@@ -98,7 +98,12 @@ df <- df %>%
   )
 
 # Export the dataframe to a new CSV file
-output_csv_file <- "exported_data.csv"
+output_csv_file <- "full_exported_data.csv"
 write.csv(df, file = output_csv_file, row.names = FALSE)
 
 cat(paste("Data successfully exported to", output_csv_file, "\n"))
+
+write.csv(df %>%
+            filter(stringr::str_detect(section, "217")), file = "217_exported_data.csv", row.names = FALSE)
+write.csv(df %>%
+            filter(stringr::str_detect(section, "231")), file = "231_exported_data.csv", row.names = FALSE)
