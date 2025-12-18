@@ -6,6 +6,7 @@ library(shinyjs)
 library(DT)
 library(tidyverse)
 library(stringr)
+library(ggplot2)
 
 # Source all R files in the R directory
 R_files <- list.files("R", pattern = "\\.R$", full.names = TRUE)
@@ -27,8 +28,7 @@ ui <- fluidPage(
   # Main content area
   fluidRow(
     column(3,
-      sidebarPanel(
-        width = 3,
+      div(class = "sidebar-panel",
         h3("Navigation"),
         
         # Category buttons for free-text questions
@@ -42,13 +42,7 @@ ui <- fluidPage(
               class = "question-btn"
             )
           })
-        ),
-        
-        hr(),
-        h4("About"),
-        p("This application allows you to explore free-text responses from the survey.
-          Click on any question button to view all responses, then click on a response
-          to see the participant's complete profile.")
+        )
       )
     ),
     column(9,
@@ -61,6 +55,45 @@ ui <- fluidPage(
                 h2("Welcome to the Survey Explorer"),
                 p("This application provides an interactive way to explore survey responses.
                   The free-text questions are organized by category below."),
+                
+                # Statistics section
+                div(class = "stats-container",
+                  div(class = "stat-card",
+                    h4("Total Responses"),
+                    div(class = "stat-value", textOutput("total_responses"))
+                  ),
+                  div(class = "stat-card",
+                    h4("Questions"),
+                    div(class = "stat-value", textOutput("question_count"))
+                  ),
+                  div(class = "stat-card",
+                    h4("Avg. Response Length"),
+                    div(class = "stat-value", textOutput("avg_response_length"))
+                  )
+                ),
+                
+                hr(),
+                
+                # Data visualization section
+                h3("Survey Insights"),
+                p("Visual overview of the survey data and response patterns."),
+                
+                div(class = "visualization-container",
+                  fluidRow(
+                    column(6,
+                      div(class = "chart-container",
+                        h4("Response Distribution"),
+                        plotOutput("response_distribution_plot", height = "300px")
+                      )
+                    ),
+                    column(6,
+                      div(class = "chart-container",
+                        h4("Response Length by Question"),
+                        plotOutput("response_length_plot", height = "300px")
+                      )
+                    )
+                  )
+                ),
                 
                 hr(),
                 
@@ -179,7 +212,7 @@ server <- function(input, output, session) {
     }
     
     # Get the selected participant's data
-    participant_data <- get_participant_profile(df(), selected_row())
+    participant_data <- get_participant_profile(df(), selected_row(), current_responses())
     
     if (is.null(participant_data)) {
       return(p("Error loading participant data."))
@@ -232,14 +265,132 @@ server <- function(input, output, session) {
     return(profile_html)
   })
   
-  # Update home page with question count
-  output$home_content <- renderText({
+  # Update statistics on home page
+  output$total_responses <- renderText({
     if (!is.null(df())) {
-      total_responses <- nrow(df())
-      question_count <- length(free_text_questions)
-      paste("Total responses:", total_responses, "| Questions:", question_count)
+      nrow(df())
     } else {
-      "Loading data..."
+      "0"
+    }
+  })
+  
+  output$question_count <- renderText({
+    length(free_text_questions)
+  })
+  
+  output$avg_response_length <- renderText({
+    if (!is.null(df())) {
+      # Calculate average response length across all free-text questions
+      all_responses <- c()
+      for (question in names(free_text_questions)) {
+        if (question %in% names(df())) {
+          responses <- df()[[question]]
+          responses <- responses[!is.na(responses) & responses != ""]
+          all_responses <- c(all_responses, nchar(responses))
+        }
+      }
+      if (length(all_responses) > 0) {
+        round(mean(all_responses))
+      } else {
+        "0"
+      }
+    } else {
+      "0"
+    }
+  })
+  
+  # Generate response distribution plot
+  output$response_distribution_plot <- renderPlot({
+    if (!is.null(df())) {
+      # Count responses for each question
+      response_counts <- sapply(names(free_text_questions), function(question) {
+        if (question %in% names(df())) {
+          responses <- df()[[question]]
+          sum(!is.na(responses) & responses != "")
+        } else {
+          0
+        }
+      })
+      
+      # Create data frame for plotting
+      plot_data <- data.frame(
+        question = names(free_text_questions),
+        count = response_counts,
+        question_label = free_text_questions
+      )
+      
+      # Order by count
+      plot_data <- plot_data[order(plot_data$count, decreasing = TRUE), ]
+      
+      # Create bar plot
+      ggplot(plot_data, aes(x = reorder(question_label, -count), y = count, fill = count)) +
+        geom_bar(stat = "identity", width = 0.7) +
+        scale_fill_gradient(low = "#3498db", high = "#2c3e50") +
+        theme_minimal() +
+        theme(
+          axis.text.x = element_text(angle = 45, hjust = 1),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          legend.position = "none"
+        ) +
+        labs(x = "Question", y = "Number of Responses", title = "") +
+        coord_flip()
+    } else {
+      # Return empty plot if no data
+      ggplot() +
+        geom_blank() +
+        theme_void() +
+        annotate("text", x = 0.5, y = 0.5, label = "Loading data...", size = 5)
+    }
+  })
+  
+  # Generate response length plot
+  output$response_length_plot <- renderPlot({
+    if (!is.null(df())) {
+      # Calculate average response length for each question
+      avg_lengths <- sapply(names(free_text_questions), function(question) {
+        if (question %in% names(df())) {
+          responses <- df()[[question]]
+          responses <- responses[!is.na(responses) & responses != ""]
+          if (length(responses) > 0) {
+            mean(nchar(responses))
+          } else {
+            0
+          }
+        } else {
+          0
+        }
+      })
+      
+      # Create data frame for plotting
+      plot_data <- data.frame(
+        question = names(free_text_questions),
+        avg_length = avg_lengths,
+        question_label = free_text_questions
+      )
+      
+      # Order by average length
+      plot_data <- plot_data[order(plot_data$avg_length, decreasing = TRUE), ]
+      
+      # Create bar plot
+      ggplot(plot_data, aes(x = reorder(question_label, -avg_length), y = avg_length, fill = avg_length)) +
+        geom_bar(stat = "identity", width = 0.7) +
+        scale_fill_gradient(low = "#3498db", high = "#2c3e50") +
+        theme_minimal() +
+        theme(
+          axis.text.x = element_text(angle = 45, hjust = 1),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          legend.position = "none"
+        ) +
+        labs(x = "Question", y = "Average Response Length (characters)", title = "") +
+        coord_flip()
+    } else {
+      # Return empty plot if no data
+      ggplot() +
+        geom_blank() +
+        theme_void() +
+        annotate("text", x = 0.5, y = 0.5, label = "Loading data...", size = 5)
     }
   })
 }

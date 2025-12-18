@@ -45,7 +45,7 @@ get_responses_for_question <- function(df, question) {
   responses <- df %>%
     filter(!is.na(!!sym(question)) & !!sym(question) != "") %>%
     select(all_of(c("timestamp", "section", "prior_experience", "learning_preference", question))) %>%
-    rename(response = question) %>%
+    rename(response = all_of(question)) %>%
     mutate(
       row_id = row_number(),
       response_length = nchar(response)
@@ -55,13 +55,13 @@ get_responses_for_question <- function(df, question) {
 }
 
 # Get participant profile
-get_participant_profile <- function(df, row_id) {
-  if (is.null(df) || is.na(row_id) || is.null(current_responses())) {
+get_participant_profile <- function(df, row_id, responses_data = NULL) {
+  if (is.null(df) || is.na(row_id) || is.null(responses_data)) {
     return(NULL)
   }
   
   # Get the timestamp from the selected row in the filtered responses
-  selected_timestamp <- current_responses()$timestamp[row_id]
+  selected_timestamp <- responses_data$timestamp[row_id]
   
   if (is.null(selected_timestamp)) {
     return(NULL)
