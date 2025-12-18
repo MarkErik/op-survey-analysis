@@ -1,112 +1,9 @@
-# Main application file for the Shiny app
+# Server logic for the Shiny app
 
-# Load required libraries
-library(shiny)
-library(shinyjs)
-library(DT)
-library(tidyverse)
-library(stringr)
-
-# Source all R files in the R directory
-R_files <- list.files("R", pattern = "\\.R$", full.names = TRUE)
-for (file in R_files) {
-  source(file, local = FALSE)
-}
-
-# Define UI
-ui <- fluidPage(
-  # Include custom CSS
-  includeCSS("www/css/style.css"),
-  
-  # Header
-  div(class = "app-header",
-    h1("Survey Explorer", class = "app-title"),
-    p("Explore survey responses with interactive analysis", class = "app-subtitle")
-  ),
-  
-  # Main content area
-  fluidRow(
-    column(3,
-      sidebarPanel(
-        width = 3,
-        h3("Navigation"),
-        
-        # Category buttons for free-text questions
-        hr(),
-        h4("Free-Text Questions"),
-        div(class = "question-buttons",
-          lapply(names(free_text_questions), function(question) {
-            actionButton(
-              inputId = paste0("btn_", question),
-              label = free_text_questions[question],
-              class = "question-btn"
-            )
-          })
-        ),
-        
-        hr(),
-        h4("About"),
-        p("This application allows you to explore free-text responses from the survey.
-          Click on any question button to view all responses, then click on a response
-          to see the participant's complete profile.")
-      )
-    ),
-    column(9,
-      tabsetPanel(
-        id = "tabset",
-        tabPanel("Home",
-          fluidRow(
-            column(12,
-              div(class = "home-content",
-                h2("Welcome to the Survey Explorer"),
-                p("This application provides an interactive way to explore survey responses.
-                  The free-text questions are organized by category below."),
-                
-                hr(),
-                
-                h3("Free-Text Questions"),
-                p("Click on any of the buttons in the sidebar to explore responses to that question."),
-                
-                div(class = "question-grid",
-                  lapply(names(free_text_questions), function(question) {
-                    div(class = "question-card",
-                      h4(free_text_questions[question]),
-                      p("Click the button in the sidebar to view all responses to this question.")
-                    )
-                  })
-                )
-              )
-            )
-          )
-        ),
-        tabPanel("Question Responses",
-          fluidRow(
-            column(12,
-              h3("Question Responses"),
-              p("Select a question from the sidebar to view all responses."),
-              
-              # DT output for responses table
-              DTOutput("responses_table")
-            )
-          )
-        ),
-        tabPanel("Participant Profile",
-          fluidRow(
-            column(12,
-              h3("Participant Profile"),
-              p("Click on any response in the table to view the participant's complete profile."),
-              
-              # UI for participant profile
-              uiOutput("profile_ui")
-            )
-          )
-        )
-      )
-    )
-  )
-)
-
-# Define server
+#' Create server function
+#' @param input Shiny input
+#' @param output Shiny output
+#' @param session Shiny session
 server <- function(input, output, session) {
   # Load data
   df <- reactive({
@@ -243,6 +140,3 @@ server <- function(input, output, session) {
     }
   })
 }
-
-# Create the Shiny app
-shinyApp(ui = ui, server = server)
