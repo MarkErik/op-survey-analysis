@@ -16,8 +16,17 @@ for (file in R_files) {
 
 # Define UI
 ui <- fluidPage(
-  # Include custom CSS
+  # Include custom CSS with cache busting
   includeCSS("www/css/style.css"),
+  tags$head(tags$script(HTML("
+    // Add cache busting to CSS
+    $(document).ready(function() {
+      var cssLink = $('link[href=\"www/css/style.css\"]');
+      if (cssLink.length) {
+        cssLink.attr('href', 'www/css/style.css?v=' + new Date().getTime());
+      }
+    });
+  "))),
   
   # Header
   div(class = "app-header",
@@ -54,8 +63,7 @@ ui <- fluidPage(
               div(class = "home-content",
                 h2("Welcome to the Survey Explorer"),
                 p("This application provides an interactive way to explore survey responses.
-                  The free-text questions are organized by category below."),
-                
+                  Use the navigation in the sidebar to explore different questions and responses."),
                 # Statistics section
                 div(class = "stats-container",
                   div(class = "stat-card",
@@ -95,19 +103,6 @@ ui <- fluidPage(
                   )
                 ),
                 
-                hr(),
-                
-                h3("Free-Text Questions"),
-                p("Click on any of the buttons in the sidebar to explore responses to that question."),
-                
-                div(class = "question-grid",
-                  lapply(names(free_text_questions), function(question) {
-                    div(class = "question-card",
-                      h4(free_text_questions[question]),
-                      p("Click the button in the sidebar to view all responses to this question.")
-                    )
-                  })
-                )
               )
             )
           )
@@ -187,12 +182,7 @@ server <- function(input, output, session) {
       selection = 'single',
       rownames = FALSE,
       caption = paste("Responses to:", free_text_questions[current_question()])
-    ) %>%
-      formatStyle(
-        'response_length',
-        target = 'row',
-        backgroundColor = styleColorBar(c(0, max(responses$response_length, na.rm = TRUE)), 'lightblue')
-      )
+    )
   })
   
   # Handle row selection in responses table
@@ -212,7 +202,7 @@ server <- function(input, output, session) {
     }
     
     # Get the selected participant's data
-    participant_data <- get_participant_profile(df(), selected_row(), current_responses())
+    participant_data <- get_participant_profile(df(), selected_row(), current_responses(), current_question())
     
     if (is.null(participant_data)) {
       return(p("Error loading participant data."))
@@ -231,7 +221,6 @@ server <- function(input, output, session) {
           column(6,
             h5("Basic Information"),
             tags$ul(
-              tags$li(strong("Timestamp:"), participant_data$timestamp),
               tags$li(strong("Section:"), participant_data$section),
               tags$li(strong("Prior Experience:"), participant_data$prior_experience),
               tags$li(strong("Learning Preference:"), participant_data$learning_preference)
@@ -396,4 +385,4 @@ server <- function(input, output, session) {
 }
 
 # Create the Shiny app
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server, options = list(port = 6831))

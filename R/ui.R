@@ -78,22 +78,11 @@ home_ui <- function() {
     column(12,
       div(class = "home-content",
         h2("Welcome to the Survey Explorer"),
-        p("This application provides an interactive way to explore survey responses. 
-          The free-text questions are organized by category below."),
+        p("This application provides an interactive way to explore survey responses.
+          Use the navigation in the sidebar to explore different questions and responses."),
         
         hr(),
         
-        h3("Free-Text Questions"),
-        p("Click on any of the buttons in the sidebar to explore responses to that question."),
-        
-        div(class = "question-grid",
-          lapply(names(free_text_questions), function(question) {
-            div(class = "question-card",
-              h4(free_text_questions[question]),
-              p("Click the button in the sidebar to view all responses to this question.")
-            )
-          })
-        )
       )
     )
   )

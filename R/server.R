@@ -51,12 +51,7 @@ server <- function(input, output, session) {
       selection = 'single',
       rownames = FALSE,
       caption = paste("Responses to:", free_text_questions[current_question()])
-    ) %>%
-      formatStyle(
-        'response_length',
-        target = 'row',
-        backgroundColor = styleColorBar(c(0, max(responses$response_length, na.rm = TRUE)), 'lightblue')
-      )
+    )
   })
   
   # Handle row selection in responses table
@@ -76,7 +71,7 @@ server <- function(input, output, session) {
     }
     
     # Get the selected participant's data
-    participant_data <- get_participant_profile(df(), selected_row())
+    participant_data <- get_participant_profile(df(), selected_row(), current_responses(), current_question())
     
     if (is.null(participant_data)) {
       return(p("Error loading participant data."))
@@ -95,7 +90,6 @@ server <- function(input, output, session) {
           column(6,
             h5("Basic Information"),
             tags$ul(
-              tags$li(strong("Timestamp:"), participant_data$timestamp),
               tags$li(strong("Section:"), participant_data$section),
               tags$li(strong("Prior Experience:"), participant_data$prior_experience),
               tags$li(strong("Learning Preference:"), participant_data$learning_preference)

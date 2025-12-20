@@ -44,35 +44,48 @@ get_responses_for_question <- function(df, question) {
   
   responses <- df %>%
     filter(!is.na(!!sym(question)) & !!sym(question) != "") %>%
-    select(all_of(c("timestamp", "section", "prior_experience", "learning_preference", question))) %>%
-    rename(response = all_of(question)) %>%
-    mutate(
-      row_id = row_number(),
-      response_length = nchar(response)
-    )
+    select(all_of(c("section", "prior_experience", "learning_preference", question))) %>%
+    rename(response = all_of(question))
   
   return(responses)
 }
 
 # Get participant profile
-get_participant_profile <- function(df, row_id, responses_data = NULL) {
-  if (is.null(df) || is.na(row_id) || is.null(responses_data)) {
+get_participant_profile <- function(df, row_id, responses_data = NULL, current_question = NULL) {
+  if (is.null(df) || is.na(row_id) || is.null(responses_data) || is.null(current_question)) {
     return(NULL)
   }
   
-  # Get the timestamp from the selected row in the filtered responses
-  selected_timestamp <- responses_data$timestamp[row_id]
+  # Since we removed timestamp and row_id, we'll use the row index directly
+  # Get the selected row from the filtered responses
+  selected_response <- responses_data[row_id, ]
   
-  if (is.null(selected_timestamp)) {
+  if (nrow(selected_response) == 0) {
+    return(NULL)
+  }
+  
+  # Find the matching row in the original data frame using the response content
+  # This assumes the response content is unique enough to identify the participant
+  response_content <- selected_response$response
+  
+  if (is.null(response_content) || response_content == "") {
     return(NULL)
   }
   
   # Find the matching row in the original data frame
-  profile <- df %>%
-    filter(timestamp == selected_timestamp) %>%
-    select(-starts_with("discord_")) %>%
-    mutate(across(where(is.character), str_trim)) %>%
-    slice(1)  # In case of duplicates, take the first one
+  # Only remove Discord columns if the current question is not a Discord question
+  if (startsWith(current_question, "discord_")) {
+    profile <- df %>%
+      filter(!!sym(current_question) == response_content) %>%
+      mutate(across(where(is.character), str_trim)) %>%
+      slice(1)  # In case of duplicates, take the first one
+  } else {
+    profile <- df %>%
+      filter(!!sym(current_question) == response_content) %>%
+      select(-starts_with("discord_")) %>%
+      mutate(across(where(is.character), str_trim)) %>%
+      slice(1)  # In case of duplicates, take the first one
+  }
   
   return(profile)
 }
@@ -81,11 +94,6 @@ get_participant_profile <- function(df, row_id, responses_data = NULL) {
 format_response <- function(response) {
   if (is.null(response) || is.na(response) || response == "") {
     return("No response provided")
-  }
-  
-  # Truncate long responses for preview
-  if (nchar(response) > 200) {
-    return(paste0(substr(response, 1, 200), "..."))
   }
   
   return(response)
