@@ -405,6 +405,7 @@ server <- function(input, output, session) {
   })
   
   
+  
   # Handle click events on response distribution plot
   observeEvent(input$dist_plot_click, {
     click_data <- input$dist_plot_click
