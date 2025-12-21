@@ -28,6 +28,9 @@ ui <- fluidPage(
     });
   "))),
   
+  # Include custom JavaScript for chart click handling
+  includeScript("www/js/chart_click_handler.js"),
+  
   # Header
   div(class = "app-header",
     h1("Survey Explorer", class = "app-title"),
@@ -91,13 +94,13 @@ ui <- fluidPage(
                     column(6,
                       div(class = "chart-container",
                         h4("Response Distribution"),
-                        plotOutput("response_distribution_plot", height = "300px")
+                        plotOutput("response_distribution_plot", height = "300px", click = "dist_plot_click")
                       )
                     ),
                     column(6,
                       div(class = "chart-container",
                         h4("Response Length by Question"),
-                        plotOutput("response_length_plot", height = "300px")
+                        plotOutput("response_length_plot", height = "300px", click = "length_plot_click")
                       )
                     )
                   )
@@ -145,6 +148,10 @@ server <- function(input, output, session) {
   current_question <- reactiveVal(NULL)
   current_responses <- reactiveVal(NULL)
   selected_row <- reactiveVal(NULL)
+  
+  # Plot data for click detection
+  plot_data_dist <- reactiveVal(NULL)
+  plot_data_length <- reactiveVal(NULL)
   
   # Handle question button clicks
   observe({
@@ -305,14 +312,15 @@ server <- function(input, output, session) {
       plot_data <- data.frame(
         question = names(free_text_questions),
         count = response_counts,
-        question_label = free_text_questions
+        question_label = free_text_questions,
+        stringsAsFactors = FALSE
       )
       
       # Order by count
       plot_data <- plot_data[order(plot_data$count, decreasing = TRUE), ]
       
-      # Create bar plot
-      ggplot(plot_data, aes(x = reorder(question_label, -count), y = count, fill = count)) +
+      # Create bar plot with custom tooltips
+      p <- ggplot(plot_data, aes(x = reorder(question_label, -count), y = count, fill = count)) +
         geom_bar(stat = "identity", width = 0.7) +
         scale_fill_gradient(low = "#3498db", high = "#2c3e50") +
         theme_minimal() +
@@ -324,6 +332,12 @@ server <- function(input, output, session) {
         ) +
         labs(x = "Question", y = "Number of Responses", title = "") +
         coord_flip()
+      
+      # Store the plot data for click handling
+      plot_data_dist(plot_data)
+      
+      # Return the plot
+      p
     } else {
       # Return empty plot if no data
       ggplot() +
@@ -355,14 +369,15 @@ server <- function(input, output, session) {
       plot_data <- data.frame(
         question = names(free_text_questions),
         avg_length = avg_lengths,
-        question_label = free_text_questions
+        question_label = free_text_questions,
+        stringsAsFactors = FALSE
       )
       
       # Order by average length
       plot_data <- plot_data[order(plot_data$avg_length, decreasing = TRUE), ]
       
       # Create bar plot
-      ggplot(plot_data, aes(x = reorder(question_label, -avg_length), y = avg_length, fill = avg_length)) +
+      p <- ggplot(plot_data, aes(x = reorder(question_label, -avg_length), y = avg_length, fill = avg_length)) +
         geom_bar(stat = "identity", width = 0.7) +
         scale_fill_gradient(low = "#3498db", high = "#2c3e50") +
         theme_minimal() +
@@ -374,12 +389,136 @@ server <- function(input, output, session) {
         ) +
         labs(x = "Question", y = "Average Response Length (characters)", title = "") +
         coord_flip()
+      
+      # Store the plot data for click handling
+      plot_data_length(plot_data)
+      
+      # Return the plot
+      p
     } else {
       # Return empty plot if no data
       ggplot() +
         geom_blank() +
         theme_void() +
         annotate("text", x = 0.5, y = 0.5, label = "Loading data...", size = 5)
+    }
+  })
+  
+  
+  # Handle click events on response distribution plot
+  observeEvent(input$dist_plot_click, {
+    click_data <- input$dist_plot_click
+    
+    if (!is.null(click_data)) {
+      # Get the y-coordinate (which corresponds to the question in a flipped plot)
+      y_coord <- round(click_data$y)
+      
+      # Try to match with response distribution plot data
+      dist_data <- plot_data_dist()
+      if (!is.null(dist_data)) {
+        # The y-coordinates in a flipped plot correspond to the row numbers (1-based)
+        if (y_coord >= 1 && y_coord <= nrow(dist_data)) {
+          question_key <- dist_data$question[y_coord]
+          
+          if (!is.null(question_key) && question_key %in% names(free_text_questions)) {
+            # Set the current question and responses
+            current_question(question_key)
+            current_responses(get_responses_for_question(df(), question_key))
+            selected_row(NULL)
+            
+            # Switch to Question Responses tab
+            updateTabsetPanel(session, "tabset", selected = "Question Responses")
+          }
+        }
+      }
+    }
+  })
+  
+  # Handle click events on response length plot
+  observeEvent(input$length_plot_click, {
+    click_data <- input$length_plot_click
+    
+    if (!is.null(click_data)) {
+      # Get the y-coordinate (which corresponds to the question in a flipped plot)
+      y_coord <- round(click_data$y)
+      
+      # Try to match with response length plot data
+      length_data <- plot_data_length()
+      if (!is.null(length_data)) {
+        # The y-coordinates in a flipped plot correspond to the row numbers (1-based)
+        if (y_coord >= 1 && y_coord <= nrow(length_data)) {
+          question_key <- length_data$question[y_coord]
+          
+          if (!is.null(question_key) && question_key %in% names(free_text_questions)) {
+            # Set the current question and responses
+            current_question(question_key)
+            current_responses(get_responses_for_question(df(), question_key))
+            selected_row(NULL)
+            
+            # Switch to Question Responses tab
+            updateTabsetPanel(session, "tabset", selected = "Question Responses")
+          }
+        }
+      }
+    }
+  })
+  
+  # Handle bar click events from JavaScript
+  observeEvent(input$bar_click, {
+    click_data <- input$bar_click
+    
+    if (!is.null(click_data) && !is.null(click_data$question)) {
+      question_key <- click_data$question
+      
+      # Set the current question and responses
+      current_question(question_key)
+      current_responses(get_responses_for_question(df(), question_key))
+      selected_row(NULL)
+      
+      # Switch to Question Responses tab
+      updateTabsetPanel(session, "tabset", selected = "Question Responses")
+    }
+  })
+  
+  # Send plot data to JavaScript when requested
+  observeEvent(input$get_dist_plot_data, {
+    dist_data <- plot_data_dist()
+    if (!is.null(dist_data)) {
+      # Create a mapping of question keys to labels as a list
+      question_mapping <- as.list(dist_data$question_label)
+      names(question_mapping) <- dist_data$question
+      
+      # Send the data to JavaScript
+      session$sendCustomMessage("dist_plot_data", question_mapping)
+    }
+  })
+  
+  observeEvent(input$get_length_plot_data, {
+    length_data <- plot_data_length()
+    if (!is.null(length_data)) {
+      # Create a mapping of question keys to labels as a list
+      question_mapping <- as.list(length_data$question_label)
+      names(question_mapping) <- length_data$question
+      
+      # Send the data to JavaScript
+      session$sendCustomMessage("length_plot_data", question_mapping)
+    }
+  })
+  
+  # Handle y-axis click events from JavaScript
+  observeEvent(input$y_axis_click, {
+    click_data <- input$y_axis_click
+    
+    if (!is.null(click_data) && !is.null(click_data$question)) {
+      question_key <- click_data$question
+      
+      # Set the current question and responses
+      current_question(question_key)
+      current_responses(get_responses_for_question(df(), question_key))
+      selected_row(NULL)
+      
+      # Switch to Question Responses tab
+      updateTabsetPanel(session, "tabset", selected = "Question Responses")
     }
   })
 }
