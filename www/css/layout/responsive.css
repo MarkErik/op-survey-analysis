@@ -1,0 +1,100 @@
+/* Responsive Design */
+
+@media (max-width: 992px) {
+  .stats-container {
+    flex-direction: column;
+  }
+  
+  .stat-card {
+    margin: 0 0 15px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 20px 15px;
+  }
+  
+  .app-title {
+    font-size: 24px;
+  }
+  
+  .app-subtitle {
+    font-size: 16px;
+  }
+  
+  .home-content {
+    padding: 15px;
+  }
+  
+  .question-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .question-card {
+    padding: 15px;
+  }
+  
+  .profile-content {
+    padding: 10px;
+  }
+  
+  .sidebar-panel {
+    padding: 15px;
+  }
+  
+  .question-btn {
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .app-header {
+    padding: 15px 10px;
+  }
+  
+  .app-title {
+    font-size: 22px;
+  }
+  
+  .app-subtitle {
+    font-size: 14px;
+  }
+  
+  .home-content {
+    padding: 10px;
+  }
+  
+  .home-content h2 {
+    font-size: 20px;
+  }
+  
+  .home-content h3 {
+    font-size: 18px;
+  }
+  
+  .question-card {
+    padding: 12px;
+  }
+  
+  .question-card h4 {
+    font-size: 16px;
+  }
+  
+  .sidebar-panel {
+    padding: 10px;
+  }
+  
+  .sidebar-panel h3 {
+    font-size: 18px;
+  }
+  
+  .sidebar-panel h4 {
+    font-size: 16px;
+  }
+  
+  .question-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}

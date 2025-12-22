@@ -1,10 +1,36 @@
+/**
+ * Chart Click Handler for Survey Explorer
+ * Handles click events on y-axis labels of ggplot2 charts in Shiny
+ */
+
 $(document).ready(function() {
-  // Function to handle clicks on y-axis labels only
+  // Configuration constants
+  const CONFIG = {
+    MAX_ATTEMPTS: 10,
+    BASE_DELAY: 500,
+    SELECTORS: [
+      '.axis.y .tick text',
+      '.y-axis .tick text',
+      '.ytick text',
+      '.tick text',
+      'text[transform*="translate(0"]',
+      'g[transform*="translate(0"] text',
+      'svg text'
+    ]
+  };
+
+  /**
+   * Handles clicks on y-axis labels of a plot
+   * @param {string} plotId - The ID of the plot container
+   * @param {Object} plotData - Mapping of question keys to labels
+   */
   function handleYAxisClicks(plotId, plotData) {
-    // Function to try to attach click handlers
+    /**
+     * Attempts to attach click handlers to y-axis labels
+     * @returns {boolean} True if handlers were attached successfully
+     */
     function tryAttachHandlers() {
-      // Get the plot container
-      var plotContainer = $('#' + plotId);
+      const plotContainer = $(`#${plotId}`);
       
       if (plotContainer.length === 0) {
         console.log("Plot container not found:", plotId);
@@ -12,56 +38,77 @@ $(document).ready(function() {
       }
       
       // Create a mapping of question labels to question keys
-      var labelToKey = {};
-      for (var key in plotData) {
+      const labelToKey = {};
+      for (const key in plotData) {
         labelToKey[plotData[key]] = key;
       }
       
       console.log("Question label to key mapping:", labelToKey);
       
-      // Try multiple selectors for y-axis labels to handle different ggplot2 output structures
-      var labelSelectors = [
-        '.axis.y .tick text',
-        '.y-axis .tick text',
-        '.ytick text',
-        '.tick text',
-        'text[transform*="translate(0"]', // This targets y-axis labels specifically
-        'g[transform*="translate(0"] text', // More specific selector for ggplot2
-        'svg text' // Fallback to all text elements in SVG
-      ];
+      // Try to find y-axis labels using multiple selectors
+      const yAxisLabels = findYAxisLabels(plotContainer, labelToKey);
       
-      var yAxisLabels = $();
+      if (yAxisLabels.length === 0) {
+        logAvailableTextElements(plotContainer);
+        return false;
+      }
+      
+      console.log(`Found ${yAxisLabels.length} y-axis labels for click handling`);
+      
+      // Add click event to each y-axis label
+      attachClickHandlers(yAxisLabels, labelToKey);
+      
+      return true;
+    }
+    
+    /**
+     * Finds y-axis labels that match our plot data
+     * @param {jQuery} plotContainer - The plot container element
+     * @param {Object} labelToKey - Mapping of labels to keys
+     * @returns {jQuery} Matching y-axis labels
+     */
+    function findYAxisLabels(plotContainer, labelToKey) {
+      let yAxisLabels = $();
       
       // Try each selector until we find the y-axis labels
-      for (var i = 0; i < labelSelectors.length; i++) {
-        var potentialLabels = plotContainer.find(labelSelectors[i]);
+      for (const selector of CONFIG.SELECTORS) {
+        const potentialLabels = plotContainer.find(selector);
         
         // Filter to only include labels that match our plot data
-        var matchingLabels = potentialLabels.filter(function() {
-          var text = $(this).text().trim();
+        const matchingLabels = potentialLabels.filter(function() {
+          const text = $(this).text().trim();
           return labelToKey.hasOwnProperty(text);
         });
         
         if (matchingLabels.length > 0) {
           yAxisLabels = matchingLabels;
-          console.log("Found y-axis labels with selector:", labelSelectors[i]);
+          console.log("Found y-axis labels with selector:", selector);
           break;
         }
       }
       
-      if (yAxisLabels.length === 0) {
-        console.log("No y-axis labels found that match our question data");
-        console.log("Available text elements:", plotContainer.find('text').map(function() {
-          return $(this).text().trim();
-        }).get());
-        return false;
-      }
-      
-      console.log("Found", yAxisLabels.length, "y-axis labels for click handling");
-      
-      // Add click event to each y-axis label
+      return yAxisLabels;
+    }
+    
+    /**
+     * Logs available text elements for debugging
+     * @param {jQuery} plotContainer - The plot container element
+     */
+    function logAvailableTextElements(plotContainer) {
+      console.log("No y-axis labels found that match our question data");
+      console.log("Available text elements:", plotContainer.find('text').map(function() {
+        return $(this).text().trim();
+      }).get());
+    }
+    
+    /**
+     * Attaches click handlers to y-axis labels
+     * @param {jQuery} yAxisLabels - The y-axis label elements
+     * @param {Object} labelToKey - Mapping of labels to keys
+     */
+    function attachClickHandlers(yAxisLabels, labelToKey) {
       yAxisLabels.each(function() {
-        var $label = $(this);
+        const $label = $(this);
         
         // Make sure we're not adding multiple event handlers
         $label.off('click.yaxis').css('cursor', 'pointer');
@@ -70,8 +117,8 @@ $(document).ready(function() {
           e.preventDefault();
           e.stopPropagation();
           
-          var labelText = $(this).text().trim();
-          var questionKey = labelToKey[labelText];
+          const labelText = $(this).text().trim();
+          const questionKey = labelToKey[labelText];
           
           if (questionKey) {
             console.log("Y-axis label clicked:", labelText, "Question key:", questionKey);
@@ -87,24 +134,20 @@ $(document).ready(function() {
           return false; // Prevent default behavior
         });
       });
-      
-      return true; // Successfully attached handlers
     }
     
-    // Try immediately
+    // Try to attach handlers immediately
     if (tryAttachHandlers()) {
       return;
     }
     
     // If not successful, try multiple times with increasing delays
-    var attempts = 0;
-    var maxAttempts = 10;
-    var baseDelay = 500;
+    let attempts = 0;
     
     function attemptWithDelay() {
       attempts++;
       
-      if (attempts > maxAttempts) {
+      if (attempts > CONFIG.MAX_ATTEMPTS) {
         console.log("Max attempts reached for y-axis click handlers");
         return;
       }
@@ -113,7 +156,7 @@ $(document).ready(function() {
         if (!tryAttachHandlers()) {
           attemptWithDelay(); // Try again with longer delay
         }
-      }, baseDelay * attempts);
+      }, CONFIG.BASE_DELAY * attempts);
     }
     
     attemptWithDelay();
