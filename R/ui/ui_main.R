@@ -15,9 +15,13 @@ create_main_ui <- function(free_text_questions) {
     tags$head(tags$script(HTML("
       // Add cache busting to CSS
       $(document).ready(function() {
-        var cssLink = $('link[href=\"www/css/style.css\"]');
+        // Find the CSS link by its href ending with style.css
+        var cssLink = $('link[href$=\"style.css\"]');
         if (cssLink.length) {
-          cssLink.attr('href', 'www/css/style.css?v=' + new Date().getTime());
+          // Get the current href and append cache busting parameter
+          var currentHref = cssLink.attr('href');
+          var separator = currentHref.indexOf('?') >= 0 ? '&' : '?';
+          cssLink.attr('href', currentHref + separator + 'v=' + new Date().getTime());
         }
       });
     "))),

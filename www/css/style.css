@@ -1,9 +1,9 @@
 /* Custom CSS for the Shiny App */
 
 /* Import all CSS modules */
-@import url('themes/variables.css');
-@import url('themes/global.css');
-@import url('layout/layout.css');
-@import url('layout/responsive.css');
-@import url('components/components.css');
-@import url('utilities/utilities.css');
+@import url('/css/themes/variables.css');
+@import url('/css/themes/global.css');
+@import url('/css/layout/layout.css');
+@import url('/css/layout/responsive.css');
+@import url('/css/components/components.css');
+@import url('/css/utilities/utilities.css');
