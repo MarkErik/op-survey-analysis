@@ -36,13 +36,13 @@ create_home_tab <- function() {
               column(6,
                 div(class = "chart-container",
                   h4("Response Distribution"),
-                  plotOutput("response_distribution_plot", height = "300px", click = "dist_plot_click")
+                  girafeOutput("response_distribution_plot", height = "300px")
                 )
               ),
               column(6,
                 div(class = "chart-container",
                   h4("Response Length by Question"),
-                  plotOutput("response_length_plot", height = "300px", click = "length_plot_click")
+                  girafeOutput("response_length_plot", height = "300px")
                 )
               )
             )

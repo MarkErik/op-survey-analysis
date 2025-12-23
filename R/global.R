@@ -5,6 +5,7 @@ library(shiny)
 library(tidyverse)
 library(DT)
 library(stringr)
+library(ggiraph)
 
 # Define free-text questions
 free_text_questions <- c(

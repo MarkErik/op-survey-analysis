@@ -61,42 +61,5 @@ create_participant_profile_ui <- function(participant_data, current_question, fr
   return(profile_html)
 }
 
-# Handle plot click events
-handle_plot_click <- function(click_data, plot_data, current_question, current_responses, selected_row, df, session, free_text_questions) {
-  if (!is.null(click_data)) {
-    # Get the y-coordinate (which corresponds to the question in a flipped plot)
-    y_coord <- round(click_data$y)
-    
-    if (!is.null(plot_data)) {
-      # The y-coordinates in a flipped plot correspond to the row numbers (1-based)
-      if (y_coord >= 1 && y_coord <= nrow(plot_data)) {
-        question_key <- plot_data$question[y_coord]
-        
-        if (!is.null(question_key) && question_key %in% names(free_text_questions)) {
-          # Set the current question and responses
-          current_question(question_key)
-          current_responses(get_responses_for_question(df, question_key))
-          selected_row(NULL)
-          
-          # Switch to Question Responses tab
-          updateTabsetPanel(session, "tabset", selected = "Question Responses")
-        }
-      }
-    }
-  }
-}
-
-# Handle JavaScript click events
-handle_js_click <- function(click_data, current_question, current_responses, selected_row, df, session, free_text_questions) {
-  if (!is.null(click_data) && !is.null(click_data$question)) {
-    question_key <- click_data$question
-    
-    # Set the current question and responses
-    current_question(question_key)
-    current_responses(get_responses_for_question(df, question_key))
-    selected_row(NULL)
-    
-    # Switch to Question Responses tab
-    updateTabsetPanel(session, "tabset", selected = "Question Responses")
-  }
-}
+# These functions are no longer needed since we're using ggiraph for interactive charts
+# The click handling is now handled natively by ggiraph in the server_main.R file

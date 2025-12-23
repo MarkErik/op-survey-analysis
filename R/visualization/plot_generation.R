@@ -2,6 +2,7 @@
 
 # Load required libraries
 library(ggplot2)
+library(ggiraph)
 
 # Generate response distribution plot
 generate_response_distribution_plot <- function(df, free_text_questions) {
@@ -27,9 +28,15 @@ generate_response_distribution_plot <- function(df, free_text_questions) {
     # Order by count
     plot_data <- plot_data[order(plot_data$count, decreasing = TRUE), ]
     
-    # Create bar plot with custom tooltips
+    # Create interactive bar plot with ggiraph
     p <- ggplot(plot_data, aes(x = reorder(question_label, -count), y = count, fill = count)) +
-      geom_bar(stat = "identity", width = 0.7) +
+      geom_col_interactive(
+        aes(
+          tooltip = paste(question_label, ": ", count, " responses"),
+          data_id = question
+        ),
+        width = 0.7
+      ) +
       scale_fill_gradient(low = "#3498db", high = "#2c3e50") +
       theme_minimal() +
       theme(
@@ -83,9 +90,15 @@ generate_response_length_plot <- function(df, free_text_questions) {
     # Order by average length
     plot_data <- plot_data[order(plot_data$avg_length, decreasing = TRUE), ]
     
-    # Create bar plot
+    # Create interactive bar plot with ggiraph
     p <- ggplot(plot_data, aes(x = reorder(question_label, -avg_length), y = avg_length, fill = avg_length)) +
-      geom_bar(stat = "identity", width = 0.7) +
+      geom_col_interactive(
+        aes(
+          tooltip = paste(question_label, ": ", round(avg_length, 1), " characters"),
+          data_id = question
+        ),
+        width = 0.7
+      ) +
       scale_fill_gradient(low = "#3498db", high = "#2c3e50") +
       theme_minimal() +
       theme(

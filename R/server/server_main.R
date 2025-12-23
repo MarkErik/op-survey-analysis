@@ -72,23 +72,47 @@ create_main_server <- function(free_text_questions) {
     })
     
     # Generate response distribution plot
-    output$response_distribution_plot <- renderPlot({
-      render_response_distribution_plot(df(), free_text_questions, plot_data_dist)
+    output$response_distribution_plot <- renderGirafe({
+      plot_result <- render_response_distribution_plot(df(), free_text_questions, plot_data_dist)
+      girafe(ggobj = plot_result$plot)
     })
     
     # Generate response length plot
-    output$response_length_plot <- renderPlot({
-      render_response_length_plot(df(), free_text_questions, plot_data_length)
+    output$response_length_plot <- renderGirafe({
+      plot_result <- render_response_length_plot(df(), free_text_questions, plot_data_length)
+      girafe(ggobj = plot_result$plot)
     })
     
-    # Handle plot click events
-    handle_dist_plot_click(input, current_question, current_responses, selected_row, df, plot_data_dist, session, free_text_questions)
-    handle_length_plot_click(input, current_question, current_responses, selected_row, df, plot_data_length, session, free_text_questions)
-    handle_bar_click(input, current_question, current_responses, selected_row, df, session, free_text_questions)
-    handle_y_axis_click(input, current_question, current_responses, selected_row, df, session, free_text_questions)
+    # Handle ggiraph click events
+    observeEvent(input$response_distribution_plot_selected, {
+      selected_data <- input$response_distribution_plot_selected
+      if (!is.null(selected_data) && length(selected_data) > 0) {
+        question_key <- selected_data[1]  # Get the first selected question ID
+        if (!is.null(question_key) && question_key %in% names(free_text_questions)) {
+          current_question(question_key)
+          current_responses(get_responses_for_question(df(), question_key))
+          selected_row(NULL)
+          
+          # Switch to Question Responses tab
+          updateTabsetPanel(session, "tabset", selected = "Question Responses")
+        }
+      }
+    })
     
-    # Send plot data to JavaScript when requested
-    send_plot_data_to_js(input, session, plot_data_dist, plot_data_length)
+    observeEvent(input$response_length_plot_selected, {
+      selected_data <- input$response_length_plot_selected
+      if (!is.null(selected_data) && length(selected_data) > 0) {
+        question_key <- selected_data[1]  # Get the first selected question ID
+        if (!is.null(question_key) && question_key %in% names(free_text_questions)) {
+          current_question(question_key)
+          current_responses(get_responses_for_question(df(), question_key))
+          selected_row(NULL)
+          
+          # Switch to Question Responses tab
+          updateTabsetPanel(session, "tabset", selected = "Question Responses")
+        }
+      }
+    })
     
   }
 }
