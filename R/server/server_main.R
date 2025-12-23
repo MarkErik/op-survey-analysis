@@ -89,5 +89,6 @@ create_main_server <- function(free_text_questions) {
     
     # Send plot data to JavaScript when requested
     send_plot_data_to_js(input, session, plot_data_dist, plot_data_length)
+    
   }
 }

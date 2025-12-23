@@ -15,7 +15,18 @@ $(document).ready(function() {
       '.tick text',
       'text[transform*="translate(0"]',
       'g[transform*="translate(0"] text',
-      'svg text'
+      'svg text',
+      // More specific selectors for ggplot2
+      '.axis .tick text',
+      '.axis text',
+      'g.tick text',
+      'text.axis',
+      'text.y',
+      'text.y.axis',
+      // Even more general selectors
+      'text',
+      'g text',
+      'svg *'
     ]
   };
 
@@ -33,7 +44,6 @@ $(document).ready(function() {
       const plotContainer = $(`#${plotId}`);
       
       if (plotContainer.length === 0) {
-        console.log("Plot container not found:", plotId);
         return false;
       }
       
@@ -43,17 +53,12 @@ $(document).ready(function() {
         labelToKey[plotData[key]] = key;
       }
       
-      console.log("Question label to key mapping:", labelToKey);
-      
       // Try to find y-axis labels using multiple selectors
       const yAxisLabels = findYAxisLabels(plotContainer, labelToKey);
       
       if (yAxisLabels.length === 0) {
-        logAvailableTextElements(plotContainer);
         return false;
       }
-      
-      console.log(`Found ${yAxisLabels.length} y-axis labels for click handling`);
       
       // Add click event to each y-axis label
       attachClickHandlers(yAxisLabels, labelToKey);
@@ -77,28 +82,57 @@ $(document).ready(function() {
         // Filter to only include labels that match our plot data
         const matchingLabels = potentialLabels.filter(function() {
           const text = $(this).text().trim();
-          return labelToKey.hasOwnProperty(text);
+          
+          // Skip empty text
+          if (!text) return false;
+          
+          // Try exact match first
+          if (labelToKey.hasOwnProperty(text)) {
+            return true;
+          }
+          
+          // If no exact match, try partial match (in case of truncation)
+          for (const key in labelToKey) {
+            const label = labelToKey[key];
+            
+            // Try different matching strategies
+            if (text.includes(label) || label.includes(text)) {
+              // Store the mapping for this partial match
+              $(this).data('questionKey', key);
+              return true;
+            }
+            
+            // Try matching with cleaned text (remove special characters, extra spaces)
+            const cleanText = text.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
+            const cleanLabel = label.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
+            
+            if (cleanText.includes(cleanLabel) || cleanLabel.includes(cleanText)) {
+              // Store the mapping for this partial match
+              $(this).data('questionKey', key);
+              return true;
+            }
+            
+            // Try matching first few words (in case of truncation)
+            const textWords = text.split(' ').slice(0, 3).join(' ');
+            const labelWords = label.split(' ').slice(0, 3).join(' ');
+            
+            if (textWords.includes(labelWords) || labelWords.includes(textWords)) {
+              // Store the mapping for this partial match
+              $(this).data('questionKey', key);
+              return true;
+            }
+          }
+          
+          return false;
         });
         
         if (matchingLabels.length > 0) {
           yAxisLabels = matchingLabels;
-          console.log("Found y-axis labels with selector:", selector);
           break;
         }
       }
       
       return yAxisLabels;
-    }
-    
-    /**
-     * Logs available text elements for debugging
-     * @param {jQuery} plotContainer - The plot container element
-     */
-    function logAvailableTextElements(plotContainer) {
-      console.log("No y-axis labels found that match our question data");
-      console.log("Available text elements:", plotContainer.find('text').map(function() {
-        return $(this).text().trim();
-      }).get());
     }
     
     /**
@@ -118,10 +152,14 @@ $(document).ready(function() {
           e.stopPropagation();
           
           const labelText = $(this).text().trim();
-          const questionKey = labelToKey[labelText];
+          let questionKey = labelToKey[labelText];
+          
+          // If no exact match found, try to get the stored key from partial match
+          if (!questionKey) {
+            questionKey = $(this).data('questionKey');
+          }
           
           if (questionKey) {
-            console.log("Y-axis label clicked:", labelText, "Question key:", questionKey);
             // Trigger a Shiny input event with the question key
             Shiny.onInputChange('y_axis_click', {
               question: questionKey,
@@ -148,7 +186,6 @@ $(document).ready(function() {
       attempts++;
       
       if (attempts > CONFIG.MAX_ATTEMPTS) {
-        console.log("Max attempts reached for y-axis click handlers");
         return;
       }
       
@@ -164,12 +201,10 @@ $(document).ready(function() {
   
   // Set up custom message handlers once
   Shiny.addCustomMessageHandler('dist_plot_data', function(data) {
-    console.log("Received distribution plot data:", data);
     handleYAxisClicks('response_distribution_plot', data);
   });
   
   Shiny.addCustomMessageHandler('length_plot_data', function(data) {
-    console.log("Received length plot data:", data);
     handleYAxisClicks('response_length_plot', data);
   });
   
