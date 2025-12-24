@@ -53,15 +53,15 @@ generate_response_distribution_plot <- function(df, free_text_questions) {
     # Create interactive bar plot with ggiraph
     # - tooltip: Shows question label and response count on hover
     # - data_id: Question ID used for click detection (input$response_distribution_plot_selected)
-    p <- ggplot(plot_data, aes(x = reorder(question_label, -count), y = count, fill = count)) +
+    p <- ggplot(plot_data, aes(x = reorder(question_label, -count), y = count)) +
       geom_col_interactive(
         aes(
           tooltip = paste(question_label, ": ", count, " responses"),
           data_id = question
         ),
+        fill = "#3498db",
         width = 0.7
       ) +
-      scale_fill_gradient(low = "#3498db", high = "#2c3e50") +
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
@@ -127,15 +127,15 @@ generate_response_length_plot <- function(df, free_text_questions) {
     # Create interactive bar plot with ggiraph
     # - tooltip: Shows question label and average character count on hover
     # - data_id: Question ID used for click detection (input$response_length_plot_selected)
-    p <- ggplot(plot_data, aes(x = reorder(question_label, -avg_length), y = avg_length, fill = avg_length)) +
+    p <- ggplot(plot_data, aes(x = reorder(question_label, -avg_length), y = avg_length)) +
       geom_col_interactive(
         aes(
           tooltip = paste(question_label, ": ", round(avg_length, 1), " characters"),
           data_id = question
         ),
+        fill = "#3498db",
         width = 0.7
       ) +
-      scale_fill_gradient(low = "#3498db", high = "#2c3e50") +
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
