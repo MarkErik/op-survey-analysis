@@ -72,7 +72,10 @@ create_main_server <- function(free_text_questions) {
     output$response_distribution_plot <- renderGirafe({
       plot <- get_response_distribution_plot(df(), free_text_questions)
       girafe(
-        ggobj = plot
+        ggobj = plot,
+          options = list(
+            opts_selection(type = "none")
+          )
       )
     })
     
@@ -81,7 +84,10 @@ create_main_server <- function(free_text_questions) {
     output$response_length_plot <- renderGirafe({
       plot <- get_response_length_plot(df(), free_text_questions)
       girafe(
-        ggobj = plot
+        ggobj = plot,
+          options = list(
+            opts_selection(type = "none")
+          )
       )
     })
     
