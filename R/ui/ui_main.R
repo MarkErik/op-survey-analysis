@@ -9,22 +9,18 @@ source("R/ui/ui_participant_profile_tab.R", local = TRUE)
 
 # Create the main UI
 create_main_ui <- function(free_text_questions) {
+  # CSS version for cache busting - update this when CSS changes
+  css_version <- "1.0.0"
+  
   fluidPage(
     # Include custom CSS with cache busting
-    includeCSS("www/css/style.css"),
-    tags$head(tags$script(HTML("
-      // Add cache busting to CSS
-      $(document).ready(function() {
-        // Find the CSS link by its href ending with style.css
-        var cssLink = $('link[href$=\"style.css\"]');
-        if (cssLink.length) {
-          // Get the current href and append cache busting parameter
-          var currentHref = cssLink.attr('href');
-          var separator = currentHref.indexOf('?') >= 0 ? '&' : '?';
-          cssLink.attr('href', currentHref + separator + 'v=' + new Date().getTime());
-        }
-      });
-    "))),
+    tags$head(
+      tags$link(
+        rel = "stylesheet",
+        type = "text/css",
+        href = paste0("css/style.css?v=", css_version)
+      )
+    ),
     
     # Include custom JavaScript for chart click handling
     includeScript("www/js/chart_click_handler.js"),

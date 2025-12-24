@@ -165,10 +165,6 @@
   transition: transform var(--transition-normal);
 }
 
-.stat-card:hover {
-  transform: translateY(-3px);
-}
-
 .stat-card h4 {
   margin: 0 0 var(--spacing-sm) 0;
   color: var(--primary-color);
@@ -196,11 +192,6 @@
   margin-bottom: var(--spacing-md);
   box-shadow: var(--box-shadow-md);
   transition: all var(--transition-normal);
-}
-
-.chart-container:hover {
-  box-shadow: var(--box-shadow-lg);
-  transform: translateY(-3px);
 }
 
 .chart-container h4 {

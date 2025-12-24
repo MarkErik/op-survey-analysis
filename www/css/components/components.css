@@ -117,11 +117,6 @@
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
-.stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--box-shadow-lg);
-}
-
 .stat-card h4 {
   margin: 0 0 var(--spacing-md) 0;
   color: var(--secondary-color);

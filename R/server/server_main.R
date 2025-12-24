@@ -23,10 +23,6 @@ create_main_server <- function(free_text_questions) {
     current_responses <- reactiveVal(NULL)
     selected_row <- reactiveVal(NULL)
     
-    # Plot data for click detection
-    plot_data_dist <- reactiveVal(NULL)
-    plot_data_length <- reactiveVal(NULL)
-    
     # Handle question button clicks
     observe({
       lapply(names(free_text_questions), function(question) {
@@ -72,18 +68,25 @@ create_main_server <- function(free_text_questions) {
     })
     
     # Generate response distribution plot
+    # Uses ggiraph for interactivity - click events are captured via input$response_distribution_plot_selected
     output$response_distribution_plot <- renderGirafe({
-      plot_result <- render_response_distribution_plot(df(), free_text_questions, plot_data_dist)
-      girafe(ggobj = plot_result$plot)
+      plot <- get_response_distribution_plot(df(), free_text_questions)
+      girafe(
+        ggobj = plot
+      )
     })
     
     # Generate response length plot
+    # Uses ggiraph for interactivity - click events are captured via input$response_length_plot_selected
     output$response_length_plot <- renderGirafe({
-      plot_result <- render_response_length_plot(df(), free_text_questions, plot_data_length)
-      girafe(ggobj = plot_result$plot)
+      plot <- get_response_length_plot(df(), free_text_questions)
+      girafe(
+        ggobj = plot
+      )
     })
     
-    # Handle ggiraph click events
+    # Handle ggiraph click events for response distribution plot
+    # When a bar is clicked, the data_id (question_id) is captured in input$response_distribution_plot_selected
     observeEvent(input$response_distribution_plot_selected, {
       selected_data <- input$response_distribution_plot_selected
       if (!is.null(selected_data) && length(selected_data) > 0) {
@@ -99,6 +102,8 @@ create_main_server <- function(free_text_questions) {
       }
     })
     
+    # Handle ggiraph click events for response length plot
+    # When a bar is clicked, the data_id (question_id) is captured in input$response_length_plot_selected
     observeEvent(input$response_length_plot_selected, {
       selected_data <- input$response_length_plot_selected
       if (!is.null(selected_data) && length(selected_data) > 0) {
