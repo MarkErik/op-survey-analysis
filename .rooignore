@@ -1,3 +1,10 @@
+# Data related
 csv_import_export.R
 231_exported_data.csv
 217_exported_data.csv
+
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
