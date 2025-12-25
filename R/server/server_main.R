@@ -91,6 +91,94 @@ create_main_server <- function(free_text_questions) {
       )
     })
     
+    # Generate learning preference plot
+    output$learning_preference_plot <- renderGirafe({
+      plot <- get_learning_preference_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
+    # Generate prior experience plot
+    output$prior_experience_plot <- renderGirafe({
+      plot <- get_prior_experience_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
+    # Generate course satisfaction plot
+    output$course_satisfaction_plot <- renderGirafe({
+      plot <- get_course_satisfaction_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
+    # Generate Discord engagement plot
+    output$discord_engagement_plot <- renderGirafe({
+      plot <- get_discord_engagement_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
+    # Generate learning methods plot
+    output$learning_methods_plot <- renderGirafe({
+      plot <- get_learning_methods_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
+    # Generate community connection plot
+    output$community_connection_plot <- renderGirafe({
+      plot <- get_community_connection_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
+    # Generate section comparison plot
+    output$section_comparison_plot <- renderGirafe({
+      plot <- get_section_comparison_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
+    # Generate key themes plot
+    output$key_themes_plot <- renderGirafe({
+      plot <- get_key_themes_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
     # Handle ggiraph click events for response distribution plot
     # When a bar is clicked, the data_id (question_id) is captured in input$response_distribution_plot_selected
     observeEvent(input$response_distribution_plot_selected, {

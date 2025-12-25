@@ -22,6 +22,38 @@ free_text_questions <- c(
   "discord_other_text" = "Discord Other Text"
 )
 
+# Define standardized column names for survey questions
+# These match the lowercase-converted column names from the CSV file
+survey_columns <- list(
+  course = c(
+    excited = "(course) i am excited about the content and material that i'm learning",
+    relevant = "(course) the content is relevant and up-to-date",
+    meeting_goals = "(course) i feel like i am meeting the goals of learning python in this course",
+    apply_scenario = "(course) i feel like i could take what i'm learning and apply it in a new scenario",
+    feedback = "(course) i'm satisfied with the level of feedback i receive",
+    ask_help = "(course) it's easy to ask for help"
+  ),
+  learning = c(
+    pre_written_code = "(learning) explanations of pre-written code",
+    live_coding = "(learning) live coding by the professor",
+    slides = "(learning) presentation slides",
+    handouts = "(learning) post-class handouts and notes",
+    tophat_quizzes = "(learning) tophat quizzes",
+    assignments = "(learning) assignments",
+    labs = "(learning) labs",
+    ask_questions = "(learning) being able to ask questions of the professor during lecture",
+    studying_midterms = "(learning) studying for midterms",
+    coding_own = "(learning) coding on my own"
+  ),
+  community = c(
+    friends_important = "(community) making friends within the class is important to me",
+    easy_meet = "(community) it's easy to meet new people within the class",
+    part_of_class = "(community) i feel like i am a part of this class",
+    comfortable_speaking = "(community) i feel comfortable speaking up in class",
+    part_of_university = "(community) i feel like i am a part of the university community"
+  )
+)
+
 # Load data
 load_data <- function() {
   tryCatch({
