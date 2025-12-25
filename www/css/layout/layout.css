@@ -290,7 +290,6 @@
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
   box-shadow: var(--shadow-primary);
   border-color: var(--primary-200);
 }
@@ -342,7 +341,6 @@
 .chart-container:hover {
   box-shadow: var(--box-shadow-md);
   border-color: var(--primary-200);
-  transform: translateY(-2px);
 }
 
 .chart-container h4 {

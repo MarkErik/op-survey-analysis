@@ -319,7 +319,6 @@
   background-color: var(--primary-50);
   border-color: var(--primary-color);
   color: var(--primary-color);
-  transform: translateY(-1px);
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
@@ -418,7 +417,6 @@
 
 .btn-primary:hover {
   background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-primary);
 }
 
@@ -442,7 +440,6 @@
 
 .btn-success:hover {
   background: linear-gradient(135deg, var(--success-dark) 0%, var(--success-color) 100%);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-success);
 }
 
@@ -502,7 +499,6 @@
 
 .card:hover {
   box-shadow: var(--box-shadow-lg);
-  transform: translateY(-2px);
 }
 
 .card-header {
