@@ -74,7 +74,7 @@ create_main_server <- function(free_text_questions) {
       girafe(
         ggobj = plot,
           options = list(
-            opts_selection(type = "none")
+            opts_selection(type = "single")
           )
       )
     })
@@ -86,7 +86,7 @@ create_main_server <- function(free_text_questions) {
       girafe(
         ggobj = plot,
           options = list(
-            opts_selection(type = "none")
+            opts_selection(type = "single")
           )
       )
     })
