@@ -1,10 +1,10 @@
-/* CSS Variables for consistent theming - Modern Design System */
+/* CSS Variables - Clean, Modern Design System */
 
 :root {
-  /* Primary Colors - Modern Indigo/Violet Palette */
-  --primary-color: #6366f1;
-  --primary-dark: #4f46e5;
-  --primary-light: #818cf8;
+  /* Primary Colors - Sophisticated Indigo System */
+  --primary-color: #4f46e5;
+  --primary-dark: #4338ca;
+  --primary-light: #6366f1;
   --primary-50: #eef2ff;
   --primary-100: #e0e7ff;
   --primary-200: #c7d2fe;
@@ -16,10 +16,10 @@
   --primary-800: #3730a3;
   --primary-900: #312e81;
   
-  /* Secondary Colors - Slate/Gray Palette */
-  --secondary-color: #1e293b;
-  --secondary-dark: #0f172a;
-  --secondary-light: #334155;
+  /* Secondary Colors - Neutral Slate System */
+  --secondary-color: #0f172a;
+  --secondary-dark: #020617;
+  --secondary-light: #1e293b;
   --secondary-50: #f8fafc;
   --secondary-100: #f1f5f9;
   --secondary-200: #e2e8f0;
@@ -35,35 +35,35 @@
   --light-color: #f8fafc;
   --medium-color: #e2e8f0;
   --dark-color: #475569;
-  --text-color: #1e293b;
+  --text-color: #0f172a;
   --text-light: #64748b;
   --text-muted: #94a3b8;
   
-  /* Accent Colors */
+  /* Accent Colors - Modern Coral */
   --accent-color: #f43f5e;
   --accent-light: #fb7185;
   --accent-dark: #e11d48;
   
-  /* Semantic Colors */
+  /* Semantic Colors - Refined */
   --success-color: #10b981;
   --success-light: #34d399;
   --success-dark: #059669;
-  --success-bg: #d1fae5;
+  --success-bg: #f0fdf4;
   
   --warning-color: #f59e0b;
   --warning-light: #fbbf24;
   --warning-dark: #d97706;
-  --warning-bg: #fef3c7;
+  --warning-bg: #fffbeb;
   
   --info-color: #0ea5e9;
   --info-light: #38bdf8;
   --info-dark: #0284c7;
-  --info-bg: #e0f2fe;
+  --info-bg: #f0f9ff;
   
   --error-color: #ef4444;
   --error-light: #f87171;
   --error-dark: #dc2626;
-  --error-bg: #fee2e2;
+  --error-bg: #fef2f2;
   
   /* Spacing Scale - 4px base unit */
   --spacing-0: 0;
@@ -95,26 +95,26 @@
   --border-radius-2xl: 1.5rem;   /* 24px */
   --border-radius-full: 9999px;
   
-  /* Box Shadow - Modern layered shadows */
+  /* Box Shadow - Clean, minimal shadows */
   --box-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --box-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --box-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  --box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  --box-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+  --box-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
   
-  /* Colored shadows for depth */
-  --shadow-primary: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
-  --shadow-success: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
-  --shadow-warning: 0 4px 14px 0 rgba(245, 158, 11, 0.39);
-  --shadow-error: 0 4px 14px 0 rgba(239, 68, 68, 0.39);
+  /* Colored shadows - Subtle */
+  --shadow-primary: 0 2px 8px 0 rgba(37, 99, 235, 0.15);
+  --shadow-success: 0 2px 8px 0 rgba(5, 150, 105, 0.15);
+  --shadow-warning: 0 2px 8px 0 rgba(217, 119, 6, 0.15);
+  --shadow-error: 0 2px 8px 0 rgba(220, 38, 38, 0.15);
   
-  /* Transitions */
+  /* Transitions - Minimal, purposeful */
   --transition-instant: 0.1s ease;
   --transition-fast: 0.15s ease;
   --transition-normal: 0.2s ease;
-  --transition-slow: 0.3s ease;
-  --transition-slower: 0.5s ease;
+  --transition-slow: 0.25s ease;
+  --transition-slower: 0.3s ease;
   
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -178,7 +178,7 @@
     --light-color: #0f172a;
     --medium-color: #1e293b;
     --dark-color: #94a3b8;
-    --text-color: #f1f5f9;
+    --text-color: #f8fafc;
     --text-light: #cbd5e1;
     --text-muted: #64748b;
     
@@ -204,7 +204,7 @@
     --secondary-800: #f1f5f9;
     --secondary-900: #f8fafc;
     
-    --glass-bg: rgba(15, 23, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(15, 23, 42, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.08);
   }
 }

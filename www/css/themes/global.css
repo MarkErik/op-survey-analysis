@@ -25,7 +25,6 @@ body {
   line-height: var(--leading-normal);
   font-size: var(--text-base);
   font-weight: var(--font-normal);
-  transition: background-color var(--transition-normal), color var(--transition-normal);
   min-height: 100vh;
 }
 
@@ -77,7 +76,6 @@ p {
 a {
   color: var(--primary-color);
   text-decoration: none;
-  transition: color var(--transition-fast);
 }
 
 a:hover {
@@ -170,7 +168,7 @@ button {
   scrollbar-color: var(--secondary-300) var(--secondary-100);
 }
 
-/* Loading State - Modern spinner */
+/* Loading State - Simple spinner */
 .loading {
   display: flex;
   align-items: center;
@@ -183,34 +181,22 @@ button {
 
 .loading::after {
   content: "";
-  width: 24px;
-  height: 24px;
-  border: 3px solid var(--secondary-200);
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--secondary-200);
   border-top-color: var(--primary-color);
   border-radius: var(--border-radius-full);
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.6s linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* Skeleton loading state */
+/* Skeleton loading state - Static */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--secondary-200) 25%,
-    var(--secondary-100) 50%,
-    var(--secondary-200) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s ease-in-out infinite;
+  background-color: var(--secondary-200);
   border-radius: var(--border-radius-md);
-}
-
-@keyframes skeleton-loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
 }
 
 /* Alert/Notification States - Modern design */
@@ -338,7 +324,6 @@ button {
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: opacity var(--transition-fast);
 }
 
 [role="tooltip"].visible {
