@@ -316,7 +316,7 @@ generate_course_satisfaction_plot <- function(df) {
     
     # Create data frame for plotting
     plot_data <- data.frame(
-      question = gsub("^\\(course\\) ", "", course_questions),
+      question = gsub("^x\\.course\\.\\.", "", course_questions),
       avg_score = avg_scores,
       stringsAsFactors = FALSE
     )
@@ -476,7 +476,7 @@ generate_learning_methods_plot <- function(df) {
     
     # Create data frame for plotting
     plot_data <- data.frame(
-      method = gsub("^\\(learning\\) ", "", learning_questions),
+      method = gsub("^x\\.learning\\.\\.", "", learning_questions),
       avg_score = avg_scores,
       stringsAsFactors = FALSE
     )
@@ -561,7 +561,7 @@ generate_community_connection_plot <- function(df) {
     
     # Create data frame for plotting
     plot_data <- data.frame(
-      question = gsub("^\\(community\\) ", "", community_questions),
+      question = gsub("^x\\.community\\.\\.", "", community_questions),
       avg_score = avg_scores,
       stringsAsFactors = FALSE
     )
