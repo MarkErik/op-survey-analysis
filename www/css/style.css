@@ -2,9 +2,9 @@
 
 /* Import all CSS modules with cache busting */
 /* Update version numbers when CSS changes */
-@import url('/css/themes/variables.css?v=1.0.0');
-@import url('/css/themes/global.css?v=1.0.0');
-@import url('/css/layout/layout.css?v=1.0.0');
-@import url('/css/layout/responsive.css?v=1.0.0');
-@import url('/css/components/components.css?v=1.0.0');
-@import url('/css/utilities/utilities.css?v=1.0.0');
+@import url('/css/themes/variables.css?v=2.0.0');
+@import url('/css/themes/global.css?v=2.0.0');
+@import url('/css/layout/layout.css?v=2.0.0');
+@import url('/css/layout/responsive.css?v=2.0.0');
+@import url('/css/components/components.css?v=2.0.0');
+@import url('/css/utilities/utilities.css?v=2.0.0');

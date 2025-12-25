@@ -10,7 +10,7 @@ source("R/ui/ui_participant_profile_tab.R", local = TRUE)
 # Create the main UI
 create_main_ui <- function(free_text_questions) {
   # CSS version for cache busting - update this when CSS changes
-  css_version <- "1.0.0"
+  css_version <- "2.0.0"
   
   fluidPage(
     # Include custom CSS with cache busting
