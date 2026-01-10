@@ -275,6 +275,61 @@ generate_prior_experience_plot <- function(df) {
   }
 }
 
+# Generate section breakdown pie chart
+# Creates a pie chart showing the distribution of students across sections
+#
+# Parameters:
+#   df: Data frame containing survey responses
+#
+# Returns:
+#   List with:
+#     - plot: ggplot object with interactive elements for ggiraph rendering
+#     - data: Data frame used for plotting
+generate_section_breakdown_plot <- function(df) {
+  if (!is.null(df) && "section" %in% names(df)) {
+    # Count students per section
+    section_counts <- table(df$section, useNA = "ifany")
+    section_df <- data.frame(
+      section = names(section_counts),
+      count = as.numeric(section_counts),
+      percentage = round(as.numeric(section_counts) / sum(section_counts) * 100, 1),
+      stringsAsFactors = FALSE
+    )
+    
+    # Remove NA if present
+    section_df <- section_df[!is.na(section_df$section), ]
+    
+    # Create pie chart
+    p <- ggplot(section_df, aes(x = "", y = count, fill = section)) +
+      geom_col_interactive(
+        aes(
+          tooltip = paste("Section ", section, ": ", count, " students (", percentage, "%)", sep = ""),
+          data_id = section
+        ),
+        width = 1,
+        color = "white"
+      ) +
+      coord_polar(theta = "y") +
+      scale_fill_brewer(palette = "Set3") +
+      theme_minimal() +
+      theme(
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        legend.position = "right"
+      ) +
+      labs(fill = "Section")
+    
+    return(list(plot = p, data = section_df))
+  } else {
+    p <- ggplot() +
+      geom_blank() +
+      theme_void() +
+      annotate("text", x = 0.5, y = 0.5, label = "Loading data...", size = 5)
+    return(list(plot = p, data = NULL))
+  }
+}
+
 # Generate course satisfaction overview plot
 # Creates a horizontal bar chart showing average scores for course satisfaction questions
 #

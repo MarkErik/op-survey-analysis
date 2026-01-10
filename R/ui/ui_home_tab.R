@@ -39,13 +39,19 @@ create_home_tab <- function() {
             
             div(class = "visualization-container",
               fluidRow(
-                column(6,
+                column(4,
+                  div(class = "chart-container",
+                    h4("Section Distribution"),
+                    girafeOutput("section_breakdown_plot", height = "300px")
+                  )
+                ),
+                column(4,
                   div(class = "chart-container",
                     h4("Learning Preference Distribution"),
                     girafeOutput("learning_preference_plot", height = "300px")
                   )
                 ),
-                column(6,
+                column(4,
                   div(class = "chart-container",
                     h4("Prior Programming Experience"),
                     girafeOutput("prior_experience_plot", height = "300px")

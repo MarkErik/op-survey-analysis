@@ -67,6 +67,13 @@ get_section_comparison_plot <- function(df) {
   return(plot_result$plot)
 }
 
+# Generate section breakdown pie chart
+# Returns a ggplot object with interactive elements for ggiraph rendering
+get_section_breakdown_plot <- function(df) {
+  plot_result <- generate_section_breakdown_plot(df)
+  return(plot_result$plot)
+}
+
 # Generate key themes plot
 # Returns a ggplot object with interactive elements for ggiraph rendering
 get_key_themes_plot <- function(df) {

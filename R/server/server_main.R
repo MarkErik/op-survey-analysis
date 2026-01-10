@@ -113,6 +113,17 @@ create_main_server <- function(free_text_questions) {
       )
     })
     
+    # Generate section breakdown pie chart
+    output$section_breakdown_plot <- renderGirafe({
+      plot <- get_section_breakdown_plot(df())
+      girafe(
+        ggobj = plot,
+        options = list(
+          opts_selection(type = "single")
+        )
+      )
+    })
+    
     # Generate course satisfaction plot
     output$course_satisfaction_plot <- renderGirafe({
       plot <- get_course_satisfaction_plot(df())
