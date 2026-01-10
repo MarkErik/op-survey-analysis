@@ -7,6 +7,7 @@ library(DT)
 library(tidyverse)
 library(stringr)
 library(ggplot2)
+library(ggiraph)
 
 # Source global variables
 source("R/global.R", local = FALSE)

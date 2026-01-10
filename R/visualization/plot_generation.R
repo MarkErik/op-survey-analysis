@@ -12,9 +12,8 @@
 # 2. Render with renderGirafe() and girafe(ggobj=plot)
 # 3. Handle clicks via observeEvent(input$<plot_id>_selected, {...})
 
-# Load required libraries
-library(ggplot2)
-library(ggiraph)
+# Note: All library loading is consolidated in app.R
+# Libraries loaded: shiny, shinyjs, DT, tidyverse, stringr, ggplot2, ggiraph
 
 # Generate response distribution plot
 # Creates an interactive bar chart showing the number of responses per question

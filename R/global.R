@@ -1,11 +1,7 @@
 # Global variables and data loading
 
-# Load required libraries
-library(shiny)
-library(tidyverse)
-library(DT)
-library(stringr)
-library(ggiraph)
+# Note: All library loading is consolidated in app.R
+# Libraries loaded: shiny, shinyjs, DT, tidyverse, stringr, ggplot2, ggiraph
 
 # Define free-text questions
 free_text_questions <- c(
@@ -58,11 +54,4 @@ survey_columns <- list(
 # get_participant_profile, calculate_statistics) are sourced from
 # R/data/data_processing.R in the server module
 
-# Format response for display
-format_response <- function(response) {
-  if (is.null(response) || is.na(response) || response == "") {
-    return("No response provided")
-  }
-  
-  return(response)
-}
+# Note: format_response() function is defined in R/utils/utility_functions.R

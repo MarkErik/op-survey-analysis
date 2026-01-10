@@ -1,8 +1,7 @@
 # Data Processing Module
 
-# Load required libraries
-library(tidyverse)
-library(stringr)
+# Note: All library loading is consolidated in app.R
+# Libraries loaded: shiny, shinyjs, DT, tidyverse, stringr, ggplot2, ggiraph
 
 # Load data
 load_data <- function() {
