@@ -22,9 +22,6 @@ create_main_ui <- function(free_text_questions) {
       )
     ),
     
-    # Note: Chart click handling is now done via ggiraph (input$<plot_id>_selected)
-    # No custom JavaScript needed
-    
     # Header
     create_app_header(),
     

@@ -68,7 +68,6 @@ create_main_server <- function(free_text_questions) {
     })
     
     # Generate response distribution plot
-    # Uses ggiraph for interactivity - click events are captured via input$response_distribution_plot_selected
     output$response_distribution_plot <- renderGirafe({
       plot <- get_response_distribution_plot(df(), free_text_questions)
       girafe(
@@ -80,7 +79,6 @@ create_main_server <- function(free_text_questions) {
     })
     
     # Generate response length plot
-    # Uses ggiraph for interactivity - click events are captured via input$response_length_plot_selected
     output$response_length_plot <- renderGirafe({
       plot <- get_response_length_plot(df(), free_text_questions)
       girafe(

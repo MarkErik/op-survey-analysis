@@ -12,9 +12,6 @@
 # 2. Render with renderGirafe() and girafe(ggobj=plot)
 # 3. Handle clicks via observeEvent(input$<plot_id>_selected, {...})
 
-# Note: All library loading is consolidated in app.R
-# Libraries loaded: shiny, shinyjs, DT, tidyverse, stringr, ggplot2, ggiraph
-
 # Generate response distribution plot
 # Creates an interactive bar chart showing the number of responses per question
 #
@@ -50,8 +47,6 @@ generate_response_distribution_plot <- function(df, free_text_questions) {
     plot_data <- plot_data[order(plot_data$count, decreasing = TRUE), ]
     
     # Create interactive bar plot with ggiraph
-    # - tooltip: Shows question label and response count on hover
-    # - data_id: Question ID used for click detection (input$response_distribution_plot_selected)
     p <- ggplot(plot_data, aes(x = reorder(question_label, -count), y = count)) +
       geom_col_interactive(
         aes(

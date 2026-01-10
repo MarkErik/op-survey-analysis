@@ -1,8 +1,5 @@
 # Data Processing Module
 
-# Note: All library loading is consolidated in app.R
-# Libraries loaded: shiny, shinyjs, DT, tidyverse, stringr, ggplot2, ggiraph
-
 # Load data
 load_data <- function() {
   tryCatch({
@@ -37,8 +34,7 @@ get_participant_profile <- function(df, row_id, responses_data = NULL, current_q
   if (is.null(df) || is.na(row_id) || is.null(responses_data) || is.null(current_question)) {
     return(NULL)
   }
-  
-  # Since we removed timestamp and row_id, we'll use the row index directly
+   
   # Get the selected row from the filtered responses
   selected_response <- responses_data[row_id, ]
   
@@ -54,8 +50,6 @@ get_participant_profile <- function(df, row_id, responses_data = NULL, current_q
     return(NULL)
   }
   
-  # Find the matching row in the original data frame
-  # Only remove Discord columns if the current question is not a Discord question
   if (startsWith(current_question, "discord_")) {
     profile <- df %>%
       filter(!!sym(current_question) == response_content) %>%

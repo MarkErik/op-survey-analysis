@@ -60,6 +60,3 @@ create_participant_profile_ui <- function(participant_data, current_question, fr
   
   return(profile_html)
 }
-
-# These functions are no longer needed since we're using ggiraph for interactive charts
-# The click handling is now handled natively by ggiraph in the server_main.R file

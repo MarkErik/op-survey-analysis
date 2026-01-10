@@ -1,8 +1,5 @@
 # Global variables and data loading
 
-# Note: All library loading is consolidated in app.R
-# Libraries loaded: shiny, shinyjs, DT, tidyverse, stringr, ggplot2, ggiraph
-
 # Define free-text questions
 free_text_questions <- c(
   "free_text_learning_preference" = "Learning Preference",
@@ -49,9 +46,3 @@ survey_columns <- list(
     part_of_university = "x.community..i.feel.like.i.am.a.part.of.the.university.community"
   )
 )
-
-# Note: Data processing functions (load_data, get_responses_for_question,
-# get_participant_profile, calculate_statistics) are sourced from
-# R/data/data_processing.R in the server module
-
-# Note: format_response() function is defined in R/utils/utility_functions.R
