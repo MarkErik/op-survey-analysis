@@ -1,8 +1,8 @@
 services:
-  shiny-app:
+  shiny_app:
     build: .
     ports:
-      - "7008:7008"
+      - "7008"
     volumes:
       # Bind mount for survey data (host path to container path)
       - ./survey_data:/srv/shinyapp/survey_data

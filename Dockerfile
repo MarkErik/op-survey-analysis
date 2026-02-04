@@ -1,7 +1,13 @@
-# Use a base image that supports multi-architecture builds
-FROM r-base:4.3.3
+FROM debian:bookworm-slim
 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+# ---- Core OS deps + CA certs + build toolchain ----
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    gnupg \
     build-essential \
     gfortran \
     libcurl4-openssl-dev \
@@ -17,17 +23,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install R packages needed for the app
-RUN R -e "install.packages(c('shiny', 'shinyjs', 'DT', 'tidyverse', 'ggiraph'), repos='https://cloud.r-project.org/')"
+# ---- Add CRAN repo and install R ----
+RUN curl -fsSL https://cloud.r-project.org/bin/linux/debian/marutter_pubkey.asc \
+    | gpg --dearmor -o /usr/share/keyrings/cran.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/cran.gpg] https://cloud.r-project.org/bin/linux/debian bookworm-cran40/" \
+    > /etc/apt/sources.list.d/cran.list \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends r-base \
+ && rm -rf /var/lib/apt/lists/*
 
-# Create app directory
+# ---- Install R packages and fail if missing ----
+RUN R -q -e "install.packages(c('shiny','shinyjs','DT','tidyverse','ggiraph'), repos='https://cloud.r-project.org/')" \
+ && R -q -e "stopifnot(requireNamespace('shiny', quietly=TRUE))" \
+ && R -q -e "stopifnot(requireNamespace('tidyverse', quietly=TRUE))"
+
+# ---- App ----
 WORKDIR /srv/shinyapp
-
-# Copy app files
 COPY . /srv/shinyapp/
 
-# Expose port
 EXPOSE 7008
-
-# Run the Shiny app as root
-CMD ["R", "-e", "shiny::runApp('/srv/shinyapp', host='0.0.0.0', port=7008)"]
+CMD ["R", "-q", "-e", "shiny::runApp('/srv/shinyapp', host='0.0.0.0', port=7008)"]
