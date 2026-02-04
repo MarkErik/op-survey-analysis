@@ -1,0 +1,35 @@
+# Ignore R project files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+op-survey-analysis.Rproj
+
+# Ignore data files (we want to bind mount these)
+*.csv
+
+# Ignore environment variables
+.env
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore temporary files
+.DS_Store
+tmp/
+temp/
+
+# Ignore R package cache
+R/.Rcache
+
+# Only include what we need for the app
+!app.R
+!Dockerfile
+!docker-compose.yml
+!README.md
+!R/
+!www/
+!survey_data/

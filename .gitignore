@@ -1,8 +1,37 @@
-# R
+# R project files
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+op-survey-analysis.Rproj
 
-# Data
+# Data files
 *.csv
+survey_data/
+
+# Environment variables
+.env
+
+# Docker files
+!.dockerignore
+!Dockerfile
+!docker-compose.yml
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+.DS_Store
+tmp/
+temp/
+
+# R package cache
+R/.Rcache
+
+# Build artifacts
+node_modules/
+dist/
+build/
