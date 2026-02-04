@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
       && rm -rf /var/lib/apt/lists/*
 
 # ---- Install R packages ----
-RUN R -e "install.packages(c('shinyjs','DT', 'ggiraph'), repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('shinyjs','DT', 'ggiraph'), repos='https://cloud.r-project.org/', lib='/usr/local/lib/R/site-library')"
 
 # ---- App ----
 WORKDIR /srv/shinyapp
