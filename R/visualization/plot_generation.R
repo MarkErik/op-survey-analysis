@@ -345,16 +345,17 @@ generate_course_satisfaction_plot <- function(df) {
         responses <- df[[q]]
         responses <- responses[!is.na(responses)]
         if (length(responses) > 0) {
-          # Convert Likert scale to numeric
-          numeric_responses <- sapply(responses, function(r) {
-            if (grepl("Strongly Disagree", r)) return(1)
-            if (grepl("Disagree", r) && !grepl("Strongly", r)) return(2)
-            if (grepl("Neutral", r)) return(3)
-            if (grepl("Agree", r) && !grepl("Strongly", r)) return(4)
-            if (grepl("Strongly Agree", r)) return(5)
-            return(NA)
-          })
-          mean(numeric_responses, na.rm = TRUE)
+         # Convert Likert scale to numeric by stripping all non-numeric characters
+         # This handles both pure numbers (e.g., "4") and numbered scales (e.g., "5 - Strongly Agree")
+         numeric_responses <- sapply(responses, function(r) {
+           # Extract only digits from the response
+           numeric_value <- gsub("[^0-9]", "", r)
+           if (numeric_value != "") {
+             return(as.numeric(numeric_value))
+           }
+           return(NA)
+         })
+         mean(numeric_responses, na.rm = TRUE)
         } else {
           NA
         }
@@ -587,16 +588,17 @@ generate_community_connection_plot <- function(df) {
         responses <- df[[q]]
         responses <- responses[!is.na(responses)]
         if (length(responses) > 0) {
-          # Convert Likert scale to numeric
-          numeric_responses <- sapply(responses, function(r) {
-            if (grepl("Not at all", r)) return(1)
-            if (grepl("Not very much", r)) return(2)
-            if (grepl("Somewhat", r)) return(3)
-            if (grepl("Very much", r) && !grepl("Very much so", r)) return(4)
-            if (grepl("Very much so", r)) return(5)
-            return(NA)
-          })
-          mean(numeric_responses, na.rm = TRUE)
+         # Convert Likert scale to numeric by stripping all non-numeric characters
+         # This handles both pure numbers (e.g., "4") and numbered scales (e.g., "5 - Very much so")
+         numeric_responses <- sapply(responses, function(r) {
+           # Extract only digits from the response
+           numeric_value <- gsub("[^0-9]", "", r)
+           if (numeric_value != "") {
+             return(as.numeric(numeric_value))
+           }
+           return(NA)
+         })
+         mean(numeric_responses, na.rm = TRUE)
         } else {
           NA
         }
@@ -675,12 +677,13 @@ generate_section_comparison_plot <- function(df) {
           responses <- sec_data[[q]]
           responses <- responses[!is.na(responses)]
           if (length(responses) > 0) {
+            # Convert Likert scale to numeric by stripping all non-numeric characters
             numeric_responses <- sapply(responses, function(r) {
-              if (grepl("Strongly Disagree", r)) return(1)
-              if (grepl("Disagree", r) && !grepl("Strongly", r)) return(2)
-              if (grepl("Neutral", r)) return(3)
-              if (grepl("Agree", r) && !grepl("Strongly", r)) return(4)
-              if (grepl("Strongly Agree", r)) return(5)
+              # Extract only digits from the response
+              numeric_value <- gsub("[^0-9]", "", r)
+              if (numeric_value != "") {
+                return(as.numeric(numeric_value))
+              }
               return(NA)
             })
             mean(numeric_responses, na.rm = TRUE)
