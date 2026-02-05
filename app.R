@@ -25,4 +25,4 @@ ui <- create_main_ui(free_text_questions)
 server <- create_main_server(free_text_questions)
 
 # Create the Shiny app
-shinyApp(ui = ui, server = server, options = list(port = 7008))
+shinyApp(ui = ui, server = server, options = list(port = 3838))
