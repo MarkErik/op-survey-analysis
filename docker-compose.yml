@@ -1,7 +1,8 @@
 services:
   op_shiny:
-    build: 
+    build:
       context: .
+    image: op_shiny
     container_name: op_shiny
     restart: unless-stopped
     volumes:
@@ -10,22 +11,20 @@ services:
     networks:
       - default
   
-  nginx_op_shiny:
-    image: nginx:alpine
-    container_name: nginx_op_shiny
+  shinyproxy:
+    image: openanalytics/shinyproxy:latest
+    container_name: shinyproxy
     restart: unless-stopped
-    depends_on: 
-      - op_shiny
     volumes:
-     - ./.htpasswd:/etc/nginx/htpasswd:ro
-     - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    environment: 
+      - ./application.yml:/opt/shinyproxy/application.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
       - VIRTUAL_HOST
       - LETSENCRYPT_HOST
       - LETSENCRYPT_EMAIL
     networks:
-     - default
-     - outside
+      - default
+      - outside
 
 networks:
   default:

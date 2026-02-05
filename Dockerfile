@@ -32,5 +32,8 @@ RUN R -e "install.packages(c('shinyjs', 'DT', 'ggiraph'))"
 # ---- App ----
 COPY . /srv/shiny-server/
 
-# Expose port 3838 (Shiny Server default)
-EXPOSE 3838
+# Expose port 8080 (ShinyProxy default)
+EXPOSE 8080
+
+# Configure Shiny Server to listen on port 8080
+RUN sed -i 's/listen 3838/listen 8080/g' /etc/shiny-server/shiny-server.conf
