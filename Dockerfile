@@ -1,7 +1,7 @@
 # For x86-based systems
 FROM rocker/shiny-verse:4.5
 
-# For Apple Silicon ARM
+# For Apple Silicon
 #FROM --platform=linux/amd64 rocker/shiny-verse:4.5
 
 
