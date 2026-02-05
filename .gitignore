@@ -11,6 +11,8 @@ survey_data/
 
 # Environment variables
 .env
+htpasswd
+.htpasswd
 
 # Docker files
 !.dockerignore

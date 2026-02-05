@@ -7,13 +7,11 @@ services:
     volumes:
       # Bind mount for survey data (host path to container path)
       - ./survey_data:/srv/shinyapp/survey_data
-    environment:
-      - SHINY_PORT=7008
     networks:
       - default
   
   nginx_op_shiny:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: nginx_op_shiny
     restart: unless-stopped
     depends_on: 

@@ -1,4 +1,9 @@
+# For x86-based systems
 FROM rocker/shiny-verse:4.5
+
+# For Apple Silicon ARM
+#FROM --platform=linux/amd64 rocker/shiny-verse:4.5
+
 
 # ---- Core OS deps + CA certs + build toolchain ----
 RUN apt-get update && apt-get install -y \
@@ -21,11 +26,11 @@ RUN apt-get update && apt-get install -y \
       && rm -rf /var/lib/apt/lists/*
 
 # ---- Install R packages ----
-RUN R -e "install.packages(c('shinyjs','DT', 'ggiraph'), repos='https://cloud.r-project.org/', lib='/usr/local/lib/R/site-library')"
+RUN R -e "install.packages(c('shinyjs', 'DT', 'ggiraph'))"
+
 
 # ---- App ----
-WORKDIR /srv/shinyapp
-COPY . /srv/shinyapp/
+COPY . /srv/shiny-server/
 
-EXPOSE 7008
-CMD ["R", "-q", "-e", "shiny::runApp('/srv/shinyapp', host='0.0.0.0', port=7008)"]
+# Expose port 3838 (Shiny Server default)
+EXPOSE 3838

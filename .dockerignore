@@ -10,6 +10,11 @@ op-survey-analysis.Rproj
 
 # Ignore environment variables
 .env
+.rooignore
+
+# Ignore passwords
+.htpasswd
+htpasswd
 
 # Ignore IDE and editor files
 .vscode/
