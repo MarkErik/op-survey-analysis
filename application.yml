@@ -6,17 +6,14 @@ proxy:
   heartbeat-timeout: 60000
   port: 80
   authentication: simple
-  admin-groups: admins
-  
-  # Simple file-based authentication
-  authentication-simple:
-    users:
+  admin-groups: scientists
+  users:
     - name: admin
-      password: admin
-      roles: ADMIN
+      password: admin123
+      groups: scientists
     - name: user
-      password: user
-      roles: USER
+      password: user123
+      groups: mathematicians
   
   # Docker configuration
   docker:
