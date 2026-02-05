@@ -17,7 +17,7 @@ services:
     depends_on: 
       - op_shiny
     volumes:
-     - ./.htpasswd:/etc/nginx/.htpasswd:ro
+     - ./.htpasswd:/etc/nginx/htpasswd:ro
      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     environment: 
       - VIRTUAL_HOST
