@@ -1,5 +1,5 @@
 server:
-  use-forward-headers: true
+  forward-headers-strategy: framework
 
 proxy:
   title: OP Survey Analysis
