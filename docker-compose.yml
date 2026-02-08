@@ -4,7 +4,7 @@ services:
     container_name: shinyproxy
     restart: unless-stopped
     group_add:
-      - ${DOCKER_GID:-999}
+      - ${DOCKER_GID:-998}
     expose:
       - "80"
     volumes:
