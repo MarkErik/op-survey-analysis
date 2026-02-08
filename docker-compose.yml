@@ -1,20 +1,10 @@
 services:
-  op_shiny:
-    build:
-      context: .
-    image: op_shiny
-    container_name: op_shiny
-    restart: unless-stopped
-    volumes:
-      # Bind mount for survey data (host path to container path)
-      - ./survey_data:/srv/shinyapp/survey_data
-    networks:
-      - default
-  
   shinyproxy:
     image: openanalytics/shinyproxy:latest
     container_name: shinyproxy
     restart: unless-stopped
+    group_add:
+      - ${DOCKER_GID:-999}
     expose:
       - "80"
     volumes:

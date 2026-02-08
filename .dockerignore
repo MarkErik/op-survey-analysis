@@ -5,8 +5,10 @@
 .Ruserdata
 op-survey-analysis.Rproj
 
-# Ignore data files (we want to bind mount these)
+# Ignore data files (except survey_data which is copied during build)
+# Allow CSV files in survey_data since we COPY them during build
 *.csv
+!survey_data/*.csv
 
 # Ignore environment variables
 .env
