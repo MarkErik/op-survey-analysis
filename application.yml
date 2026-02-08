@@ -1,3 +1,6 @@
+server:
+  use-forward-headers: true
+
 proxy:
   title: OP Survey Analysis
   logo-url: https://www.openanalytics.eu/shinyproxy/logo.png
@@ -5,8 +8,8 @@ proxy:
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
   port: 80
+  proxy-url: https://somethingfix.com
   authentication: simple
-  forward-headers-strategy: framework
   admin-groups: scientists
   users:
     - name: admin
