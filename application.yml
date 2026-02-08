@@ -30,6 +30,6 @@ proxy:
   - id: op-survey
     display-name: OP Survey Analysis
     description: Survey data analysis application
-    container-cmd: ["R", "-e", "shiny::runApp('/srv/shiny-server', port=3838)"]
+    container-cmd: ["R", "-e", "shiny::runApp('/srv/shiny-server', host='0.0.0.0', port=3838)"]
     container-image: op_shiny
     container-network: internal_op_shiny
