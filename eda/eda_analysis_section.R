@@ -1,6 +1,6 @@
-# Exploratory Data Analysis (EDA) Script for Survey Data
+# Exploratory Data Analysis (EDA) Script by Section
 # This script calculates descriptive statistics and generates histograms
-# for all Likert scale-type questions in the survey data.
+# for all Likert scale-type questions, broken down by class section.
 
 # Required libraries
 library(ggplot2)
@@ -15,7 +15,7 @@ library(stringr)
 
 load_data <- function() {
   tryCatch({
-    df <- read.csv("survey_data/exported_data.csv", stringsAsFactors = FALSE)
+    df <- read.csv("../survey_data/exported_data.csv", stringsAsFactors = FALSE)
     # Clean column names
     names(df) <- tolower(names(df))
     # Remove any leading/trailing whitespace from character columns
@@ -175,13 +175,17 @@ calculate_mode <- function(x) {
   ux[which.max(tabulate(match(x, ux)))]
 }
 
-# Calculate comprehensive statistics for a question
-calculate_statistics <- function(df, column_name, question_label, scale) {
+# Calculate comprehensive statistics for a question (by section)
+calculate_statistics_by_section <- function(df, column_name, question_label, scale, section) {
+  # Filter by section
+  df_section <- df[df$section == section, ]
+  
   # Check if column exists
-  if (!column_name %in% names(df)) {
+  if (!column_name %in% names(df_section)) {
     return(list(
       question = question_label,
       column = column_name,
+      section = section,
       status = "Column not found",
       n = 0,
       mean = NA,
@@ -198,7 +202,7 @@ calculate_statistics <- function(df, column_name, question_label, scale) {
   }
   
   # Extract responses
-  responses <- df[[column_name]]
+  responses <- df_section[[column_name]]
   
   # Calculate basic counts
   total_responses <- length(responses)
@@ -209,6 +213,7 @@ calculate_statistics <- function(df, column_name, question_label, scale) {
     return(list(
       question = question_label,
       column = column_name,
+      section = section,
       status = "No valid responses",
       n = 0,
       mean = NA,
@@ -232,6 +237,7 @@ calculate_statistics <- function(df, column_name, question_label, scale) {
     return(list(
       question = question_label,
       column = column_name,
+      section = section,
       status = "No valid numeric conversions",
       n = valid_responses,
       mean = NA,
@@ -251,6 +257,7 @@ calculate_statistics <- function(df, column_name, question_label, scale) {
   stats <- list(
     question = question_label,
     column = column_name,
+    section = section,
     status = "OK",
     n = length(numeric_values),
     mean = round(mean(numeric_values), 3),
@@ -272,15 +279,18 @@ calculate_statistics <- function(df, column_name, question_label, scale) {
 # HISTOGRAM GENERATION
 # =============================================================================
 
-# Generate histogram for a single question
-generate_histogram <- function(df, column_name, question_label, scale) {
+# Generate histogram for a single question (by section)
+generate_histogram_by_section <- function(df, column_name, question_label, scale, section) {
+  # Filter by section
+  df_section <- df[df$section == section, ]
+  
   # Check if column exists
-  if (!column_name %in% names(df)) {
+  if (!column_name %in% names(df_section)) {
     return(NULL)
   }
   
   # Extract and convert responses
-  responses <- df[[column_name]]
+  responses <- df_section[[column_name]]
   numeric_values <- convert_to_numeric(responses, scale)
   numeric_values <- numeric_values[!is.na(numeric_values)]
   
@@ -313,7 +323,7 @@ generate_histogram <- function(df, column_name, question_label, scale) {
       expand = expansion(mult = c(0.05, 0.05))
     ) +
     labs(
-      title = question_label,
+      title = paste0(question_label, " - ", section),
       x = "Response",
       y = "Count",
       subtitle = paste0("n = ", sum(freq_table))
@@ -332,14 +342,21 @@ generate_histogram <- function(df, column_name, question_label, scale) {
 # MAIN ANALYSIS
 # =============================================================================
 
-# Run complete EDA analysis
-run_eda_analysis <- function() {
+# Run complete EDA analysis by section
+run_eda_analysis_by_section <- function() {
   message("\n========================================")
-  message("EXPLORATORY DATA ANALYSIS")
+  message("EXPLORATORY DATA ANALYSIS BY SECTION")
   message("========================================\n")
   
   # Load data
   df <- load_data()
+  
+  # Get unique sections (excluding NA)
+  sections <- unique(df$section)
+  sections <- sections[!is.na(sections)]
+  sections <- sort(sections)
+  
+  message("Found ", length(sections), " sections: ", paste(sections, collapse = ", "), "\n")
   
   # Initialize results storage
   all_stats <- list()
@@ -357,27 +374,38 @@ run_eda_analysis <- function() {
       
       message("Analyzing: ", question_info$label)
       
-      # Calculate statistics
-      stats <- calculate_statistics(
-        df = df,
-        column_name = question_info$column,
-        question_label = question_info$label,
-        scale = question_info$scale
-      )
+      question_stats <- list()
+      question_plots <- list()
       
-      category_stats[[question_name]] <- stats
-      
-      # Generate histogram
-      plot <- generate_histogram(
-        df = df,
-        column_name = question_info$column,
-        question_label = question_info$label,
-        scale = question_info$scale
-      )
-      
-      if (!is.null(plot)) {
-        category_plots[[question_name]] <- plot
+      # Process each section
+      for (section in sections) {
+        # Calculate statistics
+        stats <- calculate_statistics_by_section(
+          df = df,
+          column_name = question_info$column,
+          question_label = question_info$label,
+          scale = question_info$scale,
+          section = section
+        )
+        
+        question_stats[[section]] <- stats
+        
+        # Generate histogram
+        plot <- generate_histogram_by_section(
+          df = df,
+          column_name = question_info$column,
+          question_label = question_info$label,
+          scale = question_info$scale,
+          section = section
+        )
+        
+        if (!is.null(plot)) {
+          question_plots[[section]] <- plot
+        }
       }
+      
+      category_stats[[question_name]] <- question_stats
+      category_plots[[question_name]] <- question_plots
     }
     
     all_stats[[category]] <- category_stats
@@ -388,7 +416,8 @@ run_eda_analysis <- function() {
   return(list(
     stats = all_stats,
     plots = all_plots,
-    data = df
+    data = df,
+    sections = sections
   ))
 }
 
@@ -396,80 +425,95 @@ run_eda_analysis <- function() {
 # OUTPUT FUNCTIONS
 # =============================================================================
 
-# Print statistics summary
-print_statistics_summary <- function(results) {
+# Print statistics summary by section
+print_statistics_summary_by_section <- function(results) {
   message("\n========================================")
-  message("STATISTICS SUMMARY")
+  message("STATISTICS SUMMARY BY SECTION")
   message("========================================\n")
   
   for (category in names(results$stats)) {
-    message("\n### ", toupper(category), " ###\n")
-    
-    # Create data frame for this category
-    stats_df <- do.call(rbind, lapply(results$stats[[category]], function(x) {
-      data.frame(
-        Question = x$question,
-        N = x$n,
-        Mean = x$mean,
-        Median = x$median,
-        Mode = x$mode,
-        SD = x$sd,
-        SE = x$se,
-        Min = x$min,
-        Max = x$max,
-        Q1 = x$q1,
-        Q3 = x$q3,
-        Missing = x$missing,
-        stringsAsFactors = FALSE
-      )
-    }))
-    
-    print(stats_df, row.names = FALSE)
-    message("\n")
+    for (question_name in names(results$stats[[category]])) {
+      question_label <- results$stats[[category]][[question_name]][[1]]$question
+      
+      message("\n### ", question_label, " ###\n")
+      
+      # Create data frame for this question across all sections
+      stats_df <- do.call(rbind, lapply(results$stats[[category]][[question_name]], function(x) {
+        data.frame(
+          Section = x$section,
+          N = x$n,
+          Mean = x$mean,
+          Median = x$median,
+          Mode = x$mode,
+          SD = x$sd,
+          SE = x$se,
+          Min = x$min,
+          Max = x$max,
+          Q1 = x$q1,
+          Q3 = x$q3,
+          Missing = x$missing,
+          stringsAsFactors = FALSE
+        )
+      }))
+      
+      print(stats_df, row.names = FALSE)
+      message("\n")
+    }
   }
 }
 
-# Save statistics to CSV
-save_statistics_csv <- function(results, output_file = "eda_statistics.csv") {
+# Save statistics to CSV (by section)
+save_statistics_csv_by_section <- function(results, output_file = "eda_statistics_by_section.csv") {
   all_stats_df <- data.frame()
   
   for (category in names(results$stats)) {
-    category_df <- do.call(rbind, lapply(results$stats[[category]], function(x) {
-      data.frame(
-        Category = category,
-        Question = x$question,
-        Column = x$column,
-        Status = x$status,
-        N = x$n,
-        Mean = x$mean,
-        Median = x$median,
-        Mode = x$mode,
-        SD = x$sd,
-        SE = x$se,
-        Min = x$min,
-        Max = x$max,
-        Q1 = x$q1,
-        Q3 = x$q3,
-        Missing = x$missing,
-        stringsAsFactors = FALSE
-      )
-    }))
-    all_stats_df <- rbind(all_stats_df, category_df)
+    for (question_name in names(results$stats[[category]])) {
+      category_df <- do.call(rbind, lapply(results$stats[[category]][[question_name]], function(x) {
+        data.frame(
+          Category = category,
+          Question = x$question,
+          Column = x$column,
+          Section = x$section,
+          Status = x$status,
+          N = x$n,
+          Mean = x$mean,
+          Median = x$median,
+          Mode = x$mode,
+          SD = x$sd,
+          SE = x$se,
+          Min = x$min,
+          Max = x$max,
+          Q1 = x$q1,
+          Q3 = x$q3,
+          Missing = x$missing,
+          stringsAsFactors = FALSE
+        )
+      }))
+      all_stats_df <- rbind(all_stats_df, category_df)
+    }
   }
   
   write.csv(all_stats_df, output_file, row.names = FALSE)
   message("Statistics saved to: ", output_file)
 }
 
-# Save histograms to PDF
-save_histograms_pdf <- function(results, output_file = "eda_histograms.pdf") {
-  pdf(output_file, width = 10, height = 6)
+# Save histograms to PDF (by section - all sections for each question on one page)
+save_histograms_pdf_by_section <- function(results, output_file = "eda_histograms_by_section.pdf") {
+  pdf(output_file, width = 14, height = 10)
   
   for (category in names(results$plots)) {
     for (question_name in names(results$plots[[category]])) {
-      plot <- results$plots[[category]][[question_name]]
-      if (!is.null(plot)) {
-        print(plot)
+      plots_list <- results$plots[[category]][[question_name]]
+      
+      # Filter out NULL plots
+      plots_list <- plots_list[!sapply(plots_list, is.null)]
+      
+      if (length(plots_list) > 0) {
+        # Arrange all section plots for this question in a grid
+        grid.arrange(grobs = plots_list, ncol = 2, nrow = 3,
+                     top = grid::textGrob(paste(toupper(category), "-", 
+                                                results$stats[[category]][[question_name]][[1]]$question),
+                                          gp = grid::gpar(fontsize = 14, fontface = "bold")))
       }
     }
   }
@@ -478,8 +522,8 @@ save_histograms_pdf <- function(results, output_file = "eda_histograms.pdf") {
   message("Histograms saved to: ", output_file)
 }
 
-# Save histograms as individual PNG files
-save_histograms_png <- function(results, output_dir = "eda_histograms") {
+# Save histograms as individual PNG files (by section)
+save_histograms_png_by_section <- function(results, output_dir = "eda_histograms_by_section") {
   # Create output directory if it doesn't exist
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
@@ -487,19 +531,23 @@ save_histograms_png <- function(results, output_dir = "eda_histograms") {
   
   for (category in names(results$plots)) {
     for (question_name in names(results$plots[[category]])) {
-      plot <- results$plots[[category]][[question_name]]
-      if (!is.null(plot)) {
-        # Create safe filename
-        safe_name <- gsub("[^a-zA-Z0-9]", "_", question_name)
-        filename <- file.path(output_dir, paste0(category, "_", safe_name, ".png"))
+      for (section in names(results$plots[[category]][[question_name]])) {
+        plot <- results$plots[[category]][[question_name]][[section]]
         
-        ggsave(
-          filename = filename,
-          plot = plot,
-          width = 10,
-          height = 6,
-          dpi = 300
-        )
+        if (!is.null(plot)) {
+          # Create safe filename
+          safe_question <- gsub("[^a-zA-Z0-9]", "_", question_name)
+          safe_section <- gsub("[^a-zA-Z0-9]", "_", section)
+          filename <- file.path(output_dir, paste0(category, "_", safe_question, "_", safe_section, ".png"))
+          
+          ggsave(
+            filename = filename,
+            plot = plot,
+            width = 10,
+            height = 6,
+            dpi = 300
+          )
+        }
       }
     }
   }
@@ -512,21 +560,21 @@ save_histograms_png <- function(results, output_dir = "eda_histograms") {
 # =============================================================================
 
 # Run the analysis
-results <- run_eda_analysis()
+results <- run_eda_analysis_by_section()
 
 # Print summary to console
-print_statistics_summary(results)
+print_statistics_summary_by_section(results)
 
 # Save outputs
-save_statistics_csv(results)
-save_histograms_pdf(results)
-save_histograms_png(results)
+save_statistics_csv_by_section(results)
+save_histograms_pdf_by_section(results)
+save_histograms_png_by_section(results)
 
 message("\n========================================")
-message("EDA ANALYSIS COMPLETE")
+message("EDA ANALYSIS BY SECTION COMPLETE")
 message("========================================")
 message("\nGenerated files:")
-message("  - eda_statistics.csv (summary statistics)")
-message("  - eda_histograms.pdf (all histograms in one file)")
-message("  - eda_histograms/ (individual PNG files)")
+message("  - eda_statistics_by_section.csv (summary statistics by section)")
+message("  - eda_histograms_by_section.pdf (all histograms by section)")
+message("  - eda_histograms_by_section/ (individual PNG files by section)")
 message("\n")
