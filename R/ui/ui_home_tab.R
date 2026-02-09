@@ -41,7 +41,7 @@ create_home_tab <- function() {
               fluidRow(
                 column(4,
                   div(class = "chart-container",
-                    h4("Section Distribution"),
+                    h4("Responses per Section"),
                     girafeOutput("section_breakdown_plot", height = "300px")
                   )
                 ),

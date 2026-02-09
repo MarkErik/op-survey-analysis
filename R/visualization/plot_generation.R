@@ -269,8 +269,8 @@ generate_prior_experience_plot <- function(df) {
   }
 }
 
-# Generate section breakdown pie chart
-# Creates a pie chart showing the distribution of students across sections
+# Generate section breakdown bar chart
+# Creates a bar chart showing the distribution of students across sections
 #
 # Parameters:
 #   df: Data frame containing survey responses
@@ -293,26 +293,41 @@ generate_section_breakdown_plot <- function(df) {
     # Remove NA if present
     section_df <- section_df[!is.na(section_df$section), ]
     
-    # Create pie chart
-    p <- ggplot(section_df, aes(x = "", y = count, fill = section)) +
+    # Define custom ordering: 217 first (11am, 1pm, 3pm), then 231 (11am, 1pm, 3pm)
+    time_order <- c("11am", "1pm", "3pm")
+    section_order <- c("217", "231")
+    
+    # Extract section number and time for ordering
+    section_df$section_num <- gsub("^(\\d+).*", "\\1", section_df$section)
+    section_df$time <- gsub("^\\d+\\s*-\\s*", "", section_df$section)
+    
+    # Create factor levels for custom ordering
+    section_df$section <- factor(section_df$section,
+                                  levels = paste0(rep(section_order, each = length(time_order)),
+                                                  " - ", time_order))
+    
+    # Sort by the factor levels
+    section_df <- section_df[order(section_df$section), ]
+    
+    # Create bar chart with different shades for 217 and 231
+    p <- ggplot(section_df, aes(x = section, y = count, fill = section_num)) +
       geom_col_interactive(
         aes(
-          tooltip = paste("Section ", section, ": ", count, " students (", percentage, "%)", sep = ""),
+          tooltip = paste("Section ", section, ": ", count, " responses (", percentage, "%)", sep = ""),
           data_id = section
         ),
-        width = 1,
-        color = "white"
+        width = 0.7
       ) +
-      coord_polar(theta = "y") +
-      scale_fill_brewer(palette = "Set3") +
+      scale_fill_manual(values = c("217" = "#3498db", "231" = "#5dade2")) +
+      scale_x_discrete(drop = FALSE) +
       theme_minimal() +
       theme(
-        axis.title = element_blank(),
-        axis.text = element_blank(),
-        panel.grid = element_blank(),
-        legend.position = "right"
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none"
       ) +
-      labs(fill = "Section")
+      labs(x = "Section", y = "Number of Responses")
     
     return(list(plot = p, data = section_df))
   } else {
