@@ -154,7 +154,7 @@ generate_response_length_plot <- function(df, free_text_questions) {
 }
 
 # Generate learning preference distribution plot
-# Creates a pie/donut chart showing distribution of learning preferences
+# Creates a bar chart showing distribution of learning preferences
 #
 # Parameters:
 #   df: Data frame containing survey responses
@@ -177,26 +177,27 @@ generate_learning_preference_plot <- function(df) {
     # Remove NA if present
     pref_df <- pref_df[!is.na(pref_df$preference), ]
     
-    # Create donut chart
-    p <- ggplot(pref_df, aes(x = "", y = count, fill = preference)) +
+    # Order by count descending
+    pref_df <- pref_df[order(pref_df$count, decreasing = TRUE), ]
+    
+    # Create bar chart with 3 distinct colors
+    p <- ggplot(pref_df, aes(x = preference, y = count, fill = preference)) +
       geom_col_interactive(
         aes(
           tooltip = paste(preference, ": ", count, " (", percentage, "%)", sep = ""),
           data_id = preference
         ),
-        width = 1,
-        color = "white"
+        width = 0.7
       ) +
-      coord_polar(theta = "y") +
-      scale_fill_brewer(palette = "Set2") +
+      scale_fill_manual(values = c("In-person" = "#3498db", "Online" = "#2ecc71", "No preference" = "#f39c12")) +
       theme_minimal() +
       theme(
-        axis.title = element_blank(),
-        axis.text = element_blank(),
-        panel.grid = element_blank(),
-        legend.position = "right"
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none"
       ) +
-      labs(fill = "Learning Preference")
+      labs(x = "Learning Preference", y = "Number of Responses")
     
     return(list(plot = p, data = pref_df))
   } else {
