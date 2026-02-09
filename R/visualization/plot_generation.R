@@ -189,7 +189,7 @@ generate_learning_preference_plot <- function(df) {
         ),
         width = 0.7
       ) +
-      scale_fill_manual(values = c("In-person" = "#3498db", "Online" = "#2ecc71", "No preference" = "#f39c12")) +
+      scale_fill_manual(values = c("In-person" = "#f8b4b4", "Online" = "#a8e6cf", "No preference" = "#ffd3b6")) +
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
