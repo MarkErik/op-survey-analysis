@@ -109,49 +109,21 @@ create_home_tab <- function() {
           
           # Low Priority Insights
           div(class = "insights-section",
-            h3("Section Comparison & Key Themes"),
-            p("Comparison across sections and common themes from free text responses."),
+            h3("Section Comparison"),
+            p("Comparison across sections."),
             
             div(class = "visualization-container",
               fluidRow(
-                column(6,
+                column(12,
                   div(class = "chart-container",
                     h4("Section Comparison"),
                     girafeOutput("section_comparison_plot", height = "300px")
-                  )
-                ),
-                column(6,
-                  div(class = "chart-container",
-                    h4("Key Themes from Free Text"),
-                    girafeOutput("key_themes_plot", height = "300px")
                   )
                 )
               )
             )
           ),
           
-          # Original Response Insights
-          div(class = "insights-section",
-            h3("Response Analysis"),
-            p("Visual overview of the survey data and response patterns."),
-            
-            div(class = "visualization-container",
-              fluidRow(
-                column(6,
-                  div(class = "chart-container",
-                    h4("Response Distribution"),
-                    girafeOutput("response_distribution_plot", height = "300px")
-                  )
-                ),
-                column(6,
-                  div(class = "chart-container",
-                    h4("Response Length by Question"),
-                    girafeOutput("response_length_plot", height = "300px")
-                  )
-                )
-              )
-            )
-          )
         )
       )
     )
