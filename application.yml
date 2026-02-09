@@ -7,8 +7,8 @@ proxy:
   landing-page: /app/op-survey
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
-  port: 80
-  proxy-url: https://somethingfix.com
+  port: 8080
+  proxy-url: ${PROXY_URL}
   authentication: simple
   hide-navbar: true
   admin-groups: scientists
@@ -29,7 +29,7 @@ proxy:
   # Application definition
   specs:
   - id: op-survey
-    display-name: OP Survey Analysis
+    display-name: Online Pathways Survey Analysis
     description: Survey data analysis application
     container-cmd: ["R", "-e", "shiny::runApp('/srv/shiny-server', host='0.0.0.0', port=3838)"]
     container-image: op_shiny
