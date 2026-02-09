@@ -37,3 +37,7 @@ R/.Rcache
 node_modules/
 dist/
 build/
+
+# Outputs
+*.pdf
+*.png

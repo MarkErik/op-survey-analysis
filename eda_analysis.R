@@ -1,0 +1,532 @@
+# Exploratory Data Analysis (EDA) Script for Survey Data
+# This script calculates descriptive statistics and generates histograms
+# for all Likert scale-type questions in the survey data.
+
+# Required libraries
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+library(scales)
+library(stringr)
+
+# =============================================================================
+# DATA LOADING
+# =============================================================================
+
+load_data <- function() {
+  tryCatch({
+    df <- read.csv("survey_data/exported_data.csv", stringsAsFactors = FALSE)
+    # Clean column names
+    names(df) <- tolower(names(df))
+    # Remove any leading/trailing whitespace from character columns
+    df <- df %>% mutate(across(where(is.character), str_trim))
+    message("Data loaded successfully: ", nrow(df), " rows, ", ncol(df), " columns")
+    return(df)
+  }, error = function(e) {
+    stop("Error loading data: ", e$message)
+  })
+}
+
+# =============================================================================
+# LIKERT SCALE DEFINITIONS
+# =============================================================================
+
+# Define Likert scale questions and their response mappings
+likert_questions <- list(
+  course = list(
+    excited = list(
+      column = "x.course..i.am.excited.about.the.content.and.material.that.i.m.learning",
+      label = "Excited about content and material",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    relevant = list(
+      column = "x.course..the.content.is.relevant.and.up.to.date",
+      label = "Content is relevant and up to date",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    meeting_goals = list(
+      column = "x.course..i.feel.like.i.am.meeting.the.goals.of.learning.python.in.this.course",
+      label = "Meeting learning goals",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    apply_scenario = list(
+      column = "x.course..i.feel.like.i.could.take.what.i.m.learning.and.apply.it.in.a.new.scenario",
+      label = "Can apply learning to new scenarios",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    feedback = list(
+      column = "x.course..i.m.satisfied.with.the.level.of.feedback.i.receive",
+      label = "Satisfied with feedback level",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    ask_help = list(
+      column = "x.course..it.s.easy.to.ask.for.help",
+      label = "Easy to ask for help",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    )
+  ),
+  learning = list(
+    pre_written_code = list(
+      column = "x.learning..explanations.of.pre.written.code",
+      label = "Explanations of pre-written code",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    live_coding = list(
+      column = "x.learning..live.coding.by.the.professor",
+      label = "Live coding by professor",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    slides = list(
+      column = "x.learning..presentation.slides",
+      label = "Presentation slides",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    handouts = list(
+      column = "x.learning..post.class.handouts.and.notes",
+      label = "Post-class handouts and notes",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    tophat_quizzes = list(
+      column = "x.learning..tophat.quizzes",
+      label = "TopHat quizzes",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    assignments = list(
+      column = "x.learning..assignments",
+      label = "Assignments",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    labs = list(
+      column = "x.learning..labs",
+      label = "Labs",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    ask_questions = list(
+      column = "x.learning..being.able.to.ask.questions.of.the.professor.during.lecture",
+      label = "Asking questions during lecture",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    studying_midterms = list(
+      column = "x.learning..studying.for.midterms",
+      label = "Studying for midterms",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    ),
+    coding_own = list(
+      column = "x.learning..coding.on.my.own",
+      label = "Coding on my own",
+      scale = c("Doesn't contribute", "Somewhat contributes", "Contributes", "Very helpful", "Essential")
+    )
+  ),
+  community = list(
+    friends_important = list(
+      column = "x.community..making.friends.within.the.class.is.important.to.me",
+      label = "Making friends is important",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    easy_meet = list(
+      column = "x.community..it.s.easy.to.meet.new.people.within.the.class",
+      label = "Easy to meet new people",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    part_of_class = list(
+      column = "x.community..i.feel.like.i.am.a.part.of.this.class",
+      label = "Feel part of this class",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    comfortable_speaking = list(
+      column = "x.community..i.feel.comfortable.speaking.up.in.class",
+      label = "Comfortable speaking in class",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    ),
+    part_of_university = list(
+      column = "x.community..i.feel.like.i.am.a.part.of.the.university.community",
+      label = "Feel part of university community",
+      scale = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+    )
+  )
+)
+
+# =============================================================================
+# STATISTICAL FUNCTIONS
+# =============================================================================
+
+# Convert text responses to numeric scores (1-5)
+convert_to_numeric <- function(responses, scale) {
+  # Remove all non-numeric characters to extract the score
+  # Handles formats like "5 - Strongly Agree", "4", "3", etc.
+  numeric_values <- sapply(responses, function(r) {
+    if (is.na(r) || r == "") {
+      return(NA)
+    }
+    
+    # Extract numeric value by removing all non-numeric characters
+    numeric_value <- as.numeric(gsub("[^0-9]", "", r))
+    
+    return(numeric_value)
+  })
+  
+  return(as.numeric(numeric_values))
+}
+
+# Calculate mode (most frequent value)
+calculate_mode <- function(x) {
+  ux <- na.omit(unique(x))
+  if (length(ux) == 0) return(NA)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+# Calculate comprehensive statistics for a question
+calculate_statistics <- function(df, column_name, question_label, scale) {
+  # Check if column exists
+  if (!column_name %in% names(df)) {
+    return(list(
+      question = question_label,
+      column = column_name,
+      status = "Column not found",
+      n = 0,
+      mean = NA,
+      median = NA,
+      mode = NA,
+      sd = NA,
+      se = NA,
+      min = NA,
+      max = NA,
+      q1 = NA,
+      q3 = NA,
+      missing = NA
+    ))
+  }
+  
+  # Extract responses
+  responses <- df[[column_name]]
+  
+  # Calculate basic counts
+  total_responses <- length(responses)
+  valid_responses <- sum(!is.na(responses) & responses != "")
+  missing_responses <- total_responses - valid_responses
+  
+  if (valid_responses == 0) {
+    return(list(
+      question = question_label,
+      column = column_name,
+      status = "No valid responses",
+      n = 0,
+      mean = NA,
+      median = NA,
+      mode = NA,
+      sd = NA,
+      se = NA,
+      min = NA,
+      max = NA,
+      q1 = NA,
+      q3 = NA,
+      missing = missing_responses
+    ))
+  }
+  
+  # Convert to numeric
+  numeric_values <- convert_to_numeric(responses, scale)
+  numeric_values <- numeric_values[!is.na(numeric_values)]
+  
+  if (length(numeric_values) == 0) {
+    return(list(
+      question = question_label,
+      column = column_name,
+      status = "No valid numeric conversions",
+      n = valid_responses,
+      mean = NA,
+      median = NA,
+      mode = NA,
+      sd = NA,
+      se = NA,
+      min = NA,
+      max = NA,
+      q1 = NA,
+      q3 = NA,
+      missing = missing_responses
+    ))
+  }
+  
+  # Calculate statistics
+  stats <- list(
+    question = question_label,
+    column = column_name,
+    status = "OK",
+    n = length(numeric_values),
+    mean = round(mean(numeric_values), 3),
+    median = round(median(numeric_values), 3),
+    mode = calculate_mode(numeric_values),
+    sd = round(sd(numeric_values), 3),
+    se = round(sd(numeric_values) / sqrt(length(numeric_values)), 3),
+    min = min(numeric_values),
+    max = max(numeric_values),
+    q1 = round(quantile(numeric_values, 0.25), 3),
+    q3 = round(quantile(numeric_values, 0.75), 3),
+    missing = missing_responses
+  )
+  
+  return(stats)
+}
+
+# =============================================================================
+# HISTOGRAM GENERATION
+# =============================================================================
+
+# Generate histogram for a single question
+generate_histogram <- function(df, column_name, question_label, scale) {
+  # Check if column exists
+  if (!column_name %in% names(df)) {
+    return(NULL)
+  }
+  
+  # Extract and convert responses
+  responses <- df[[column_name]]
+  numeric_values <- convert_to_numeric(responses, scale)
+  numeric_values <- numeric_values[!is.na(numeric_values)]
+  
+  if (length(numeric_values) == 0) {
+    return(NULL)
+  }
+  
+  # Create frequency table
+  freq_table <- table(factor(numeric_values, levels = 1:5))
+  freq_df <- data.frame(
+    score = 1:5,
+    label = scale,
+    count = as.numeric(freq_table),
+    percentage = round(as.numeric(freq_table) / sum(freq_table) * 100, 1)
+  )
+  
+  # Create histogram
+  p <- ggplot(freq_df, aes(x = score, y = count, fill = factor(score))) +
+    geom_col(width = 0.7) +
+    geom_text(aes(label = paste0(count, " (", percentage, "%)")), 
+              vjust = -0.5, size = 3) +
+    scale_fill_manual(
+      values = c("#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#27ae60"),
+      name = "Score",
+      labels = scale
+    ) +
+    scale_x_continuous(
+      breaks = 1:5,
+      labels = scale,
+      expand = expansion(mult = c(0.05, 0.05))
+    ) +
+    labs(
+      title = question_label,
+      x = "Response",
+      y = "Count",
+      subtitle = paste0("n = ", sum(freq_table))
+    ) +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(size = 12, face = "bold"),
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+      legend.position = "none"
+    )
+  
+  return(p)
+}
+
+# =============================================================================
+# MAIN ANALYSIS
+# =============================================================================
+
+# Run complete EDA analysis
+run_eda_analysis <- function() {
+  message("\n========================================")
+  message("EXPLORATORY DATA ANALYSIS")
+  message("========================================\n")
+  
+  # Load data
+  df <- load_data()
+  
+  # Initialize results storage
+  all_stats <- list()
+  all_plots <- list()
+  
+  # Process each category
+  for (category in names(likert_questions)) {
+    message("\n--- Processing ", toupper(category), " Questions ---\n")
+    
+    category_stats <- list()
+    category_plots <- list()
+    
+    for (question_name in names(likert_questions[[category]])) {
+      question_info <- likert_questions[[category]][[question_name]]
+      
+      message("Analyzing: ", question_info$label)
+      
+      # Calculate statistics
+      stats <- calculate_statistics(
+        df = df,
+        column_name = question_info$column,
+        question_label = question_info$label,
+        scale = question_info$scale
+      )
+      
+      category_stats[[question_name]] <- stats
+      
+      # Generate histogram
+      plot <- generate_histogram(
+        df = df,
+        column_name = question_info$column,
+        question_label = question_info$label,
+        scale = question_info$scale
+      )
+      
+      if (!is.null(plot)) {
+        category_plots[[question_name]] <- plot
+      }
+    }
+    
+    all_stats[[category]] <- category_stats
+    all_plots[[category]] <- category_plots
+  }
+  
+  # Return results
+  return(list(
+    stats = all_stats,
+    plots = all_plots,
+    data = df
+  ))
+}
+
+# =============================================================================
+# OUTPUT FUNCTIONS
+# =============================================================================
+
+# Print statistics summary
+print_statistics_summary <- function(results) {
+  message("\n========================================")
+  message("STATISTICS SUMMARY")
+  message("========================================\n")
+  
+  for (category in names(results$stats)) {
+    message("\n### ", toupper(category), " ###\n")
+    
+    # Create data frame for this category
+    stats_df <- do.call(rbind, lapply(results$stats[[category]], function(x) {
+      data.frame(
+        Question = x$question,
+        N = x$n,
+        Mean = x$mean,
+        Median = x$median,
+        Mode = x$mode,
+        SD = x$sd,
+        SE = x$se,
+        Min = x$min,
+        Max = x$max,
+        Q1 = x$q1,
+        Q3 = x$q3,
+        Missing = x$missing,
+        stringsAsFactors = FALSE
+      )
+    }))
+    
+    print(stats_df, row.names = FALSE)
+    message("\n")
+  }
+}
+
+# Save statistics to CSV
+save_statistics_csv <- function(results, output_file = "eda_statistics.csv") {
+  all_stats_df <- data.frame()
+  
+  for (category in names(results$stats)) {
+    category_df <- do.call(rbind, lapply(results$stats[[category]], function(x) {
+      data.frame(
+        Category = category,
+        Question = x$question,
+        Column = x$column,
+        Status = x$status,
+        N = x$n,
+        Mean = x$mean,
+        Median = x$median,
+        Mode = x$mode,
+        SD = x$sd,
+        SE = x$se,
+        Min = x$min,
+        Max = x$max,
+        Q1 = x$q1,
+        Q3 = x$q3,
+        Missing = x$missing,
+        stringsAsFactors = FALSE
+      )
+    }))
+    all_stats_df <- rbind(all_stats_df, category_df)
+  }
+  
+  write.csv(all_stats_df, output_file, row.names = FALSE)
+  message("Statistics saved to: ", output_file)
+}
+
+# Save histograms to PDF
+save_histograms_pdf <- function(results, output_file = "eda_histograms.pdf") {
+  pdf(output_file, width = 10, height = 6)
+  
+  for (category in names(results$plots)) {
+    for (question_name in names(results$plots[[category]])) {
+      plot <- results$plots[[category]][[question_name]]
+      if (!is.null(plot)) {
+        print(plot)
+      }
+    }
+  }
+  
+  dev.off()
+  message("Histograms saved to: ", output_file)
+}
+
+# Save histograms as individual PNG files
+save_histograms_png <- function(results, output_dir = "eda_histograms") {
+  # Create output directory if it doesn't exist
+  if (!dir.exists(output_dir)) {
+    dir.create(output_dir, recursive = TRUE)
+  }
+  
+  for (category in names(results$plots)) {
+    for (question_name in names(results$plots[[category]])) {
+      plot <- results$plots[[category]][[question_name]]
+      if (!is.null(plot)) {
+        # Create safe filename
+        safe_name <- gsub("[^a-zA-Z0-9]", "_", question_name)
+        filename <- file.path(output_dir, paste0(category, "_", safe_name, ".png"))
+        
+        ggsave(
+          filename = filename,
+          plot = plot,
+          width = 10,
+          height = 6,
+          dpi = 300
+        )
+      }
+    }
+  }
+  
+  message("Histograms saved to: ", output_dir, "/")
+}
+
+# =============================================================================
+# MAIN EXECUTION
+# =============================================================================
+
+# Run the analysis
+results <- run_eda_analysis()
+
+# Print summary to console
+print_statistics_summary(results)
+
+# Save outputs
+save_statistics_csv(results)
+save_histograms_pdf(results)
+save_histograms_png(results)
+
+message("\n========================================")
+message("EDA ANALYSIS COMPLETE")
+message("========================================")
+message("\nGenerated files:")
+message("  - eda_statistics.csv (summary statistics)")
+message("  - eda_histograms.pdf (all histograms in one file)")
+message("  - eda_histograms/ (individual PNG files)")
+message("\n")
