@@ -4,12 +4,13 @@ server:
 proxy:
   title: OP Survey Analysis
   logo-url: https://www.openanalytics.eu/shinyproxy/logo.png
-  landing-page: /
+  landing-page: /app/op-survey
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
   port: 80
   proxy-url: https://somethingfix.com
   authentication: simple
+  hide-navbar: true
   admin-groups: scientists
   users:
     - name: admin
