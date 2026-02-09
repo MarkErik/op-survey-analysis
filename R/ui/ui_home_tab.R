@@ -107,23 +107,6 @@ create_home_tab <- function() {
             )
           ),
           
-          # Low Priority Insights
-          div(class = "insights-section",
-            h3("Section Comparison"),
-            p("Comparison across sections."),
-            
-            div(class = "visualization-container",
-              fluidRow(
-                column(12,
-                  div(class = "chart-container",
-                    h4("Section Comparison"),
-                    girafeOutput("section_comparison_plot", height = "300px")
-                  )
-                )
-              )
-            )
-          ),
-          
         )
       )
     )
