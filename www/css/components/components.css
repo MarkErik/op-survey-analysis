@@ -1,24 +1,121 @@
 /* Component Styles - Modern Design System */
 
 /* ============================================
-   Question Navigation Buttons
+   Question Responses Tab Layout
    ============================================ */
 
-.question-selector {
-  background-color: white;
-  border-radius: var(--border-radius-lg);
+.responses-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
   padding: var(--spacing-6);
-  margin-bottom: var(--spacing-6);
+}
+
+/* Question Selector Section */
+.question-selector-section {
+  background-color: white;
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-8);
   border: 1px solid var(--medium-color);
   box-shadow: var(--box-shadow-sm);
 }
 
-.question-selector h4 {
-  margin: 0 0 var(--spacing-4) 0;
+.question-selector-section h3 {
+  margin: 0 0 var(--spacing-2) 0;
   color: var(--secondary-color);
-  font-weight: var(--font-semibold);
-  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  font-size: var(--text-2xl);
 }
+
+.selector-description {
+  margin: 0 0 var(--spacing-6) 0;
+  color: var(--text-light);
+  font-size: var(--text-base);
+}
+
+.question-buttons-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.question-btn-horizontal {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  transition: all var(--transition-fast);
+  letter-spacing: 0.01em;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.question-btn-horizontal:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow-md);
+}
+
+.question-btn-horizontal:active {
+  background-color: var(--primary-700);
+  transform: translateY(0);
+}
+
+.question-btn-horizontal:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Responses Table Section */
+.responses-table-section {
+  background-color: white;
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-8);
+  border: 1px solid var(--medium-color);
+  box-shadow: var(--box-shadow-sm);
+}
+
+.responses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 2px solid var(--light-color);
+}
+
+.responses-header h3 {
+  margin: 0;
+  color: var(--secondary-color);
+  font-weight: var(--font-bold);
+  font-size: var(--text-2xl);
+}
+
+.selected-question-badge {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+  padding: var(--spacing-3) var(--spacing-5);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+}
+
+.selected-question-badge strong {
+  font-weight: var(--font-bold);
+}
+
+.selected-question-placeholder {
+  color: var(--text-light);
+  font-style: italic;
+  font-size: var(--text-sm);
+}
+
+/* ============================================
+   Legacy Question Navigation Buttons (for sidebar)
+   ============================================ */
 
 .question-buttons {
   display: flex;
@@ -38,7 +135,7 @@
   font-weight: var(--font-medium);
   transition: background-color var(--transition-fast);
   letter-spacing: 0.01em;
-  min-height: 48px; /* Touch target size */
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;

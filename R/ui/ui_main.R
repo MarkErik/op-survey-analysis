@@ -28,10 +28,7 @@ create_main_ui <- function(free_text_questions) {
     
     # Main content area
     fluidRow(
-      column(3,
-        create_sidebar_panel(free_text_questions)
-      ),
-      column(9,
+      column(12,
         tabsetPanel(
           id = "tabset",
           create_home_tab(),

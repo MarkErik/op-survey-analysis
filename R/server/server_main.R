@@ -62,6 +62,19 @@ create_main_server <- function(free_text_questions) {
       }
     })
     
+    # Render selected question display
+    output$selected_question_display <- renderUI({
+      if (!is.null(current_question())) {
+        div(class = "selected-question-badge",
+          span("Viewing responses for: ", strong(free_text_questions[current_question()]))
+        )
+      } else {
+        div(class = "selected-question-placeholder",
+          span("No question selected")
+        )
+      }
+    })
+    
     # Render responses table
     output$responses_table <- renderDT({
       render_responses_table(current_responses, free_text_questions, current_question)
