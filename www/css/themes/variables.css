@@ -104,7 +104,6 @@
   --box-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
   
   /* Colored shadows - Subtle */
-  --shadow-primary: 0 2px 8px 0 rgba(37, 99, 235, 0.15);
   --shadow-success: 0 2px 8px 0 rgba(5, 150, 105, 0.15);
   --shadow-warning: 0 2px 8px 0 rgba(217, 119, 6, 0.15);
   --shadow-error: 0 2px 8px 0 rgba(220, 38, 38, 0.15);

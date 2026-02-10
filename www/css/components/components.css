@@ -475,11 +475,6 @@
   box-shadow: var(--box-shadow-sm);
 }
 
-.btn-primary:hover {
-  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
-  box-shadow: var(--shadow-primary);
-}
-
 .btn-secondary {
   background-color: white;
   color: var(--text-color);
