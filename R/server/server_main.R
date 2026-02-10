@@ -21,7 +21,7 @@ create_main_server <- function(free_text_questions) {
     # Current question state
     current_question <- reactiveVal(NULL)
     current_responses <- reactiveVal(NULL)
-    selected_row <- reactiveVal(NULL)
+    selected_response_id <- reactiveVal(NULL)
     selected_section <- reactiveVal(NULL)
     
     # Handle question button clicks
@@ -30,7 +30,7 @@ create_main_server <- function(free_text_questions) {
         observeEvent(input[[paste0("btn_", question)]], {
           current_question(question)
           current_responses(get_responses_for_question(df(), question))
-          selected_row(NULL)
+          selected_response_id(NULL)
           
           # Switch to Question Responses tab
           updateTabsetPanel(session, "tabset", selected = "Question Responses")
@@ -68,11 +68,11 @@ create_main_server <- function(free_text_questions) {
     })
     
     # Handle row selection in responses table
-    handle_row_selection(input, selected_row, session)
+    handle_row_selection(input, selected_response_id, current_responses, session)
     
     # Render participant profile
     output$profile_ui <- renderUI({
-      render_participant_profile(selected_row, current_responses, current_question, df(), free_text_questions)
+      render_participant_profile(selected_response_id, current_responses, current_question, df(), free_text_questions)
     })
     
     # Update statistics on home page

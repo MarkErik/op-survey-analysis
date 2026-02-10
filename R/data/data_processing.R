@@ -1,5 +1,10 @@
 # Data Processing Module
 
+# Generate unique response IDs
+generate_response_ids <- function(n) {
+  paste0("RPT-", sprintf("%04d", 1:n))
+}
+
 # Load data
 load_data <- function() {
   tryCatch({
@@ -8,6 +13,9 @@ load_data <- function() {
     names(df) <- tolower(names(df))
     # Remove any leading/trailing whitespace from character columns
     df <- df %>% mutate(across(where(is.character), str_trim))
+    # Add response_id as first column
+    df$response_id <- generate_response_ids(nrow(df))
+    df <- df %>% select(response_id, everything())
     return(df)
   }, error = function(e) {
     message("Error loading data: ", e$message)
@@ -23,44 +31,25 @@ get_responses_for_question <- function(df, question) {
   
   responses <- df %>%
     filter(!is.na(!!sym(question)) & !!sym(question) != "") %>%
-    select(all_of(c("section", "prior_experience", "learning_preference", question))) %>%
+    select(all_of(c("response_id", "section", "prior_experience", "learning_preference", question))) %>%
     rename(response = all_of(question))
   
   return(responses)
 }
 
 # Get participant profile
-get_participant_profile <- function(df, row_id, responses_data = NULL, current_question = NULL) {
-  if (is.null(df) || is.na(row_id) || is.null(responses_data) || is.null(current_question)) {
-    return(NULL)
-  }
-   
-  # Get the selected row from the filtered responses
-  selected_response <- responses_data[row_id, ]
-  
-  if (nrow(selected_response) == 0) {
+get_participant_profile <- function(df, response_id) {
+  if (is.null(df) || is.null(response_id)) {
     return(NULL)
   }
   
-  # Find the matching row in the original data frame using the response content
-  # This assumes the response content is unique enough to identify the participant
-  response_content <- selected_response$response
+  # Direct ID lookup - no content matching needed
+  profile <- df %>%
+    filter(response_id == response_id) %>%
+    slice(1)
   
-  if (is.null(response_content) || response_content == "") {
+  if (nrow(profile) == 0) {
     return(NULL)
-  }
-  
-  if (startsWith(current_question, "discord_")) {
-    profile <- df %>%
-      filter(!!sym(current_question) == response_content) %>%
-      mutate(across(where(is.character), str_trim)) %>%
-      slice(1)  # In case of duplicates, take the first one
-  } else {
-    profile <- df %>%
-      filter(!!sym(current_question) == response_content) %>%
-      select(-starts_with("discord_")) %>%
-      mutate(across(where(is.character), str_trim)) %>%
-      slice(1)  # In case of duplicates, take the first one
   }
   
   return(profile)

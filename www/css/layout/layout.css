@@ -315,10 +315,6 @@
   transition: color var(--transition-normal);
 }
 
-.stat-card:hover .stat-value {
-  color: var(--primary-dark);
-}
-
 /* ============================================
    Visualization Container
    ============================================ */
