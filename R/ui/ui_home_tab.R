@@ -6,9 +6,9 @@ create_home_tab <- function() {
     fluidRow(
       column(12,
         div(class = "home-content",
-          # Overview section
+          # Responses section
           div(class = "stats-section",
-            h3("Overview"),
+            h3("Responses"),
             p("Select a course section to filter data below"),
             
             # First row: Section chart and stat cards
@@ -37,10 +37,9 @@ create_home_tab <- function() {
             )
           ),
           
-          # Demographics & Preferences
+          # Overview section
           div(class = "insights-section",
-            h3("Demographics & Preferences"),
-            p("Overview of student backgrounds and learning preferences."),
+            h3("Overview"),
             
             div(class = "visualization-container",
               fluidRow(
@@ -55,18 +54,7 @@ create_home_tab <- function() {
                     h4("Prior Programming Experience"),
                     girafeOutput("prior_experience_plot", height = "300px")
                   )
-                )
-              )
-            )
-          ),
-          
-          # Course Satisfaction & Discord
-          div(class = "insights-section",
-            h3("Course Satisfaction & Engagement"),
-            p("Student satisfaction with the course and Discord platform engagement."),
-            
-            div(class = "visualization-container",
-              fluidRow(
+                ),
                 column(6,
                   div(class = "chart-container",
                     h4("Course Satisfaction Overview"),
@@ -78,18 +66,7 @@ create_home_tab <- function() {
                     h4("Discord Engagement Metrics"),
                     girafeOutput("discord_engagement_plot", height = "300px")
                   )
-                )
-              )
-            )
-          ),
-          
-          # Learning Methods & Community Connection
-          div(class = "insights-section",
-            h3("Learning Methods & Community Connection"),
-            p("Most valuable learning methods and community connection scores."),
-            
-            div(class = "visualization-container",
-              fluidRow(
+                ),
                 column(6,
                   div(class = "chart-container",
                     h4("Most Valuable Learning Methods"),
