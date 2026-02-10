@@ -71,30 +71,12 @@ calculate_statistics <- function(df, free_text_questions) {
   if (is.null(df)) {
     return(list(
       total_responses = 0,
-      question_count = length(free_text_questions),
-      avg_response_length = 0
+      question_count = length(free_text_questions)
     ))
-  }
-  
-  # Calculate average response length across all free-text questions
-  all_response_lengths <- c()
-  for (question in names(free_text_questions)) {
-    if (question %in% names(df)) {
-      responses <- df[[question]]
-      responses <- responses[!is.na(responses) & responses != ""]
-      all_response_lengths <- c(all_response_lengths, nchar(responses))
-    }
-  }
-  
-  avg_length <- if (length(all_response_lengths) > 0) {
-    round(mean(all_response_lengths))
-  } else {
-    0
   }
   
   return(list(
     total_responses = nrow(df),
-    question_count = length(free_text_questions),
-    avg_response_length = avg_length
+    question_count = length(free_text_questions)
   ))
 }

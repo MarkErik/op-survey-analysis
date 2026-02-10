@@ -63,32 +63,6 @@ create_main_server <- function(free_text_questions) {
       stats()$question_count
     })
     
-    output$avg_response_length <- renderText({
-      stats()$avg_response_length
-    })
-    
-    # Generate response distribution plot
-    output$response_distribution_plot <- renderGirafe({
-      plot <- get_response_distribution_plot(df(), free_text_questions)
-      girafe(
-        ggobj = plot,
-          options = list(
-            opts_selection(type = "single")
-          )
-      )
-    })
-    
-    # Generate response length plot
-    output$response_length_plot <- renderGirafe({
-      plot <- get_response_length_plot(df(), free_text_questions)
-      girafe(
-        ggobj = plot,
-          options = list(
-            opts_selection(type = "single")
-          )
-      )
-    })
-    
     # Generate learning preference plot
     output$learning_preference_plot <- renderGirafe({
       plot <- get_learning_preference_plot(df())
@@ -164,62 +138,6 @@ create_main_server <- function(free_text_questions) {
           opts_selection(type = "single")
         )
       )
-    })
-    
-    # Generate section comparison plot
-    output$section_comparison_plot <- renderGirafe({
-      plot <- get_section_comparison_plot(df())
-      girafe(
-        ggobj = plot,
-        options = list(
-          opts_selection(type = "single")
-        )
-      )
-    })
-    
-    # Generate key themes plot
-    output$key_themes_plot <- renderGirafe({
-      plot <- get_key_themes_plot(df())
-      girafe(
-        ggobj = plot,
-        options = list(
-          opts_selection(type = "single")
-        )
-      )
-    })
-    
-    # Handle ggiraph click events for response distribution plot
-    # When a bar is clicked, the data_id (question_id) is captured in input$response_distribution_plot_selected
-    observeEvent(input$response_distribution_plot_selected, {
-      selected_data <- input$response_distribution_plot_selected
-      if (!is.null(selected_data) && length(selected_data) > 0) {
-        question_key <- selected_data[1]  # Get the first selected question ID
-        if (!is.null(question_key) && question_key %in% names(free_text_questions)) {
-          current_question(question_key)
-          current_responses(get_responses_for_question(df(), question_key))
-          selected_row(NULL)
-          
-          # Switch to Question Responses tab
-          updateTabsetPanel(session, "tabset", selected = "Question Responses")
-        }
-      }
-    })
-    
-    # Handle ggiraph click events for response length plot
-    # When a bar is clicked, the data_id (question_id) is captured in input$response_length_plot_selected
-    observeEvent(input$response_length_plot_selected, {
-      selected_data <- input$response_length_plot_selected
-      if (!is.null(selected_data) && length(selected_data) > 0) {
-        question_key <- selected_data[1]  # Get the first selected question ID
-        if (!is.null(question_key) && question_key %in% names(free_text_questions)) {
-          current_question(question_key)
-          current_responses(get_responses_for_question(df(), question_key))
-          selected_row(NULL)
-          
-          # Switch to Question Responses tab
-          updateTabsetPanel(session, "tabset", selected = "Question Responses")
-        }
-      }
     })
     
   }

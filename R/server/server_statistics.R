@@ -8,7 +8,6 @@ update_statistics <- function(df, free_text_questions) {
   # Return statistics as a list
   list(
     total_responses = stats$total_responses,
-    question_count = stats$question_count,
-    avg_response_length = stats$avg_response_length
+    question_count = stats$question_count
   )
 }

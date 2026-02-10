@@ -24,10 +24,6 @@ create_home_tab <- function() {
               div(class = "stat-card",
                 h4("Questions"),
                 div(class = "stat-value", textOutput("question_count"))
-              ),
-              div(class = "stat-card",
-                h4("Avg. Response Length"),
-                div(class = "stat-value", textOutput("avg_response_length"))
               )
             )
           ),
