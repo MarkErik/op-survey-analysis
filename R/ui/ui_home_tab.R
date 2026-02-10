@@ -11,30 +11,28 @@ create_home_tab <- function() {
             h3("Overview"),
             p("Select a course section to filter data below"),
             
-            # First row: Section chart and Total Responses
+            # First row: Section chart and stat cards
             div(class = "overview-first-row",
               fluidRow(
+                column(4,
+                  div(class = "overview-stats-column",
+                    div(class = "stat-card",
+                      h4("Total Responses"),
+                      div(class = "stat-value", textOutput("total_responses"))
+                    ),
+                    div(class = "stat-card",
+                      h4("Selected Section"),
+                      div(class = "stat-value", textOutput("selected_section_display")),
+                      actionButton("reset_section_filter", "Reset Filter", class = "btn-reset")
+                    )
+                  )
+                ),
                 column(8,
                   div(class = "chart-container",
                     h4("Responses per Section"),
                     girafeOutput("section_breakdown_plot", height = "300px")
                   )
-                ),
-                column(4,
-                  div(class = "stat-card",
-                    h4("Total Responses"),
-                    div(class = "stat-value", textOutput("total_responses"))
-                  )
                 )
-              )
-            ),
-            
-            # Second row: Selected Section display and Reset button
-            div(class = "overview-second-row",
-              div(class = "stat-card",
-                h4("Selected Section"),
-                div(class = "stat-value", textOutput("selected_section_display")),
-                actionButton("reset_section_filter", "Reset Filter", class = "btn-reset")
               )
             )
           ),
