@@ -91,9 +91,8 @@
 
 .stat-card {
   background-color: white;
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-6);
-  box-shadow: var(--box-shadow-md);
   flex: 1;
   min-width: 200px;
   border: 1px solid var(--medium-color);
