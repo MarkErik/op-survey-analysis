@@ -14,6 +14,12 @@ create_home_tab <- function() {
             # First row: Section chart and stat cards
             div(class = "overview-first-row",
               fluidRow(
+                column(8,
+                  div(class = "chart-container",
+                    h4("Responses per Section"),
+                    girafeOutput("section_breakdown_plot", height = "300px")
+                  )
+                ),
                 column(4,
                   div(class = "overview-stats-column",
                     div(class = "stat-card",
@@ -25,12 +31,6 @@ create_home_tab <- function() {
                       div(class = "stat-value", textOutput("selected_section_display")),
                       actionButton("reset_section_filter", "Reset Filter", class = "btn-reset")
                     )
-                  )
-                ),
-                column(8,
-                  div(class = "chart-container",
-                    h4("Responses per Section"),
-                    girafeOutput("section_breakdown_plot", height = "300px")
                   )
                 )
               )
