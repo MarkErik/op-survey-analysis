@@ -1,5 +1,28 @@
 # Utility Functions Module
 
+# Get CSS file version based on modification time for cache busting
+# This ensures browsers reload CSS when files change
+get_css_version <- function(file_path) {
+  full_path <- file.path("www", file_path)
+  if (file.exists(full_path)) {
+    # Use file modification time as version
+    as.integer(file.mtime(full_path))
+  } else {
+    # Fallback to current time if file doesn't exist
+    as.integer(Sys.time())
+  }
+}
+
+# Create CSS link tag with cache-busting version
+create_css_link <- function(file_path) {
+  version <- get_css_version(file_path)
+  tags$link(
+    rel = "stylesheet",
+    type = "text/css",
+    href = paste0(file_path, "?v=", version)
+  )
+}
+
 # Convert text responses to numeric scores (1-5)
 # This function handles Likert-type responses by extracting numeric values
 # from various formats like "5 - Strongly Agree", "4", "3", etc.

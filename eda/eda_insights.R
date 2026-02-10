@@ -21,7 +21,7 @@ library(factoextra)
 
 load_data <- function() {
   tryCatch({
-    df <- read.csv("../survey_data/exported_data.csv", stringsAsFactors = FALSE)
+    df <- read.csv("survey_data/exported_data.csv", stringsAsFactors = FALSE)
     # Clean column names
     names(df) <- tolower(names(df))
     # Remove any leading/trailing whitespace from character columns

@@ -1,10 +1,5 @@
 /* Custom CSS for the Shiny App */
 
-/* Import all CSS modules with cache busting */
-/* Update version numbers when CSS changes */
-@import url('themes/variables.css?v=2.0.1');
-@import url('themes/global.css?v=2.0.1');
-@import url('layout/layout.css?v=2.0.1');
-@import url('layout/responsive.css?v=2.0.1');
-@import url('components/components.css?v=2.0.1');
-@import url('utilities/utilities.css?v=2.0.1');
+/* Note: CSS modules are now loaded directly in ui_main.R with dynamic cache-busting.
+   This file is kept for reference but individual CSS files are loaded separately
+   to ensure proper cache-busting when files are modified. */

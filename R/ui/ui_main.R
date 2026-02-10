@@ -6,20 +6,21 @@ source("R/ui/ui_sidebar.R", local = TRUE)
 source("R/ui/ui_home_tab.R", local = TRUE)
 source("R/ui/ui_question_responses_tab.R", local = TRUE)
 source("R/ui/ui_participant_profile_tab.R", local = TRUE)
+source("R/utils/utility_functions.R", local = TRUE)
 
 # Create the main UI
 create_main_ui <- function(free_text_questions) {
-  # CSS version for cache busting - update this when CSS changes
-  css_version <- "2.0.1"
-  
   fluidPage(
-    # Include custom CSS with cache busting
+    # Include custom CSS with dynamic cache busting
+    # Each CSS file gets a version based on its modification time
     tags$head(
-      tags$link(
-        rel = "stylesheet",
-        type = "text/css",
-        href = paste0("css/style.css?v=", css_version)
-      )
+      # Load CSS files in correct order (variables first, then others)
+      create_css_link("css/themes/variables.css"),
+      create_css_link("css/themes/global.css"),
+      create_css_link("css/layout/layout.css"),
+      create_css_link("css/layout/responsive.css"),
+      create_css_link("css/components/components.css"),
+      create_css_link("css/utilities/utilities.css")
     ),
     
     # Header
