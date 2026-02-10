@@ -6,25 +6,31 @@ create_home_tab <- function() {
     fluidRow(
       column(12,
         div(class = "home-content",
-          # Welcome section
-          div(class = "welcome-section",
-            h2("Welcome to the Survey Explorer"),
-            p("This application provides an interactive way to explore survey responses.
-              Use the navigation in the sidebar to explore different questions and responses.")
-          ),
-          
-          # Statistics section
+          # Overview section
           div(class = "stats-section",
-            h3("Overview Statistics"),
-            div(class = "stats-container",
-              div(class = "stat-card",
-                h4("Total Responses"),
-                div(class = "stat-value", textOutput("total_responses"))
-              ),
-              div(class = "stat-card",
-                h4("Questions"),
-                div(class = "stat-value", textOutput("question_count"))
-              ),
+            h3("Overview"),
+            p("Select a course section to filter data below"),
+            
+            # First row: Section chart and Total Responses
+            div(class = "overview-first-row",
+              fluidRow(
+                column(8,
+                  div(class = "chart-container",
+                    h4("Responses per Section"),
+                    girafeOutput("section_breakdown_plot", height = "300px")
+                  )
+                ),
+                column(4,
+                  div(class = "stat-card",
+                    h4("Total Responses"),
+                    div(class = "stat-value", textOutput("total_responses"))
+                  )
+                )
+              )
+            ),
+            
+            # Second row: Selected Section display and Reset button
+            div(class = "overview-second-row",
               div(class = "stat-card",
                 h4("Selected Section"),
                 div(class = "stat-value", textOutput("selected_section_display")),
@@ -33,26 +39,20 @@ create_home_tab <- function() {
             )
           ),
           
-          # High Priority Insights
+          # Demographics & Preferences
           div(class = "insights-section",
             h3("Demographics & Preferences"),
             p("Overview of student backgrounds and learning preferences."),
             
             div(class = "visualization-container",
               fluidRow(
-                column(4,
-                  div(class = "chart-container",
-                    h4("Responses per Section"),
-                    girafeOutput("section_breakdown_plot", height = "300px")
-                  )
-                ),
-                column(4,
+                column(6,
                   div(class = "chart-container",
                     h4("Learning Preference Distribution"),
                     girafeOutput("learning_preference_plot", height = "300px")
                   )
                 ),
-                column(4,
+                column(6,
                   div(class = "chart-container",
                     h4("Prior Programming Experience"),
                     girafeOutput("prior_experience_plot", height = "300px")
@@ -85,7 +85,7 @@ create_home_tab <- function() {
             )
           ),
           
-          # Medium Priority Insights
+          # Learning Methods & Community Connection
           div(class = "insights-section",
             h3("Learning Methods & Community Connection"),
             p("Most valuable learning methods and community connection scores."),

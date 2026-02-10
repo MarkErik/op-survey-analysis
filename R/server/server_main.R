@@ -84,10 +84,6 @@ create_main_server <- function(free_text_questions) {
       stats()$total_responses
     })
     
-    output$question_count <- renderText({
-      stats()$question_count
-    })
-    
     # Display selected section
     output$selected_section_display <- renderText({
       if (!is.null(selected_section())) {

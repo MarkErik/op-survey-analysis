@@ -99,6 +99,14 @@
   border: 1px solid var(--medium-color);
 }
 
+.overview-first-row {
+  margin-bottom: var(--spacing-6);
+}
+
+.overview-second-row {
+  margin-bottom: var(--spacing-4);
+}
+
 .btn-reset {
   background-color: var(--secondary-color);
   color: white;
