@@ -137,29 +137,34 @@
 }
 
 .btn-reset {
-  background-color: var(--secondary-color);
+  background-color: #cccccc;
   color: white;
   border: none;
   padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--border-radius-md);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
+  cursor: not-allowed;
   margin-top: var(--spacing-3);
   width: 100%;
 }
 
-.btn-reset:hover {
-  background-color: var(--secondary-dark);
+.btn-reset.btn-reset-active {
+  background-color: rgb(42, 131, 213);
+  cursor: pointer;
+  transition: font-weight var(--transition-fast);
 }
 
-.btn-reset:active {
-  background-color: var(--secondary-700);
+.btn-reset.btn-reset-active:hover {
+  font-weight: var(--font-bold);
 }
 
-.btn-reset:focus-visible {
-  outline: 2px solid var(--secondary-color);
+.btn-reset.btn-reset-active:active {
+  background-color: rgb(35, 110, 180);
+}
+
+.btn-reset.btn-reset-active:focus-visible {
+  outline: 2px solid rgb(42, 131, 213);
   outline-offset: 2px;
 }
 

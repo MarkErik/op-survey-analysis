@@ -93,6 +93,16 @@ create_main_server <- function(free_text_questions) {
       }
     })
     
+    # Render reset filter button with dynamic class
+    output$reset_section_filter_ui <- renderUI({
+      btn_class <- if (!is.null(selected_section())) {
+        "btn-reset btn-reset-active"
+      } else {
+        "btn-reset"
+      }
+      actionButton("reset_section_filter", "Reset Filter", class = btn_class)
+    })
+    
     # Generate learning preference plot
     output$learning_preference_plot <- renderGirafe({
       plot <- get_learning_preference_plot(filtered_df())
