@@ -169,12 +169,15 @@ generate_section_breakdown_plot <- function(df) {
       scale_x_discrete(drop = FALSE) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(hjust = 0.5, size = 13),
+        axis.text.y = element_text(size = 12),
+        axis.title.x = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor = element_blank(),
-        legend.position = "none"
+        legend.position = "none",
       ) +
-      labs(x = "Section", y = "Number of Responses")
+      labs(y = "Number of Responses") +
+      geom_hline(yintercept = 0, color = "gray80", linewidth = 0.5)
     
     return(list(plot = p, data = section_df))
   } else {
