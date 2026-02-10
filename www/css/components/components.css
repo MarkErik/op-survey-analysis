@@ -99,6 +99,21 @@
   border: 1px solid var(--medium-color);
 }
 
+/* Override stat-card styles in Overview section to remove gradient and hover animation */
+.stats-section .stat-card {
+  background: white !important;
+  border: 1px solid var(--medium-color) !important;
+}
+
+.stats-section .stat-card::before {
+  display: none !important;
+}
+
+.stats-section .stat-card:hover {
+  box-shadow: var(--box-shadow-lg) !important;
+  border-color: var(--primary-200) !important;
+}
+
 .overview-first-row {
   margin-bottom: var(--spacing-6);
 }
