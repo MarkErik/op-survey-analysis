@@ -96,23 +96,13 @@ create_main_server <- function(free_text_questions) {
     # Generate learning preference plot
     output$learning_preference_plot <- renderGirafe({
       plot <- get_learning_preference_plot(filtered_df())
-      girafe(
-        ggobj = plot,
-        options = list(
-          opts_selection(type = "single")
-        )
-      )
+      girafe(ggobj = plot)
     })
     
     # Generate prior experience plot
     output$prior_experience_plot <- renderGirafe({
       plot <- get_prior_experience_plot(filtered_df())
-      girafe(
-        ggobj = plot,
-        options = list(
-          opts_selection(type = "single")
-        )
-      )
+      girafe(ggobj = plot)
     })
     
     # Generate section breakdown pie chart
@@ -129,45 +119,25 @@ create_main_server <- function(free_text_questions) {
     # Generate course satisfaction plot
     output$course_satisfaction_plot <- renderGirafe({
       plot <- get_course_satisfaction_plot(filtered_df())
-      girafe(
-        ggobj = plot,
-        options = list(
-          opts_selection(type = "single")
-        )
-      )
+      girafe(ggobj = plot)
     })
     
     # Generate Discord engagement plot
     output$discord_engagement_plot <- renderGirafe({
       plot <- get_discord_engagement_plot(filtered_df())
-      girafe(
-        ggobj = plot,
-        options = list(
-          opts_selection(type = "single")
-        )
-      )
+      girafe(ggobj = plot)
     })
     
     # Generate learning methods plot
     output$learning_methods_plot <- renderGirafe({
       plot <- get_learning_methods_plot(filtered_df())
-      girafe(
-        ggobj = plot,
-        options = list(
-          opts_selection(type = "single")
-        )
-      )
+      girafe(ggobj = plot)
     })
     
     # Generate community connection plot
     output$community_connection_plot <- renderGirafe({
       plot <- get_community_connection_plot(filtered_df())
-      girafe(
-        ggobj = plot,
-        options = list(
-          opts_selection(type = "single")
-        )
-      )
+      girafe(ggobj = plot)
     })
     
   }

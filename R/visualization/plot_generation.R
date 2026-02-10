@@ -41,13 +41,7 @@ generate_learning_preference_plot <- function(df) {
     
     # Create bar chart with 3 distinct colors
     p <- ggplot(pref_df, aes(x = preference, y = count, fill = preference)) +
-      geom_col_interactive(
-        aes(
-          tooltip = paste(preference, ": ", count, " (", percentage, "%)", sep = ""),
-          data_id = preference
-        ),
-        width = 0.7
-      ) +
+      geom_col(width = 0.7) +
       scale_fill_manual(values = c("In-person" = "#f8b4b4", "Online" = "#a8e6cf", "No preference" = "#ffd3b6")) +
       theme_minimal() +
       theme(
@@ -101,14 +95,7 @@ generate_prior_experience_plot <- function(df) {
     
     # Create horizontal bar chart
     p <- ggplot(exp_df, aes(x = experience, y = count)) +
-      geom_col_interactive(
-        aes(
-          tooltip = paste(experience, ": ", count, " (", percentage, "%)", sep = ""),
-          data_id = experience
-        ),
-        fill = "#2ecc71",
-        width = 0.7
-      ) +
+      geom_col(fill = "#2ecc71", width = 0.7) +
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
@@ -244,14 +231,7 @@ generate_course_satisfaction_plot <- function(df) {
     
     # Create horizontal bar chart
     p <- ggplot(plot_data, aes(x = reorder(question, avg_score), y = avg_score)) +
-      geom_col_interactive(
-        aes(
-          tooltip = paste(question, ": ", round(avg_score, 2), "/ 5.00", sep = ""),
-          data_id = question
-        ),
-        fill = "#9b59b6",
-        width = 0.7
-      ) +
+      geom_col(fill = "#9b59b6", width = 0.7) +
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
@@ -323,14 +303,7 @@ generate_discord_engagement_plot <- function(df) {
     
     # Create horizontal bar chart
     p <- ggplot(plot_data, aes(x = metric, y = percentage)) +
-      geom_col_interactive(
-        aes(
-          tooltip = paste(metric, ": ", round(percentage, 1), "%", sep = ""),
-          data_id = metric
-        ),
-        fill = "#7289da",
-        width = 0.7
-      ) +
+      geom_col(fill = "#7289da", width = 0.7) +
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
@@ -398,14 +371,7 @@ generate_learning_methods_plot <- function(df) {
     
     # Create horizontal bar chart
     p <- ggplot(plot_data, aes(x = reorder(method, avg_score), y = avg_score)) +
-      geom_col_interactive(
-        aes(
-          tooltip = paste(method, ": ", round(avg_score, 2), "/ 5.00", sep = ""),
-          data_id = method
-        ),
-        fill = "#e67e22",
-        width = 0.7
-      ) +
+      geom_col(fill = "#e67e22", width = 0.7) +
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
@@ -475,14 +441,7 @@ generate_community_connection_plot <- function(df) {
     
     # Create horizontal bar chart
     p <- ggplot(plot_data, aes(x = reorder(question, avg_score), y = avg_score)) +
-      geom_col_interactive(
-        aes(
-          tooltip = paste(question, ": ", round(avg_score, 2), "/ 5.00", sep = ""),
-          data_id = question
-        ),
-        fill = "#1abc9c",
-        width = 0.7
-      ) +
+      geom_col(fill = "#1abc9c", width = 0.7) +
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
