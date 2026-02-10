@@ -220,16 +220,8 @@ generate_course_satisfaction_plot <- function(df) {
         responses <- df[[q]]
         responses <- responses[!is.na(responses)]
         if (length(responses) > 0) {
-         # Convert Likert scale to numeric by stripping all non-numeric characters
-         # This handles both pure numbers (e.g., "4") and numbered scales (e.g., "5 - Strongly Agree")
-         numeric_responses <- sapply(responses, function(r) {
-           # Extract only digits from the response
-           numeric_value <- gsub("[^0-9]", "", r)
-           if (numeric_value != "") {
-             return(as.numeric(numeric_value))
-           }
-           return(NA)
-         })
+         # Convert Likert scale to numeric using centralized function
+         numeric_responses <- convert_to_numeric(responses)
          mean(numeric_responses, na.rm = TRUE)
         } else {
           NA
@@ -381,15 +373,8 @@ generate_learning_methods_plot <- function(df) {
         responses <- df[[q]]
         responses <- responses[!is.na(responses)]
         if (length(responses) > 0) {
-          # Convert scale to numeric
-          numeric_responses <- sapply(responses, function(r) {
-            if (grepl("Doesn't contribute", r)) return(1)
-            if (grepl("Somewhat contributes", r)) return(2)
-            if (grepl("Contributes", r) && !grepl("Somewhat", r) && !grepl("Essential", r)) return(3)
-            if (grepl("Very helpful", r)) return(4)
-            if (grepl("Essential", r)) return(5)
-            return(NA)
-          })
+          # Convert scale to numeric using centralized function
+          numeric_responses <- convert_to_numeric(responses)
           mean(numeric_responses, na.rm = TRUE)
         } else {
           NA
@@ -463,16 +448,8 @@ generate_community_connection_plot <- function(df) {
         responses <- df[[q]]
         responses <- responses[!is.na(responses)]
         if (length(responses) > 0) {
-         # Convert Likert scale to numeric by stripping all non-numeric characters
-         # This handles both pure numbers (e.g., "4") and numbered scales (e.g., "5 - Very much so")
-         numeric_responses <- sapply(responses, function(r) {
-           # Extract only digits from the response
-           numeric_value <- gsub("[^0-9]", "", r)
-           if (numeric_value != "") {
-             return(as.numeric(numeric_value))
-           }
-           return(NA)
-         })
+         # Convert Likert scale to numeric using centralized function
+         numeric_responses <- convert_to_numeric(responses)
          mean(numeric_responses, na.rm = TRUE)
         } else {
           NA

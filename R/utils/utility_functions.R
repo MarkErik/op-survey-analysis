@@ -1,5 +1,25 @@
 # Utility Functions Module
 
+# Convert text responses to numeric scores (1-5)
+# This function handles Likert-type responses by extracting numeric values
+# from various formats like "5 - Strongly Agree", "4", "3", etc.
+convert_to_numeric <- function(responses, scale = NULL) {
+  # Remove all non-numeric characters to extract the score
+  # Handles formats like "5 - Strongly Agree", "4", "3", etc.
+  numeric_values <- sapply(responses, function(r) {
+    if (is.na(r) || r == "") {
+      return(NA)
+    }
+    
+    # Extract numeric value by removing all non-numeric characters
+    numeric_value <- as.numeric(gsub("[^0-9]", "", r))
+    
+    return(numeric_value)
+  })
+  
+  return(as.numeric(numeric_values))
+}
+
 # Format response for display
 format_response <- function(response) {
   if (is.null(response) || is.na(response) || response == "") {

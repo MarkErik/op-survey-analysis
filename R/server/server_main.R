@@ -22,6 +22,7 @@ create_main_server <- function(free_text_questions) {
     current_question <- reactiveVal(NULL)
     current_responses <- reactiveVal(NULL)
     selected_row <- reactiveVal(NULL)
+    selected_section <- reactiveVal(NULL)
     
     # Handle question button clicks
     observe({
@@ -35,6 +36,30 @@ create_main_server <- function(free_text_questions) {
           updateTabsetPanel(session, "tabset", selected = "Question Responses")
         })
       })
+    })
+    
+    # Handle section selection from section breakdown plot
+    observeEvent(input$section_breakdown_plot_selected, {
+      if (!is.null(input$section_breakdown_plot_selected)) {
+        selected_section(input$section_breakdown_plot_selected)
+      } else {
+        selected_section(NULL)
+      }
+    })
+    
+    # Handle reset section filter button
+    observeEvent(input$reset_section_filter, {
+      selected_section(NULL)
+    })
+    
+    # Create filtered data frame based on selected section
+    filtered_df <- reactive({
+      data <- df()
+      if (!is.null(selected_section())) {
+        data[data$section == selected_section(), ]
+      } else {
+        data
+      }
     })
     
     # Render responses table
@@ -52,7 +77,7 @@ create_main_server <- function(free_text_questions) {
     
     # Update statistics on home page
     stats <- reactive({
-      update_statistics(df(), free_text_questions)
+      update_statistics(filtered_df(), free_text_questions)
     })
     
     output$total_responses <- renderText({
@@ -63,9 +88,18 @@ create_main_server <- function(free_text_questions) {
       stats()$question_count
     })
     
+    # Display selected section
+    output$selected_section_display <- renderText({
+      if (!is.null(selected_section())) {
+        selected_section()
+      } else {
+        "All Sections"
+      }
+    })
+    
     # Generate learning preference plot
     output$learning_preference_plot <- renderGirafe({
-      plot <- get_learning_preference_plot(df())
+      plot <- get_learning_preference_plot(filtered_df())
       girafe(
         ggobj = plot,
         options = list(
@@ -76,7 +110,7 @@ create_main_server <- function(free_text_questions) {
     
     # Generate prior experience plot
     output$prior_experience_plot <- renderGirafe({
-      plot <- get_prior_experience_plot(df())
+      plot <- get_prior_experience_plot(filtered_df())
       girafe(
         ggobj = plot,
         options = list(
@@ -98,7 +132,7 @@ create_main_server <- function(free_text_questions) {
     
     # Generate course satisfaction plot
     output$course_satisfaction_plot <- renderGirafe({
-      plot <- get_course_satisfaction_plot(df())
+      plot <- get_course_satisfaction_plot(filtered_df())
       girafe(
         ggobj = plot,
         options = list(
@@ -109,7 +143,7 @@ create_main_server <- function(free_text_questions) {
     
     # Generate Discord engagement plot
     output$discord_engagement_plot <- renderGirafe({
-      plot <- get_discord_engagement_plot(df())
+      plot <- get_discord_engagement_plot(filtered_df())
       girafe(
         ggobj = plot,
         options = list(
@@ -120,7 +154,7 @@ create_main_server <- function(free_text_questions) {
     
     # Generate learning methods plot
     output$learning_methods_plot <- renderGirafe({
-      plot <- get_learning_methods_plot(df())
+      plot <- get_learning_methods_plot(filtered_df())
       girafe(
         ggobj = plot,
         options = list(
@@ -131,7 +165,7 @@ create_main_server <- function(free_text_questions) {
     
     # Generate community connection plot
     output$community_connection_plot <- renderGirafe({
-      plot <- get_community_connection_plot(df())
+      plot <- get_community_connection_plot(filtered_df())
       girafe(
         ggobj = plot,
         options = list(
