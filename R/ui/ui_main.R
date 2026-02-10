@@ -35,7 +35,7 @@ create_main_ui <- function(free_text_questions) {
         tabsetPanel(
           id = "tabset",
           create_home_tab(),
-          create_question_responses_tab(),
+          create_question_responses_tab(free_text_questions),
           create_participant_profile_tab()
         )
       )

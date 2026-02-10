@@ -4,6 +4,22 @@
    Question Navigation Buttons
    ============================================ */
 
+.question-selector {
+  background-color: white;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+  border: 1px solid var(--medium-color);
+  box-shadow: var(--box-shadow-sm);
+}
+
+.question-selector h4 {
+  margin: 0 0 var(--spacing-4) 0;
+  color: var(--secondary-color);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-lg);
+}
+
 .question-buttons {
   display: flex;
   flex-direction: column;

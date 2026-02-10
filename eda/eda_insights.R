@@ -223,7 +223,7 @@ analyze_correlations <- function(numeric_df) {
       for (var in c(learning_vars, community_vars)) {
         if (var %in% names(numeric_df)) {
           cor_test <- cor.test(numeric_df[[outcome]], numeric_df[[var]], 
-                               use = "complete.obs", method = "pearson")
+                               use = "complete.obs", method = "spearman")
           
           correlations <- rbind(correlations, data.frame(
             Outcome = outcome,
