@@ -2,7 +2,6 @@
 
 # Source all UI components
 source("R/ui/ui_header.R", local = TRUE)
-source("R/ui/ui_sidebar.R", local = TRUE)
 source("R/ui/ui_home_tab.R", local = TRUE)
 source("R/ui/ui_question_responses_tab.R", local = TRUE)
 source("R/ui/ui_participant_profile_tab.R", local = TRUE)
