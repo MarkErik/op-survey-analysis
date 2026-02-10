@@ -109,10 +109,6 @@
   display: none !important;
 }
 
-.stats-section .stat-card:hover {
-  box-shadow: var(--box-shadow-lg) !important;
-  border-color: var(--primary-200) !important;
-}
 
 /* Match stat-value font to chart-container h4 font */
 .stats-section .stat-value {
@@ -166,11 +162,6 @@
 .btn-reset.btn-reset-active:focus-visible {
   outline: 2px solid rgb(42, 131, 213);
   outline-offset: 2px;
-}
-
-.stat-card:hover {
-  box-shadow: var(--box-shadow-lg);
-  border-color: var(--primary-200);
 }
 
 .stat-card h4 {
