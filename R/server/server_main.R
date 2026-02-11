@@ -173,7 +173,7 @@ create_main_server <- function(free_text_questions) {
         ggobj = plot,
         width_svg = 9,
         options = list(
-          opts_selection(type = "single", selected = selected_plot_item()),
+          opts_selection(type = "single", selected = selected_plot_item(), css = "fill:#16a085;"),
           opts_sizing(rescale = TRUE)
         )
       )

@@ -47,6 +47,7 @@ generate_learning_preference_plot <- function(df) {
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = "none"
