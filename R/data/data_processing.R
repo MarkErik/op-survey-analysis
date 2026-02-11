@@ -31,7 +31,7 @@ get_responses_for_question <- function(df, question) {
   
   responses <- df %>%
     filter(!is.na(!!sym(question)) & !!sym(question) != "") %>%
-    select(all_of(c("response_id", "section", "prior_experience", "learning_preference", question))) %>%
+    select(all_of(c("response_id", "prior_experience", "learning_preference", "section", question))) %>%
     rename(response = all_of(question))
   
   return(responses)
