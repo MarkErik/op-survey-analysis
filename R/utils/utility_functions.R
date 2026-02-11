@@ -60,31 +60,22 @@ create_participant_profile_ui <- function(participant_data, current_question, fr
   
   # Format the profile display
   profile_html <- div(class = "profile-container",
-    div(class = "profile-header",
-      h4("Participant Information"),
-      p(paste("Selected response from:", free_text_questions[current_question]))
-    ),
     
     div(class = "profile-content",
       # Basic information
-      fluidRow(
-        column(6,
-          h5("Basic Information"),
-          tags$ul(
-            tags$li(strong("Section:"), participant_data$section),
-            tags$li(strong("Prior Experience:"), participant_data$prior_experience),
-            tags$li(strong("Learning Preference:"), participant_data$learning_preference)
-          )
-        ),
-        column(6,
-          h5("Selected Response"),
-          div(class = "response-text",
-            p(format_response(participant_data[[current_question]]))
-          )
-        )
+
+      h5("Basic Information"),
+      tags$ul(
+        tags$li(strong("Section:"), participant_data$section),
+        tags$li(strong("Prior Experience:"), participant_data$prior_experience),
+        tags$li(strong("Learning Preference:"), participant_data$learning_preference)
       ),
-      
-      hr(),
+
+      h5(paste("Selected Response:", free_text_questions[current_question])),
+      div(class = "response-text",
+        p(format_response(participant_data[[current_question]]))
+      ),
+
       
       # All other responses
       h5("All Other Responses"),

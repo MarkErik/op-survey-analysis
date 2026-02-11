@@ -92,9 +92,7 @@
 .profile-container {
   background-color: white;
   border-radius: var(--border-radius-md);
-  padding: var(--spacing-8);
   box-shadow: none;
-  border: 1px solid var(--medium-color);
 }
 
 .profile-header {
@@ -298,10 +296,6 @@
   border: 1px solid var(--medium-color);
 }
 
-.response-item:hover {
-  border-left-color: var(--primary-color);
-}
-
 .response-item:last-child {
   margin-bottom: 0;
 }
@@ -313,10 +307,6 @@
   font-size: var(--text-sm);
   letter-spacing: -0.01em;
   transition: color var(--transition-normal);
-}
-
-.response-item:hover h6 {
-  color: var(--primary-color);
 }
 
 .response-item p {
@@ -675,6 +665,7 @@
   border-bottom: 1px solid var(--medium-color);
   background-color: var(--secondary-50);
   border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+  position: relative;
 }
 
 .modal-header h4 {
@@ -683,6 +674,40 @@
   font-weight: var(--font-bold);
   font-size: var(--text-xl);
   letter-spacing: -0.01em;
+}
+
+/* Modal close button (Bootstrap style) - positioned at top left of header */
+.modal-header .close {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  transition: all var(--transition-fast);
+  border-radius: var(--border-radius-sm);
+  line-height: 1;
+  opacity: 0.7;
+  z-index: 5;
+}
+
+.modal-header .close:hover {
+  background-color: var(--error-bg);
+  color: var(--error-dark);
+  opacity: 1;
+}
+
+.modal-header .close:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 .modal-close-btn {

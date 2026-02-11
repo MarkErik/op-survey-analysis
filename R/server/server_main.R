@@ -83,7 +83,17 @@ create_main_server <- function(free_text_questions) {
     observeEvent(selected_response_id(), {
       if (!is.null(selected_response_id())) {
         showModal(modalDialog(
-          title = "Participant Profile",
+          title = tagList(
+            tags$button(
+              type = "button",
+              class = "close",
+              `data-dismiss` = "modal",
+              `aria-label` = "Close",
+              onclick = "Shiny.unbindAll(this); $(this).closest('.modal').modal('hide');",
+              tags$span(`aria-hidden` = "true", HTML("&times;"))
+            ),
+            "Participant Profile"
+          ),
           uiOutput("modal_profile_ui"),
           footer = NULL,
           size = "l",
