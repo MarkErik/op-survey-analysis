@@ -11,13 +11,13 @@ render_responses_table <- function(current_responses, free_text_questions, curre
   datatable(
     responses,
     options = list(
-      pageLength = 15,
+      pageLength = 30,
       scrollX = TRUE,
-      scrollY = "400px",
       searching = TRUE,
       ordering = TRUE,
       info = TRUE,
       autoWidth = TRUE,
+      dom = 'tip',  # Hide "Show X entries" dropdown (t=table, i=info, p=pagination)
       columnDefs = list(list(visible = FALSE, targets = 0))  # Hide response_id column
     ),
     selection = 'single',

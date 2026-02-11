@@ -20,14 +20,12 @@ create_question_responses_tab <- function(free_text_questions) {
         )
       ),
       
-      # Responses table section
-      div(class = "responses-table-section",
-        div(class = "responses-header",
-          h3("Responses"),
-          uiOutput("selected_question_display")
-        ),
-        DTOutput("responses_table")
-      )
+      # Responses header
+      div(class = "responses-header",
+        h3("Responses"),
+        uiOutput("selected_question_display")
+      ),
+      DTOutput("responses_table")
     )
   )
 }

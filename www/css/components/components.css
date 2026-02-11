@@ -69,15 +69,6 @@
   outline-offset: 2px;
 }
 
-/* Responses Table Section */
-.responses-table-section {
-  background-color: white;
-  border-radius: var(--border-radius-xl);
-  padding: var(--spacing-8);
-  border: 1px solid var(--medium-color);
-  box-shadow: var(--box-shadow-sm);
-}
-
 .responses-header {
   display: flex;
   justify-content: space-between;
