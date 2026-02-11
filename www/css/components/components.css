@@ -14,10 +14,10 @@
 /* Question Selector Section */
 .question-selector-section {
   background-color: white;
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-8);
   border: 1px solid var(--medium-color);
-  box-shadow: var(--box-shadow-sm);
+  box-shadow: none;
 }
 
 .question-selector-section h3 {
@@ -55,8 +55,7 @@
 
 .question-btn-horizontal:hover {
   background-color: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: var(--box-shadow-md);
+  transform: translateY(-1px);
 }
 
 .question-btn-horizontal:active {
@@ -89,7 +88,7 @@
   background-color: var(--primary-light);
   color: var(--primary-dark);
   padding: var(--spacing-3) var(--spacing-5);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-sm);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
 }
@@ -151,9 +150,9 @@
 
 .profile-container {
   background-color: white;
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-8);
-  box-shadow: var(--box-shadow-sm);
+  box-shadow: none;
   border: 1px solid var(--medium-color);
 }
 
@@ -293,18 +292,18 @@
 
 .visualization-container {
   background-color: white;
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-6);
-  box-shadow: var(--box-shadow-md);
+  box-shadow: none;
   margin-bottom: var(--spacing-6);
   border: 1px solid var(--medium-color);
 }
 
 .chart-container {
   background-color: white;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-5);
-  box-shadow: var(--box-shadow-sm);
+  box-shadow: none;
   height: 100%;
   border: 1px solid var(--medium-color);
 }
@@ -324,7 +323,7 @@
 .response-text {
   background-color: var(--light-color);
   border: 1px solid var(--medium-color);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-5);
   margin-top: var(--spacing-3);
   border-left: 4px solid var(--primary-color);
@@ -352,17 +351,16 @@
 
 .response-item {
   background-color: white;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-5);
   margin-bottom: var(--spacing-4);
-  box-shadow: var(--box-shadow-sm);
+  box-shadow: none;
   border-left: 4px solid var(--primary-light);
   border: 1px solid var(--medium-color);
 }
 
 .response-item:hover {
   border-left-color: var(--primary-color);
-  box-shadow: var(--box-shadow-md);
 }
 
 .response-item:last-child {
@@ -536,13 +534,13 @@
    ============================================ */
 
 .js-plotly-plot .svg-container {
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-md);
   overflow: hidden;
 }
 
 .js-plotly-plot .plotly .modebar {
   border-top: 1px solid var(--medium-color);
-  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+  border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
 }
 
 /* ============================================
@@ -571,20 +569,19 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-600) 100%);
+  background-color: var(--primary-color);
   color: white;
-  box-shadow: var(--box-shadow-sm);
+  box-shadow: none;
 }
 
 .btn-success {
-  background: linear-gradient(135deg, var(--success-color) 0%, var(--success-dark) 100%);
+  background-color: var(--success-color);
   color: white;
-  box-shadow: var(--box-shadow-sm);
+  box-shadow: none;
 }
 
 .btn-success:hover {
-  background: linear-gradient(135deg, var(--success-dark) 0%, var(--success-color) 100%);
-  box-shadow: var(--shadow-success);
+  background-color: var(--success-dark);
 }
 
 .btn:focus-visible {
@@ -612,7 +609,7 @@
 .input-field {
   padding: var(--spacing-3) var(--spacing-4);
   border: 1px solid var(--medium-color);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-md);
   font-size: var(--text-sm);
   transition: all var(--transition-normal);
   background-color: white;
@@ -634,15 +631,15 @@
 
 .card {
   background-color: white;
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-6);
-  box-shadow: var(--box-shadow-md);
+  box-shadow: none;
   border: 1px solid var(--medium-color);
   transition: all var(--transition-normal);
 }
 
 .card:hover {
-  box-shadow: var(--box-shadow-lg);
+  border-color: var(--primary-200);
 }
 
 .card-header {

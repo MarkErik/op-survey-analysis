@@ -25,7 +25,7 @@
   padding: var(--spacing-3) var(--spacing-6);
   color: var(--text-light);
   border: none;
-  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
   font-weight: var(--font-medium);
   font-size: var(--text-sm);
   transition: all var(--transition-normal);
@@ -71,59 +71,32 @@
 .tab-content {
   padding: var(--spacing-8);
   background-color: white;
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--box-shadow-md);
+  border-radius: var(--border-radius-md);
+  box-shadow: none;
   min-height: 400px;
 }
 
 /* ============================================
-   App Header - Modern Gradient Design
+   App Header - Clean, Minimal Design
    ============================================ */
 
 .app-header {
-  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 50%, var(--primary-800) 100%);
-  color: white;
-  padding: var(--spacing-10) var(--spacing-8);
-  border-radius: var(--border-radius-2xl);
-  margin-bottom: var(--spacing-8);
-  position: relative;
-  overflow: hidden;
+  background-color: #ffffff;
+  color: var(--text-color);
+  padding: var(--spacing-6) var(--spacing-8);
+  border-radius: var(--border-radius-none);
+  margin-bottom: var(--spacing-6);
+  border-bottom: 1px solid var(--medium-color);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
-}
-
-/* Decorative background elements */
-.app-header::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.app-header::after {
-  content: "";
-  position: absolute;
-  bottom: -30%;
-  left: -5%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
 }
 
 .app-title {
   margin: 0;
   font-size: var(--text-4xl);
   font-weight: var(--font-bold);
-  position: relative;
-  z-index: 1;
+  color: var(--text-color);
   letter-spacing: -0.02em;
   line-height: var(--leading-tight);
 }
@@ -131,9 +104,7 @@
 .app-subtitle {
   margin: 0;
   font-size: var(--text-lg);
-  opacity: 0.9;
-  position: relative;
-  z-index: 1;
+  color: var(--text-light);
   font-weight: var(--font-normal);
   letter-spacing: 0.01em;
   line-height: var(--leading-relaxed);
@@ -145,19 +116,15 @@
 
 .sidebar-panel {
   background-color: white;
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--box-shadow-md);
+  border-radius: var(--border-radius-md);
+  box-shadow: none;
   padding: var(--spacing-6);
   margin-bottom: var(--spacing-6);
   position: sticky;
   top: var(--spacing-4);
   max-height: calc(100vh - var(--spacing-8));
   overflow-y: auto;
-  transition: box-shadow var(--transition-normal);
-}
-
-.sidebar-panel:hover {
-  box-shadow: var(--box-shadow-lg);
+  border: 1px solid var(--medium-color);
 }
 
 .sidebar-panel h3 {
@@ -203,14 +170,10 @@
 .home-content {
   padding: var(--spacing-8);
   background-color: white;
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--box-shadow-md);
+  border-radius: var(--border-radius-md);
+  box-shadow: none;
   margin-bottom: var(--spacing-8);
-  transition: box-shadow var(--transition-normal);
-}
-
-.home-content:hover {
-  box-shadow: var(--box-shadow-lg);
+  border: 1px solid var(--medium-color);
 }
 
 .home-content h2 {
@@ -265,35 +228,17 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, white 0%, var(--primary-50) 100%);
-  border-radius: var(--border-radius-xl);
+  background-color: white;
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-6);
   text-align: center;
-  box-shadow: var(--box-shadow-sm);
+  box-shadow: none;
   transition: all var(--transition-normal);
-  border: 1px solid var(--primary-100);
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-  transform: scaleX(0);
-  transition: transform var(--transition-normal);
+  border: 1px solid var(--medium-color);
 }
 
 .stat-card:hover {
   border-color: var(--primary-200);
-}
-
-.stat-card:hover::before {
-  transform: scaleX(1);
 }
 
 .stat-card h4 {
@@ -324,16 +269,15 @@
 .chart-container {
   background-color: white;
   border: 1px solid var(--medium-color);
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-md);
   padding: var(--spacing-6);
   margin-bottom: var(--spacing-4);
-  box-shadow: var(--box-shadow-sm);
+  box-shadow: none;
   transition: all var(--transition-normal);
   position: relative;
 }
 
 .chart-container:hover {
-  box-shadow: var(--box-shadow-md);
   border-color: var(--primary-200);
 }
 
@@ -360,7 +304,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-md);
 }
 
 /* ============================================
@@ -427,7 +371,7 @@
 @media (max-width: 768px) {
   .app-header {
     padding: var(--spacing-6) var(--spacing-4);
-    border-radius: var(--border-radius-xl);
+    border-radius: var(--border-radius-none);
   }
   
   .app-title {

@@ -1,25 +1,25 @@
 /* CSS Variables - Clean, Modern Design System */
 
 :root {
-  /* Primary Colors - Sophisticated Indigo System */
-  --primary-color: #4f46e5;
-  --primary-dark: #4338ca;
-  --primary-light: #6366f1;
-  --primary-50: #eef2ff;
-  --primary-100: #e0e7ff;
-  --primary-200: #c7d2fe;
-  --primary-300: #a5b4fc;
-  --primary-400: #818cf8;
-  --primary-500: #6366f1;
-  --primary-600: #4f46e5;
-  --primary-700: #4338ca;
-  --primary-800: #3730a3;
-  --primary-900: #312e81;
+  /* Primary Colors - Royal Blue System */
+  --primary-color: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #3b82f6;
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
+  --primary-300: #93c5fd;
+  --primary-400: #60a5fa;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+  --primary-700: #1d4ed8;
+  --primary-800: #1e40af;
+  --primary-900: #1e3a8a;
   
   /* Secondary Colors - Neutral Slate System */
-  --secondary-color: #0f172a;
-  --secondary-dark: #020617;
-  --secondary-light: #1e293b;
+  --secondary-color: #64748b;
+  --secondary-dark: #475569;
+  --secondary-light: #94a3b8;
   --secondary-50: #f8fafc;
   --secondary-100: #f1f5f9;
   --secondary-200: #e2e8f0;
@@ -36,13 +36,13 @@
   --medium-color: #e2e8f0;
   --dark-color: #475569;
   --text-color: #0f172a;
-  --text-light: #64748b;
+  --text-light: #475569;
   --text-muted: #94a3b8;
   
-  /* Accent Colors - Modern Coral */
-  --accent-color: #f43f5e;
-  --accent-light: #fb7185;
-  --accent-dark: #e11d48;
+  /* Accent Colors - Sky Blue */
+  --accent-color: #0ea5e9;
+  --accent-light: #38bdf8;
+  --accent-dark: #0284c7;
   
   /* Semantic Colors - Refined */
   --success-color: #10b981;
@@ -86,27 +86,27 @@
   --spacing-lg: var(--spacing-6);
   --spacing-xl: var(--spacing-10);
   
-  /* Border Radius */
+  /* Border Radius - Minimal, Professional */
   --border-radius-none: 0;
-  --border-radius-sm: 0.25rem;   /* 4px */
-  --border-radius-md: 0.5rem;    /* 8px */
-  --border-radius-lg: 0.75rem;   /* 12px */
-  --border-radius-xl: 1rem;      /* 16px */
-  --border-radius-2xl: 1.5rem;   /* 24px */
+  --border-radius-sm: 0.25rem;   /* 4px - for badges */
+  --border-radius-md: 0.5rem;    /* 8px - for cards, tabs */
+  --border-radius-lg: 0.375rem;  /* 6px - for buttons */
+  --border-radius-xl: 0.5rem;    /* 8px - for containers */
+  --border-radius-2xl: 0.5rem;   /* 8px - reduced from 24px */
   --border-radius-full: 9999px;
   
-  /* Box Shadow - Clean, minimal shadows */
-  --box-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
-  --box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-  --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
-  --box-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
-  --box-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  /* Box Shadow - Disabled for clean design */
+  --box-shadow-xs: none;
+  --box-shadow-sm: none;
+  --box-shadow-md: none;
+  --box-shadow-lg: none;
+  --box-shadow-xl: none;
+  --box-shadow-2xl: none;
   
-  /* Colored shadows - Subtle */
-  --shadow-success: 0 2px 8px 0 rgba(5, 150, 105, 0.15);
-  --shadow-warning: 0 2px 8px 0 rgba(217, 119, 6, 0.15);
-  --shadow-error: 0 2px 8px 0 rgba(220, 38, 38, 0.15);
+  /* Colored shadows - Disabled */
+  --shadow-success: none;
+  --shadow-warning: none;
+  --shadow-error: none;
   
   /* Transitions - Minimal, purposeful */
   --transition-instant: 0.1s ease;
@@ -181,16 +181,16 @@
     --text-light: #cbd5e1;
     --text-muted: #64748b;
     
-    --primary-50: #312e81;
-    --primary-100: #3730a3;
-    --primary-200: #4338ca;
-    --primary-300: #4f46e5;
-    --primary-400: #6366f1;
-    --primary-500: #818cf8;
-    --primary-600: #a5b4fc;
-    --primary-700: #c7d2fe;
-    --primary-800: #e0e7ff;
-    --primary-900: #eef2ff;
+    --primary-50: #1e3a8a;
+    --primary-100: #1e40af;
+    --primary-200: #1d4ed8;
+    --primary-300: #2563eb;
+    --primary-400: #3b82f6;
+    --primary-500: #60a5fa;
+    --primary-600: #93c5fd;
+    --primary-700: #bfdbfe;
+    --primary-800: #dbeafe;
+    --primary-900: #eff6ff;
     
     --secondary-50: #0f172a;
     --secondary-100: #1e293b;
