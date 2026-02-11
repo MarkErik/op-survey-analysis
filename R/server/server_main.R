@@ -74,12 +74,17 @@ create_main_server <- function(free_text_questions) {
     # Handle row selection in responses table
     handle_row_selection(input, selected_response_id, current_responses, session)
     
+    # Render participant profile in modal
+    output$modal_profile_ui <- renderUI({
+      render_participant_profile(selected_response_id, current_responses, current_question, df(), free_text_questions)
+    })
+    
     # Show modal when a response is selected
     observeEvent(selected_response_id(), {
       if (!is.null(selected_response_id())) {
         showModal(modalDialog(
           title = "Participant Profile",
-          render_participant_profile(selected_response_id, current_responses, current_question, df(), free_text_questions),
+          uiOutput("modal_profile_ui"),
           footer = NULL,
           size = "l",
           easyClose = TRUE

@@ -50,6 +50,6 @@ render_participant_profile <- function(selected_response_id, current_responses, 
     return(p("Error loading participant data."))
   }
   
-  # Create the profile UI
-  create_participant_profile_ui(participant_data, current_question, free_text_questions)
+  # Create the profile UI - pass the actual value of current_question
+  create_participant_profile_ui(participant_data, current_question(), free_text_questions)
 }

@@ -62,7 +62,7 @@ create_participant_profile_ui <- function(participant_data, current_question, fr
   profile_html <- div(class = "profile-container",
     div(class = "profile-header",
       h4("Participant Information"),
-      p(paste("Selected response from:", free_text_questions[current_question()]))
+      p(paste("Selected response from:", free_text_questions[current_question]))
     ),
     
     div(class = "profile-content",
@@ -79,7 +79,7 @@ create_participant_profile_ui <- function(participant_data, current_question, fr
         column(6,
           h5("Selected Response"),
           div(class = "response-text",
-            p(format_response(participant_data[[current_question()]]))
+            p(format_response(participant_data[[current_question]]))
           )
         )
       ),
@@ -90,7 +90,7 @@ create_participant_profile_ui <- function(participant_data, current_question, fr
       h5("All Other Responses"),
       div(class = "all-responses",
         lapply(names(free_text_questions), function(question) {
-          if (question != current_question()) {
+          if (question != current_question) {
             div(class = "response-item",
               h6(free_text_questions[question]),
               p(format_response(participant_data[[question]]))
