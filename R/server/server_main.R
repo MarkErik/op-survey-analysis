@@ -116,6 +116,40 @@ create_main_server <- function(free_text_questions) {
       actionButton("reset_section_filter", "Reset Filter", class = btn_class)
     })
     
+    # Helper function to generate dynamic chart titles
+    get_chart_title <- function(base_title, selected_section) {
+      if (!is.null(selected_section)) {
+        paste0(base_title, " (", selected_section, ")")
+      } else {
+        paste0(base_title, " (All Sections)")
+      }
+    }
+    
+    # Render dynamic chart titles
+    output$learning_preference_title <- renderUI({
+      h4(get_chart_title("Learning Preference Distribution", selected_section()))
+    })
+    
+    output$prior_experience_title <- renderUI({
+      h4(get_chart_title("Prior Programming Experience", selected_section()))
+    })
+    
+    output$course_satisfaction_title <- renderUI({
+      h4(get_chart_title("Course Satisfaction Overview", selected_section()))
+    })
+    
+    output$discord_engagement_title <- renderUI({
+      h4(get_chart_title("Discord Engagement Metrics", selected_section()))
+    })
+    
+    output$learning_methods_title <- renderUI({
+      h4(get_chart_title("Most Valuable Learning Methods", selected_section()))
+    })
+    
+    output$community_connection_title <- renderUI({
+      h4(get_chart_title("Community Connection Scores", selected_section()))
+    })
+    
     # Generate learning preference plot
     output$learning_preference_plot <- renderGirafe({
       plot <- get_learning_preference_plot(filtered_df())

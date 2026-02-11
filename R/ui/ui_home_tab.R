@@ -45,37 +45,37 @@ create_home_tab <- function() {
               fluidRow(
                 column(6,
                   div(class = "chart-container",
-                    h4("Learning Preference Distribution"),
+                    uiOutput("learning_preference_title"),
                     girafeOutput("learning_preference_plot", height = "300px")
                   )
                 ),
                 column(6,
                   div(class = "chart-container",
-                    h4("Prior Programming Experience"),
+                    uiOutput("prior_experience_title"),
                     girafeOutput("prior_experience_plot", height = "300px")
                   )
                 ),
                 column(6,
                   div(class = "chart-container",
-                    h4("Course Satisfaction Overview"),
+                    uiOutput("course_satisfaction_title"),
                     girafeOutput("course_satisfaction_plot", height = "300px")
                   )
                 ),
                 column(6,
                   div(class = "chart-container",
-                    h4("Discord Engagement Metrics"),
+                    uiOutput("discord_engagement_title"),
                     girafeOutput("discord_engagement_plot", height = "300px")
                   )
                 ),
                 column(6,
                   div(class = "chart-container",
-                    h4("Most Valuable Learning Methods"),
+                    uiOutput("learning_methods_title"),
                     girafeOutput("learning_methods_plot", height = "300px")
                   )
                 ),
                 column(6,
                   div(class = "chart-container",
-                    h4("Community Connection Scores"),
+                    uiOutput("community_connection_title"),
                     girafeOutput("community_connection_plot", height = "300px")
                   )
                 )
