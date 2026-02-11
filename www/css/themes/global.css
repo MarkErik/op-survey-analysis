@@ -162,12 +162,6 @@ button {
   background: var(--secondary-500);
 }
 
-/* Firefox scrollbar */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--secondary-300) var(--secondary-100);
-}
-
 /* Loading State - Simple spinner */
 .loading {
   display: flex;
