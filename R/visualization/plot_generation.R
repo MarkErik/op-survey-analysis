@@ -100,7 +100,8 @@ generate_prior_experience_plot <- function(df) {
       geom_col(fill = "#2ecc71", width = 0.7) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(hjust = 1),
+        axis.text.x = element_text(hjust = 0.7, size=14),
+        axis.text.y = element_text(size = 15),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = "none"

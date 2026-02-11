@@ -163,7 +163,9 @@ create_main_server <- function(free_text_questions) {
     # Generate prior experience plot
     output$prior_experience_plot <- renderGirafe({
       plot <- get_prior_experience_plot(filtered_df())
-      girafe(ggobj = plot)
+      girafe(
+        ggobj = plot,
+        width_svg = 10)
     })
     
     # Generate section breakdown pie chart
