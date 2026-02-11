@@ -4,12 +4,14 @@
 source("R/ui/ui_header.R", local = TRUE)
 source("R/ui/ui_home_tab.R", local = TRUE)
 source("R/ui/ui_question_responses_tab.R", local = TRUE)
-source("R/ui/ui_participant_profile_tab.R", local = TRUE)
 source("R/utils/utility_functions.R", local = TRUE)
 
 # Create the main UI
 create_main_ui <- function(free_text_questions) {
   fluidPage(
+    # Initialize shinyjs for JavaScript functionality
+    useShinyjs(),
+    
     # Include custom CSS with dynamic cache busting
     # Each CSS file gets a version based on its modification time
     tags$head(
@@ -31,8 +33,7 @@ create_main_ui <- function(free_text_questions) {
         tabsetPanel(
           id = "tabset",
           create_home_tab(),
-          create_question_responses_tab(free_text_questions),
-          create_participant_profile_tab()
+          create_question_responses_tab(free_text_questions)
         )
       )
     )

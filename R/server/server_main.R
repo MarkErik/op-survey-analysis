@@ -24,6 +24,7 @@ create_main_server <- function(free_text_questions) {
     selected_response_id <- reactiveVal(NULL)
     selected_section <- reactiveVal(NULL)
     selected_plot_item <- reactiveVal(NULL)
+    show_modal <- reactiveVal(FALSE)
     
     # Handle question button clicks
     observe({
@@ -66,19 +67,6 @@ create_main_server <- function(free_text_questions) {
       }
     })
     
-    # Render selected question display
-    output$selected_question_display <- renderUI({
-      if (!is.null(current_question())) {
-        div(class = "selected-question-badge",
-          span("Viewing responses for: ", strong(free_text_questions[current_question()]))
-        )
-      } else {
-        div(class = "selected-question-placeholder",
-          span("No question selected")
-        )
-      }
-    })
-    
     # Render responses table
     output$responses_table <- renderDT({
       render_responses_table(current_responses, free_text_questions, current_question)
@@ -87,9 +75,30 @@ create_main_server <- function(free_text_questions) {
     # Handle row selection in responses table
     handle_row_selection(input, selected_response_id, current_responses, session)
     
-    # Render participant profile
-    output$profile_ui <- renderUI({
+    # Show modal when a response is selected
+    observeEvent(selected_response_id(), {
+      if (!is.null(selected_response_id())) {
+        show_modal(TRUE)
+      }
+    })
+    
+    # Hide modal when close button is clicked
+    observeEvent(input$close_modal, {
+      show_modal(FALSE)
+    })
+    
+    # Render participant profile in modal
+    output$modal_profile_ui <- renderUI({
       render_participant_profile(selected_response_id, current_responses, current_question, df(), free_text_questions)
+    })
+    
+    # JavaScript to show/hide modal based on reactive value
+    observe({
+      if (show_modal()) {
+        runjs('$("#participant_profile_modal").show();')
+      } else {
+        runjs('$("#participant_profile_modal").hide();')
+      }
     })
     
     # Update statistics on home page

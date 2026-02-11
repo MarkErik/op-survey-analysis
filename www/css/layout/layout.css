@@ -173,7 +173,6 @@
   border-radius: var(--border-radius-md);
   box-shadow: none;
   margin-bottom: var(--spacing-8);
-  border: 1px solid var(--medium-color);
 }
 
 .home-content h2 {

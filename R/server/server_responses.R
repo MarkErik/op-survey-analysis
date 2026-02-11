@@ -33,9 +33,6 @@ handle_row_selection <- function(input, selected_response_id, current_responses,
       row_idx <- input$responses_table_rows_selected[1]
       # Extract response_id from the selected row
       selected_response_id(current_responses()[row_idx, "response_id"])
-      
-      # Switch to Participant Profile tab
-      updateTabsetPanel(session, "tabset", selected = "Participant Profile")
     }
   })
 }
