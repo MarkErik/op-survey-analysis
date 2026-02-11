@@ -9,9 +9,6 @@ source("R/utils/utility_functions.R", local = TRUE)
 # Create the main UI
 create_main_ui <- function(free_text_questions) {
   fluidPage(
-    # Initialize shinyjs for JavaScript functionality
-    useShinyjs(),
-    
     # Include custom CSS with dynamic cache busting
     # Each CSS file gets a version based on its modification time
     tags$head(

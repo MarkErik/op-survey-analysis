@@ -24,7 +24,6 @@ create_main_server <- function(free_text_questions) {
     selected_response_id <- reactiveVal(NULL)
     selected_section <- reactiveVal(NULL)
     selected_plot_item <- reactiveVal(NULL)
-    show_modal <- reactiveVal(FALSE)
     
     # Handle question button clicks
     observe({
@@ -78,26 +77,13 @@ create_main_server <- function(free_text_questions) {
     # Show modal when a response is selected
     observeEvent(selected_response_id(), {
       if (!is.null(selected_response_id())) {
-        show_modal(TRUE)
-      }
-    })
-    
-    # Hide modal when close button is clicked
-    observeEvent(input$close_modal, {
-      show_modal(FALSE)
-    })
-    
-    # Render participant profile in modal
-    output$modal_profile_ui <- renderUI({
-      render_participant_profile(selected_response_id, current_responses, current_question, df(), free_text_questions)
-    })
-    
-    # JavaScript to show/hide modal based on reactive value
-    observe({
-      if (show_modal()) {
-        runjs('$("#participant_profile_modal").show();')
-      } else {
-        runjs('$("#participant_profile_modal").hide();')
+        showModal(modalDialog(
+          title = "Participant Profile",
+          render_participant_profile(selected_response_id, current_responses, current_question, df(), free_text_questions),
+          footer = NULL,
+          size = "l",
+          easyClose = TRUE
+        ))
       }
     })
     

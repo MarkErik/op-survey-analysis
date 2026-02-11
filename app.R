@@ -2,7 +2,6 @@
 
 # Load required libraries
 library(shiny)
-library(shinyjs)
 library(DT)
 library(tidyverse)
 library(stringr)
