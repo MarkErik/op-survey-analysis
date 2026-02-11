@@ -42,6 +42,7 @@ generate_learning_preference_plot <- function(df) {
     # Create bar chart with 3 distinct colors
     p <- ggplot(pref_df, aes(x = preference, y = count, fill = preference)) +
       geom_col(width = 0.7) +
+      geom_hline(yintercept = 0, color = "gray80", linewidth = 0.75) +
       scale_fill_manual(values = c("In-person" = "#f8b4b4", "Online" = "#a8e6cf", "No preference" = "#ffd3b6")) +
       theme_minimal() +
       theme(
@@ -103,8 +104,10 @@ generate_prior_experience_plot <- function(df) {
         panel.grid.minor = element_blank(),
         legend.position = "none"
       ) +
-      labs(x = "Prior Experience", y = "Count", title = "") +
-      coord_flip()
+      labs(x = "", y = "Count", title = "") +
+      coord_flip() +
+      geom_hline(yintercept = 0, color = "gray80", linewidth = 0.75)
+
     
     return(list(plot = p, data = exp_df))
   } else {
@@ -177,7 +180,7 @@ generate_section_breakdown_plot <- function(df) {
         legend.position = "none",
       ) +
       labs(y = "Number of Responses") +
-      geom_hline(yintercept = 0, color = "gray80", linewidth = 0.5)
+      geom_hline(yintercept = 0, color = "gray80", linewidth = 0.75)
     
     return(list(plot = p, data = section_df))
   } else {
@@ -242,9 +245,11 @@ generate_course_satisfaction_plot <- function(df) {
         panel.grid.minor = element_blank(),
         legend.position = "none"
       ) +
-      labs(x = "Question", y = "Average Score (1-5)", title = "") +
+      labs(x = "", y = "Average Score (1-5)", title = "") +
       coord_flip() +
-      ylim(0, 5)
+      ylim(0, 5) +
+      geom_hline(yintercept = 0, color = "grey80", linewidth = 0.75)
+
     
     return(list(plot = p, data = plot_data))
   } else {
@@ -314,9 +319,11 @@ generate_discord_engagement_plot <- function(df) {
         panel.grid.minor = element_blank(),
         legend.position = "none"
       ) +
-      labs(x = "Discord Metric", y = "Percentage (%)", title = "") +
+      labs(x = "", y = "Percentage (%)", title = "") +
       coord_flip() +
-      ylim(0, 100)
+      ylim(0, 100) +
+      geom_hline(yintercept = 0, color = "gray80", linewidth = 0.75)
+
     
     return(list(plot = p, data = plot_data))
   } else {
@@ -382,9 +389,11 @@ generate_learning_methods_plot <- function(df) {
         panel.grid.minor = element_blank(),
         legend.position = "none"
       ) +
-      labs(x = "Learning Method", y = "Average Rating (1-5)", title = "") +
+      labs(x = "", y = "Average Rating (1-5)", title = "") +
       coord_flip() +
-      ylim(0, 5)
+      ylim(0, 5) +
+      geom_hline(yintercept = 0, color = "gray80", linewidth = 0.75)
+
     
     return(list(plot = p, data = plot_data))
   } else {
@@ -452,9 +461,11 @@ generate_community_connection_plot <- function(df) {
         panel.grid.minor = element_blank(),
         legend.position = "none"
       ) +
-      labs(x = "Community Question", y = "Average Score (1-5)", title = "") +
+      labs(x = "", y = "Average Score (1-5)", title = "") +
       coord_flip() +
-      ylim(0, 5)
+      ylim(0, 5) +
+      geom_hline(yintercept = 0, color = "gray80", linewidth = 0.75)
+
     
     return(list(plot = p, data = plot_data, overall_avg = overall_avg))
   } else {
