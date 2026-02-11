@@ -184,25 +184,33 @@ create_main_server <- function(free_text_questions) {
     # Generate course satisfaction plot
     output$course_satisfaction_plot <- renderGirafe({
       plot <- get_course_satisfaction_plot(filtered_df())
-      girafe(ggobj = plot)
+      girafe(
+        ggobj = plot,
+        width_svg = 10)
     })
     
     # Generate Discord engagement plot
     output$discord_engagement_plot <- renderGirafe({
       plot <- get_discord_engagement_plot(filtered_df())
-      girafe(ggobj = plot)
+      girafe(
+        ggobj = plot,
+        width_svg = 10)
     })
     
     # Generate learning methods plot
     output$learning_methods_plot <- renderGirafe({
       plot <- get_learning_methods_plot(filtered_df())
-      girafe(ggobj = plot)
+      girafe(
+        ggobj = plot,
+        width_svg = 10)
     })
     
     # Generate community connection plot
     output$community_connection_plot <- renderGirafe({
       plot <- get_community_connection_plot(filtered_df())
-      girafe(ggobj = plot)
+      girafe(
+        ggobj = plot,
+        width_svg = 10)
     })
     
   }
