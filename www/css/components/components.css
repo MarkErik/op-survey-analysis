@@ -393,16 +393,6 @@
    ============================================ */
 
 .dataTables_wrapper {
-  padding: var(--spacing-6);
-  background-color: white;
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--box-shadow-md);
-  transition: box-shadow var(--transition-normal);
-  border: 1px solid var(--medium-color);
-}
-
-.dataTables_wrapper:hover {
-  box-shadow: var(--box-shadow-lg);
 }
 
 .dataTables_wrapper .dataTables_filter {
