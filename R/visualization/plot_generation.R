@@ -46,7 +46,8 @@ generate_learning_preference_plot <- function(df) {
       scale_fill_manual(values = c("In-person" = "#f8b4b4", "Online" = "#a8e6cf", "No preference" = "#ffd3b6")) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(hjust = 0.5, size = 15),
+        axis.text.y = element_text(size = 14),
         axis.title.x = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor = element_blank(),
@@ -100,7 +101,7 @@ generate_prior_experience_plot <- function(df) {
       geom_col(fill = "#2ecc71", width = 0.7) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(hjust = 1),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = "none"
