@@ -23,7 +23,6 @@ create_main_server <- function(free_text_questions) {
     current_responses <- reactiveVal(NULL)
     selected_response_id <- reactiveVal(NULL)
     selected_section <- reactiveVal(NULL)
-    plot_trigger <- reactiveVal(0)
     selected_plot_item <- reactiveVal(NULL)
     
     # Handle question button clicks
@@ -55,8 +54,6 @@ create_main_server <- function(free_text_questions) {
     observeEvent(input$reset_section_filter, {
       selected_section(NULL)
       selected_plot_item(NULL)
-      # Trigger plot re-render to clear visual selection
-      plot_trigger(plot_trigger() + 1)
     })
     
     # Create filtered data frame based on selected section
@@ -171,20 +168,15 @@ create_main_server <- function(free_text_questions) {
     
     # Generate section breakdown pie chart
     output$section_breakdown_plot <- renderGirafe({
-      # Include plot_trigger to force re-render when reset is clicked
-      plot_trigger()
-      isolate({
-        plot <- get_section_breakdown_plot(df())
-        # Use NULL to clear selection when reset
-        girafe(
-          ggobj = plot,
-          width_svg = 9,
-          options = list(
-            opts_selection(type = "single", selected = selected_plot_item()),
-            opts_sizing(rescale = TRUE)
-          )
+      plot <- get_section_breakdown_plot(df())
+      girafe(
+        ggobj = plot,
+        width_svg = 9,
+        options = list(
+          opts_selection(type = "single", selected = selected_plot_item()),
+          opts_sizing(rescale = TRUE)
         )
-      })
+      )
     })
     
     # Generate course satisfaction plot
