@@ -51,7 +51,7 @@ generate_learning_preference_plot <- function(df) {
         panel.grid.minor = element_blank(),
         legend.position = "none"
       ) +
-      labs(x = "Learning Preference", y = "Number of Responses")
+      labs(y = "Number of Responses")
     
     return(list(plot = p, data = pref_df))
   } else {
@@ -163,7 +163,7 @@ generate_section_breakdown_plot <- function(df) {
     p <- ggplot(section_df, aes(x = section, y = count, fill = section_num)) +
       geom_col_interactive(
         aes(
-          tooltip = paste("Section ", section, ": ", count, " responses", sep = ""),
+          tooltip = paste(section, ": ", count, " responses", sep = ""),
           data_id = section
         ),
         width = 0.7
@@ -172,8 +172,8 @@ generate_section_breakdown_plot <- function(df) {
       scale_x_discrete(drop = FALSE) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(hjust = 0.5, size = 14),
-        axis.text.y = element_text(size = 13),
+        axis.text.x = element_text(hjust = 0.5, size = 15),
+        axis.text.y = element_text(size = 14),
         axis.title.x = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor = element_blank(),

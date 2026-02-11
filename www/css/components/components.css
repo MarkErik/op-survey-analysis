@@ -252,15 +252,18 @@
   border-radius: var(--border-radius-md);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
-  cursor: not-allowed;
+  cursor: default;
   margin-top: var(--spacing-3);
   width: 100%;
+  pointer-events: none;
 }
+
 
 .btn-reset.btn-reset-active {
   background-color: rgb(42, 131, 213);
   cursor: pointer;
   transition: font-weight var(--transition-fast);
+  pointer-events: auto;
 }
 
 .btn-reset.btn-reset-active:hover {
@@ -579,24 +582,17 @@
   transition: all var(--transition-normal);
   min-height: 40px;
   text-decoration: none;
+  color: white;
+}
+
+.btn:hover {
+  color: white;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-600) 100%);
   color: white;
   box-shadow: var(--box-shadow-sm);
-}
-
-.btn-secondary {
-  background-color: white;
-  color: var(--text-color);
-  border: 1px solid var(--medium-color);
-}
-
-.btn-secondary:hover {
-  background-color: var(--light-color);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
 }
 
 .btn-success {

@@ -23,6 +23,8 @@ create_main_server <- function(free_text_questions) {
     current_responses <- reactiveVal(NULL)
     selected_response_id <- reactiveVal(NULL)
     selected_section <- reactiveVal(NULL)
+    plot_trigger <- reactiveVal(0)
+    selected_plot_item <- reactiveVal(NULL)
     
     # Handle question button clicks
     observe({
@@ -42,14 +44,21 @@ create_main_server <- function(free_text_questions) {
     observeEvent(input$section_breakdown_plot_selected, {
       if (!is.null(input$section_breakdown_plot_selected)) {
         selected_section(input$section_breakdown_plot_selected)
+        selected_plot_item(input$section_breakdown_plot_selected)
       } else {
         selected_section(NULL)
+        selected_plot_item(NULL)
       }
     })
     
     # Handle reset section filter button
     observeEvent(input$reset_section_filter, {
       selected_section(NULL)
+      selected_plot_item(NULL)
+      # Trigger plot re-render to clear visual selection
+      plot_trigger(plot_trigger() + 1)
+      # Clear selection via JavaScript after plot re-renders
+      runjs("setTimeout(function() { var plot = document.getElementById('section_breakdown_plot'); if(plot) { var svg = plot.querySelector('svg'); if(svg && svg.girafe) { svg.girafe.clearSelection(); } else if(svg) { var rects = svg.querySelectorAll('rect[data-id]'); rects.forEach(function(r) { r.style.opacity = ''; r.style.fill = ''; }); } } }, 300);")
     })
     
     # Create filtered data frame based on selected section
@@ -164,11 +173,16 @@ create_main_server <- function(free_text_questions) {
     
     # Generate section breakdown pie chart
     output$section_breakdown_plot <- renderGirafe({
+      # Include plot_trigger to force re-render when reset is clicked
+      plot_trigger()
       plot <- get_section_breakdown_plot(df())
+      # Use NULL to clear selection when reset
       girafe(
         ggobj = plot,
+        width_svg = 9,
         options = list(
-          opts_selection(type = "single")
+          opts_selection(type = "single", selected = selected_plot_item()),
+          opts_sizing(rescale = TRUE)
         )
       )
     })
