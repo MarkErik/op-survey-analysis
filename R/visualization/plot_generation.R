@@ -100,7 +100,7 @@ generate_prior_experience_plot <- function(df) {
       geom_col(fill = "#2ecc71", width = 0.7) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(hjust = 0.7, size=14),
+        axis.text.x = element_text(hjust = 0.5, size=14),
         axis.text.y = element_text(size = 15),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -242,7 +242,8 @@ generate_course_satisfaction_plot <- function(df) {
       geom_col(fill = "#9b59b6", width = 0.7) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(hjust = 0.5, size=14),
+        axis.text.y = element_text(size = 15),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = "none"
@@ -316,7 +317,8 @@ generate_discord_engagement_plot <- function(df) {
       geom_col(fill = "#7289da", width = 0.7) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(hjust = 0.5, size=14),
+        axis.text.y = element_text(size = 15),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = "none"
@@ -386,7 +388,8 @@ generate_learning_methods_plot <- function(df) {
       geom_col(fill = "#e67e22", width = 0.7) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(hjust = 0.5, size=14),
+        axis.text.y = element_text(size = 15),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = "none"
@@ -458,7 +461,8 @@ generate_community_connection_plot <- function(df) {
       geom_col(fill = "#1abc9c", width = 0.7) +
       theme_minimal() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(hjust = 0.5, size=14),
+        axis.text.y = element_text(size = 15),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = "none"
