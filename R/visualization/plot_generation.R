@@ -82,7 +82,6 @@ generate_prior_experience_plot <- function(df) {
     exp_df <- data.frame(
       experience = names(exp_counts),
       count = as.numeric(exp_counts),
-      percentage = round(as.numeric(exp_counts) / sum(exp_counts) * 100, 1),
       stringsAsFactors = FALSE
     )
     
