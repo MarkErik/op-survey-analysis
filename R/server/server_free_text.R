@@ -62,7 +62,7 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
         "some" = "Took programming course before (either in school, or online tutorials)",
         "high" = "Highly experienced (comfortable writing own programs)"
       )
-      data <- data[data$prior_experience == exp_mapping[[rv$experience_filter]], ]
+      data <- data[data$prior_programming_experience == exp_mapping[[rv$experience_filter]], ]
     }
     
     return(data)
@@ -86,7 +86,7 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
       select(
         participant_id,
         section,
-        prior_experience,
+        prior_programming_experience,
         learning_preference,
         all_of(selected_question)
       )
@@ -107,11 +107,11 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
       participant_choices <- data %>%
         arrange(participant_id) %>%
         mutate(
-          label = paste0(participant_id, " - ", section, " (", 
+          label = paste0(participant_id, " - ", section, " (",
                         case_when(
-                          prior_experience == "No experience at all" ~ "No Exp",
-                          prior_experience == "Took programming course before (either in school, or online tutorials)" ~ "Some Exp",
-                          prior_experience == "Highly experienced (comfortable writing own programs)" ~ "High Exp",
+                          prior_programming_experience == "No experience at all" ~ "No Exp",
+                          prior_programming_experience == "Took programming course before (either in school, or online tutorials)" ~ "Some Exp",
+                          prior_programming_experience == "Highly experienced (comfortable writing own programs)" ~ "High Exp",
                           TRUE ~ "Unknown"
                         ), ")")
         ) %>%
@@ -269,7 +269,7 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
     p <- participant_data[1, ]
     
     # Define all question columns by category
-    context_cols <- c("section", "prior_experience", "learning_preference")
+    context_cols <- c("section", "prior_programming_experience", "learning_preference")
     course_agreement_cols <- c(
       "how_much_do_you_agree_with_the_statement_1",
       "how_much_do_you_agree_with_the_statement_2",
@@ -336,7 +336,7 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
       ),
       div(
         class = "profile-row",
-        strong("Experience: "), p(p$prior_experience)
+        strong("Experience: "), p(p$prior_programming_experience)
       ),
       div(
         class = "profile-row",

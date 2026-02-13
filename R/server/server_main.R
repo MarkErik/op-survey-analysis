@@ -25,7 +25,7 @@ create_main_server <- function(free_text_questions) {
   function(input, output, session) {
     # Load data
     df <- reactive({
-      load_data()
+      get_survey_data()
     })
     
     # Setup Overview tab

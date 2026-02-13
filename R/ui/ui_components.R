@@ -29,7 +29,7 @@ create_comparison_controls <- function(id = NULL) {
       # Section Selector
       div(
         class = "control-group",
-        label(ns("section_filter"), "Section", class = "control-label"),
+        tags$label("Section", `for` = ns("section_filter"), class = "control-label"),
         selectInput(
           ns("section_filter"),
           label = NULL,
@@ -42,7 +42,7 @@ create_comparison_controls <- function(id = NULL) {
       # Experience Level Selector
       div(
         class = "control-group",
-        label(ns("experience_filter"), "Programming Experience", class = "control-label"),
+        tags$label("Programming Experience", `for` = ns("experience_filter"), class = "control-label"),
         selectInput(
           ns("experience_filter"),
           label = NULL,
@@ -60,7 +60,7 @@ create_comparison_controls <- function(id = NULL) {
       # Learning Preference Selector
       div(
         class = "control-group",
-        label(ns("preference_filter"), "Learning Preference", class = "control-label"),
+        tags$label("Learning Preference", `for` = ns("preference_filter"), class = "control-label"),
         selectInput(
           ns("preference_filter"),
           label = NULL,
@@ -192,12 +192,12 @@ create_participant_modal <- function(id = NULL) {
             class = "response-grid",
             div(
               class = "response-item",
-              label("Learning Preference:", class = "response-label"),
+              tags$label("Learning Preference:", class = "response-label"),
               uiOutput(ns("participant_preference"))
             ),
             div(
               class = "response-item",
-              label("Section:", class = "response-label"),
+              tags$label("Section:", class = "response-label"),
               uiOutput(ns("participant_section_detail"))
             )
           )
