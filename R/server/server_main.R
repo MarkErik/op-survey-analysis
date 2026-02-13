@@ -4,11 +4,13 @@
 source("R/server/server_responses.R", local = TRUE)
 source("R/server/server_statistics.R", local = TRUE)
 source("R/server/server_plots.R", local = TRUE)
+source("R/server/server_overview.R", local = TRUE)
 
 # Source data processing and utility functions
 source("R/data/data_processing.R", local = TRUE)
 source("R/utils/utility_functions.R", local = TRUE)
 source("R/visualization/plot_generation.R", local = TRUE)
+source("R/visualization/plot_overview.R", local = TRUE)
 
 # Create the main server function
 create_main_server <- function(free_text_questions) {
@@ -17,6 +19,9 @@ create_main_server <- function(free_text_questions) {
     df <- reactive({
       load_data()
     })
+    
+    # Setup Overview tab
+    overview_state <- setup_overview_tab(input, output, session, df)
     
     # Current question state
     current_question <- reactiveVal(NULL)
