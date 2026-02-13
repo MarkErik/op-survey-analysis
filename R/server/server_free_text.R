@@ -109,9 +109,9 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
         mutate(
           label = paste0(participant_id, " - ", section, " (",
                         case_when(
-                          prior_programming_experience == "No experience at all" ~ "No Exp",
-                          prior_programming_experience == "Took programming course before (either in school, or online tutorials)" ~ "Some Exp",
-                          prior_programming_experience == "Highly experienced (comfortable writing own programs)" ~ "High Exp",
+                          .data$prior_programming_experience == "No experience at all" ~ "No Exp",
+                          .data$prior_programming_experience == "Took programming course before (either in school, or online tutorials)" ~ "Some Exp",
+                          .data$prior_programming_experience == "Highly experienced (comfortable writing own programs)" ~ "High Exp",
                           TRUE ~ "Unknown"
                         ), ")")
         ) %>%
@@ -210,7 +210,7 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
   })
   
   # Handle individual view profile buttons
-  for (pid in reactiveValToList(reactive({ rv$participant_list }))) {
+  for (pid in rv$participant_list) {
     local({
       participant_id <- pid
       observeEvent(input[[paste0("view_profile_", participant_id)]], {
