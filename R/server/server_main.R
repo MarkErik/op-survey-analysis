@@ -8,6 +8,8 @@ source("R/server/server_overview.R", local = TRUE)
 source("R/server/server_course_content.R", local = TRUE)
 source("R/server/server_learning_elements.R", local = TRUE)
 source("R/server/server_community.R", local = TRUE)
+source("R/server/server_free_text.R", local = TRUE)
+source("R/server/server_insights.R", local = TRUE)
 
 # Source data processing and utility functions
 source("R/data/data_processing.R", local = TRUE)
@@ -17,6 +19,7 @@ source("R/visualization/plot_overview.R", local = TRUE)
 source("R/visualization/plot_course_content.R", local = TRUE)
 source("R/visualization/plot_learning_elements.R", local = TRUE)
 source("R/visualization/plot_community.R", local = TRUE)
+source("R/visualization/plot_free_text.R", local = TRUE)
 
 # Create the main server function
 create_main_server <- function(free_text_questions) {
@@ -37,6 +40,9 @@ create_main_server <- function(free_text_questions) {
     
     # Setup Community & Belonging tab
     community_state <- setup_community_tab(input, output, session, df)
+    
+    # Setup Free Text tab
+    free_text_state <- setup_free_text_tab(input, output, session, df, free_text_questions)
     
     # Current question state
     current_question <- reactiveVal(NULL)
