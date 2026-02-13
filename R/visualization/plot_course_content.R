@@ -164,16 +164,8 @@ generate_agreement_comparison_plot <- function(df, columns, group_by, title = NU
       .groups = "drop"
     ) %>%
     mutate(
-      statement_short = case_when(
-        statement == "how_much_do_you_agree_with_the_statement_1" ~ "Statement 1",
-        statement == "how_much_do_you_agree_with_the_statement_2" ~ "Statement 2",
-        statement == "how_much_do_you_agree_with_the_statement_3" ~ "Statement 3",
-        statement == "how_much_do_you_agree_with_the_statement_4" ~ "Statement 4",
-        statement == "how_much_do_you_agree_with_the_statement_5" ~ "Statement 5",
-        statement == "how_much_do_you_agree_with_the_statement_6" ~ "Statement 6",
-        TRUE ~ statement
-      ),
-      statement_short = factor(statement_short, levels = paste0("Statement ", 1:6))
+      statement_short = sapply(statement, get_display_short),
+      statement_short = factor(statement_short, levels = unique(statement_short))
     )
   
   # Create grouped bar chart
@@ -454,16 +446,8 @@ generate_agreement_heatmap <- function(df, title = NULL) {
       response_label = factor(response_label,
                               levels = c("Strongly Disagree", "Disagree", "Neutral",
                                         "Agree", "Strongly Agree")),
-      statement_short = case_when(
-        statement == "how_much_do_you_agree_with_the_statement_1" ~ "Statement 1",
-        statement == "how_much_do_you_agree_with_the_statement_2" ~ "Statement 2",
-        statement == "how_much_do_you_agree_with_the_statement_3" ~ "Statement 3",
-        statement == "how_much_do_you_agree_with_the_statement_4" ~ "Statement 4",
-        statement == "how_much_do_you_agree_with_the_statement_5" ~ "Statement 5",
-        statement == "how_much_do_you_agree_with_the_statement_6" ~ "Statement 6",
-        TRUE ~ statement
-      ),
-      statement_short = factor(statement_short, levels = paste0("Statement ", 1:6))
+      statement_short = sapply(statement, get_display_short),
+      statement_short = factor(statement_short, levels = unique(statement_short))
     ) %>%
     count(statement_short, response_label) %>%
     group_by(statement_short) %>%
@@ -556,15 +540,7 @@ generate_agreement_rankings_plot <- function(df, title = NULL) {
       .groups = "drop"
     ) %>%
     mutate(
-      statement_short = case_when(
-        statement == "how_much_do_you_agree_with_the_statement_1" ~ "Statement 1",
-        statement == "how_much_do_you_agree_with_the_statement_2" ~ "Statement 2",
-        statement == "how_much_do_you_agree_with_the_statement_3" ~ "Statement 3",
-        statement == "how_much_do_you_agree_with_the_statement_4" ~ "Statement 4",
-        statement == "how_much_do_you_agree_with_the_statement_5" ~ "Statement 5",
-        statement == "how_much_do_you_agree_with_the_statement_6" ~ "Statement 6",
-        TRUE ~ statement
-      ),
+      statement_short = sapply(statement, get_display_short),
       label = paste0(round(avg_score, 2), " (n=", count, ")")
     ) %>%
     arrange(avg_score) %>%

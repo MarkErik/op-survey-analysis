@@ -136,7 +136,7 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
     data <- filtered_data()
     responses <- question_responses()
     if (is.null(data) || is.null(responses)) {
-      return("0%"
+      return("0%")
     }
     rate <- round(nrow(responses) / nrow(data) * 100, 1)
     paste0(rate, "%")
@@ -145,7 +145,7 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
   output$free_text_avg_words <- renderText({
     responses <- question_responses()
     if (is.null(responses) || nrow(responses) == 0) {
-      return("0"
+      return("0")
     }
     
     selected_question <- input$free_text_question

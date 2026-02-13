@@ -1,19 +1,111 @@
 # Data Access Module
 # Functions for accessing processed survey data
 
+#' Resolve Column Alias
+#'
+#' Resolves a numbered alias to the actual column name in the data.
+#'
+#' @param alias A column alias (e.g., "how_much_do_you_agree_with_the_statement_1")
+#' @return The actual column name, or the alias if not found
+#' @export
+resolve_column_alias <- function(alias) {
+  if (exists("column_mappings") && alias %in% names(column_mappings$aliases)) {
+    return(column_mappings$aliases[[alias]])
+  }
+  return(alias)
+}
+
 #' Get Column Display Name
 #'
 #' Retrieves the original column name (question text) for display in UI/charts.
 #'
-#' @param normalized_name A normalized column name
+#' @param normalized_name A normalized column name or alias
 #' @return The original column name (question text), or the normalized name if not found
 #' @export
 get_column_display_name <- function(normalized_name) {
-  idx <- which(column_mappings$normalized == normalized_name)
+  # Resolve alias if needed
+  actual_name <- resolve_column_alias(normalized_name)
+  idx <- which(column_mappings$normalized == actual_name)
   if (length(idx) == 0) {
     return(normalized_name)
   }
   return(column_mappings$original[idx[1]])
+}
+
+#' Get Display Prefix
+#'
+#' Retrieves the question stem (prefix) for a column.
+#'
+#' @param normalized_name A normalized column name or alias
+#' @return The question prefix, or empty string if not found
+#' @export
+get_display_prefix <- function(normalized_name) {
+  actual_name <- resolve_column_alias(normalized_name)
+  if (exists("column_mappings") && actual_name %in% names(column_mappings$display$prefix)) {
+    return(column_mappings$display$prefix[actual_name])
+  }
+  return("")
+}
+
+#' Get Display Core
+#'
+#' Retrieves the core content for a column (the specific question content).
+#'
+#' @param normalized_name A normalized column name or alias
+#' @return The core content, or the column name if not found
+#' @export
+get_display_core <- function(normalized_name) {
+  actual_name <- resolve_column_alias(normalized_name)
+  if (exists("column_mappings") && actual_name %in% names(column_mappings$display$core)) {
+    return(column_mappings$display$core[actual_name])
+  }
+  return(normalized_name)
+}
+
+#' Get Display Short
+#'
+#' Retrieves a compact label for a column suitable for charts and tight spaces.
+#'
+#' @param normalized_name A normalized column name or alias
+#' @return A short label, or the column name if not found
+#' @export
+get_display_short <- function(normalized_name) {
+  actual_name <- resolve_column_alias(normalized_name)
+  if (exists("column_mappings") && actual_name %in% names(column_mappings$display$short)) {
+    return(column_mappings$display$short[actual_name])
+  }
+  return(normalized_name)
+}
+
+#' Get Display Full
+#'
+#' Retrieves a cleaned full question text for a column.
+#'
+#' @param normalized_name A normalized column name or alias
+#' @return The cleaned full question text
+#' @export
+get_display_full <- function(normalized_name) {
+  actual_name <- resolve_column_alias(normalized_name)
+  prefix <- get_display_prefix(actual_name)
+  core <- get_display_core(actual_name)
+  suffix <- if (exists("column_mappings") && actual_name %in% names(column_mappings$display$suffix)) {
+    column_mappings$display$suffix[actual_name]
+  } else {
+    ""
+  }
+  
+  # Build full display text
+  if (!is.null(prefix) && prefix != "") {
+    full <- paste0(prefix, ": ", core)
+  } else {
+    full <- core
+  }
+  
+  if (!is.null(suffix) && suffix != "") {
+    full <- paste0(full, " ", suffix)
+  }
+  
+  return(full)
 }
 
 #' Get All Column Display Names
@@ -30,7 +122,7 @@ get_all_column_display_names <- function() {
 #'
 #' Returns the global column mappings list.
 #'
-#' @return A list with 'original' and 'normalized' character vectors
+#' @return A list with 'original', 'normalized', 'aliases', and 'display' components
 #' @export
 get_column_mappings <- function() {
   return(column_mappings)
@@ -125,8 +217,11 @@ get_likert_data <- function(category = NULL) {
     return(NULL)
   }
   
+  # Resolve aliases to actual column names
+  actual_cols <- sapply(cols, resolve_column_alias)
+  
   # Filter to only existing columns
-  existing_cols <- intersect(cols, names(survey_data))
+  existing_cols <- intersect(actual_cols, names(survey_data))
   
   if (length(existing_cols) == 0) {
     return(NULL)

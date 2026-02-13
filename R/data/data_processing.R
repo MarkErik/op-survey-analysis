@@ -22,8 +22,9 @@ normalize_column_names <- function(df) {
 #' Build Column Mappings
 #'
 #' Creates a global mapping between normalized column names and original
-#' question text for UI display. This function has a side effect of
-#' creating a global `column_mappings` variable.
+#' question text for UI display. Also creates numbered aliases for Likert
+#' columns and parses display name components. This function has a side
+#' effect of creating a global `column_mappings` variable.
 #'
 #' @param df A data frame with normalized column names
 #' @return The data frame with the temporary attribute removed
@@ -34,9 +35,108 @@ build_column_mappings <- function(df) {
     original_names <- names(df)
   }
   
+  normalized_names <- names(df)
+  
+  # Create aliases for Likert columns
+  aliases <- c()
+  alias_to_column <- c()
+  
+  # Course agreement statements
+  course_agreement_cols <- normalized_names[grepl("^how_much_do_you_agree_with_the_statement_", normalized_names) &
+                                           !grepl("^how_much_do_you_agree_with_the_following_statements_", normalized_names)]
+  for (i in seq_along(course_agreement_cols)) {
+    alias <- paste0("how_much_do_you_agree_with_the_statement_", i)
+    aliases <- c(aliases, alias)
+    alias_to_column <- c(alias_to_column, course_agreement_cols[i])
+  }
+  
+  # Learning elements
+  learning_cols <- normalized_names[grepl("^how_much_do_the_following_elements_contribute_to_your_learning_", normalized_names)]
+  for (i in seq_along(learning_cols)) {
+    alias <- paste0("how_much_do_the_following_elements_contribute_to_your_learning_", i)
+    aliases <- c(aliases, alias)
+    alias_to_column <- c(alias_to_column, learning_cols[i])
+  }
+  
+  # Community statements
+  community_cols <- normalized_names[grepl("^how_much_do_you_agree_with_the_following_statements_", normalized_names)]
+  for (i in seq_along(community_cols)) {
+    alias <- paste0("how_much_do_you_agree_with_the_following_statements_", i)
+    aliases <- c(aliases, alias)
+    alias_to_column <- c(alias_to_column, community_cols[i])
+  }
+  
+  names(alias_to_column) <- aliases
+  
+  # Parse display name components for each column
+  display_prefix <- character(length(normalized_names))
+  display_core <- character(length(normalized_names))
+  display_suffix <- character(length(normalized_names))
+  display_short <- character(length(normalized_names))
+  names(display_prefix) <- normalized_names
+  names(display_core) <- normalized_names
+  names(display_suffix) <- normalized_names
+  names(display_short) <- normalized_names
+  
+  for (i in seq_along(normalized_names)) {
+    orig <- original_names[i]
+    
+    # Extract prefix (question stem before brackets)
+    if (grepl("\\[", orig)) {
+      prefix <- trimws(gsub("\\[.*", "", orig))
+      # Remove trailing punctuation
+      prefix <- gsub("[?!.]$", "", prefix)
+      display_prefix[i] <- prefix
+      
+      # Extract core (content within brackets)
+      core <- gsub(".*\\[", "", orig)
+      core <- gsub("\\].*", "", core)
+      display_core[i] <- core
+      
+      # Extract suffix (anything after brackets)
+      if (grepl("\\]", orig)) {
+        suffix <- trimws(gsub(".*\\]", "", orig))
+        display_suffix[i] <- suffix
+      }
+      
+      # Create short label (first few words of core, capitalized)
+      core_words <- strsplit(core, "\\s+")[[1]]
+      if (length(core_words) > 0) {
+        short_words <- core_words[1:min(3, length(core_words))]
+        display_short[i] <- paste(toupper(substr(short_words, 1, 1)),
+                                   substr(short_words, 2, nchar(short_words)),
+                                   sep = "", collapse = " ")
+      } else {
+        display_short[i] <- core
+      }
+    } else {
+      # No brackets, use full text as core
+      display_prefix[i] <- ""
+      display_core[i] <- orig
+      display_suffix[i] <- ""
+      # Create short from first few words
+      words <- strsplit(orig, "\\s+")[[1]]
+      if (length(words) > 0) {
+        short_words <- words[1:min(3, length(words))]
+        display_short[i] <- paste(toupper(substr(short_words, 1, 1)),
+                                   substr(short_words, 2, nchar(short_words)),
+                                   sep = "", collapse = " ")
+      } else {
+        display_short[i] <- orig
+      }
+    }
+  }
+  
   column_mappings <<- list(
     original = original_names,
-    normalized = names(df)
+    normalized = normalized_names,
+    aliases = alias_to_column,
+    display = list(
+      prefix = display_prefix,
+      core = display_core,
+      suffix = display_suffix,
+      short = display_short
+    )
   )
   
   # Remove the temporary attribute
@@ -94,18 +194,43 @@ parse_section_identifiers <- function(df) {
   return(df)
 }
 
+#' Resolve Column Alias
+#'
+#' Resolves a numbered alias to the actual column name in the data.
+#'
+#' @param alias A column alias (e.g., "how_much_do_you_agree_with_the_statement_1")
+#' @return The actual column name, or the alias if not found
+#' @export
+resolve_column_alias <- function(alias) {
+  if (exists("column_mappings") && alias %in% names(column_mappings$aliases)) {
+    return(column_mappings$aliases[[alias]])
+  }
+  return(alias)
+}
+
 #' Normalize Likert Scales
 #'
 #' Strips non-numeric characters from Likert responses to extract numeric rating (1-5).
+#' Accepts either actual column names or numbered aliases.
 #'
 #' @param df A data frame
-#' @param likert_columns Character vector of column names containing Likert responses
+#' @param likert_columns Character vector of column names or aliases containing Likert responses
 #' @return A data frame with Likert columns converted to integers
 #' @export
 normalize_likert_scales <- function(df, likert_columns) {
+  # Resolve any aliases to actual column names
+  actual_columns <- sapply(likert_columns, resolve_column_alias)
+  
+  # Filter to only existing columns
+  existing_cols <- intersect(actual_columns, names(df))
+  
+  if (length(existing_cols) == 0) {
+    return(df)
+  }
+  
   df <- df %>%
     mutate(across(
-      all_of(likert_columns),
+      all_of(existing_cols),
       ~ as.integer(gsub("[^0-9]", "", .x))
     ))
   return(df)
@@ -169,16 +294,23 @@ parse_discord_responses <- function(df) {
 #' @return A data frame with cleaned text columns
 #' @export
 clean_free_text <- function(df, text_columns) {
+  # Filter to only existing columns
+  existing_cols <- intersect(text_columns, names(df))
+  
+  if (length(existing_cols) == 0) {
+    return(df)
+  }
+  
   df <- df %>%
     mutate(across(
-      all_of(text_columns),
+      all_of(existing_cols),
       ~ {
-        if (is.na(.x)) return(NA_character_)
-        .x %>%
-          str_trim() %>%
-          gsub("\\r\\n|\\r|\\n", " ", .) %>%
-          gsub("\\s+", " ", .) %>%
-          str_trim()
+        result <- .x
+        result[!is.na(result)] <- str_trim(result[!is.na(result)])
+        result[!is.na(result)] <- gsub("\\r\\n|\\r|\\n", " ", result[!is.na(result)])
+        result[!is.na(result)] <- gsub("\\s+", " ", result[!is.na(result)])
+        result[!is.na(result)] <- str_trim(result[!is.na(result)])
+        result
       }
     ))
   return(df)
@@ -198,10 +330,11 @@ process_survey_data <- function(raw_df) {
   df <- raw_df %>%
     normalize_column_names() %>%
     build_column_mappings() %>%
+    rename(section = what_section_are_you_in) %>%
     generate_participant_ids() %>%
     parse_section_identifiers()
   
-  # Define column groups
+  # Define column groups using numbered aliases
   likert_columns <- c(
     # Course agreement (columns 8-13)
     "how_much_do_you_agree_with_the_statement_1",

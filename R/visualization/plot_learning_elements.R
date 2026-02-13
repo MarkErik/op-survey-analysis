@@ -88,20 +88,7 @@ generate_learning_elements_ranking_plot <- function(df, title = NULL) {
       .groups = "drop"
     ) %>%
     mutate(
-      element_short = case_when(
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_1" ~ "Element 1",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_2" ~ "Element 2",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_3" ~ "Element 3",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_4" ~ "Element 4",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_5" ~ "Element 5",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_6" ~ "Element 6",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_7" ~ "Element 7",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_8" ~ "Element 8",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_9" ~ "Element 9",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_10" ~ "Element 10",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_11" ~ "Element 11",
-        TRUE ~ element
-      ),
+      element_short = sapply(element, get_display_short),
       label = paste0(round(avg_score, 2), " (n=", count, ")")
     ) %>%
     arrange(avg_score) %>%
@@ -208,21 +195,8 @@ generate_elements_comparison_plot <- function(df, group_by, title = NULL) {
       .groups = "drop"
     ) %>%
     mutate(
-      element_short = case_when(
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_1" ~ "Element 1",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_2" ~ "Element 2",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_3" ~ "Element 3",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_4" ~ "Element 4",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_5" ~ "Element 5",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_6" ~ "Element 6",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_7" ~ "Element 7",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_8" ~ "Element 8",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_9" ~ "Element 9",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_10" ~ "Element 10",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_11" ~ "Element 11",
-        TRUE ~ element
-      ),
-      element_short = factor(element_short, levels = paste0("Element ", 1:11))
+      element_short = sapply(element, get_display_short),
+      element_short = factor(element_short, levels = unique(element_short))
     )
   
   # Create grouped bar chart
@@ -421,21 +395,8 @@ generate_element_distribution_plot <- function(df, title = NULL) {
       response_label = factor(response_label,
                               levels = c("Not at all", "Slightly", "Moderately",
                                         "Significantly", "Very significantly")),
-      element_short = case_when(
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_1" ~ "Element 1",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_2" ~ "Element 2",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_3" ~ "Element 3",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_4" ~ "Element 4",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_5" ~ "Element 5",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_6" ~ "Element 6",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_7" ~ "Element 7",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_8" ~ "Element 8",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_9" ~ "Element 9",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_10" ~ "Element 10",
-        element == "how_much_do_the_following_elements_contribute_to_your_learning_11" ~ "Element 11",
-        TRUE ~ element
-      ),
-      element_short = factor(element_short, levels = paste0("Element ", 1:11))
+      element_short = sapply(element, get_display_short),
+      element_short = factor(element_short, levels = unique(element_short))
     ) %>%
     count(element_short, response_label) %>%
     group_by(element_short) %>%

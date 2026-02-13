@@ -164,15 +164,8 @@ generate_belonging_comparison_plot <- function(df, columns, group_by, title = NU
       .groups = "drop"
     ) %>%
     mutate(
-      statement_short = case_when(
-        statement == "how_much_do_you_agree_with_the_following_statements_1" ~ "Statement 1",
-        statement == "how_much_do_you_agree_with_the_following_statements_2" ~ "Statement 2",
-        statement == "how_much_do_you_agree_with_the_following_statements_3" ~ "Statement 3",
-        statement == "how_much_do_you_agree_with_the_following_statements_4" ~ "Statement 4",
-        statement == "how_much_do_you_agree_with_the_following_statements_5" ~ "Statement 5",
-        TRUE ~ statement
-      ),
-      statement_short = factor(statement_short, levels = paste0("Statement ", 1:5))
+      statement_short = sapply(statement, get_display_short),
+      statement_short = factor(statement_short, levels = unique(statement_short))
     )
   
   # Create grouped bar chart
@@ -422,15 +415,8 @@ generate_belonging_statements_distribution_plot <- function(df, title = NULL) {
       response_label = factor(response_label,
                               levels = c("Strongly Disagree", "Disagree", "Neutral",
                                         "Agree", "Strongly Agree")),
-      statement_short = case_when(
-        statement == "how_much_do_you_agree_with_the_following_statements_1" ~ "Statement 1",
-        statement == "how_much_do_you_agree_with_the_following_statements_2" ~ "Statement 2",
-        statement == "how_much_do_you_agree_with_the_following_statements_3" ~ "Statement 3",
-        statement == "how_much_do_you_agree_with_the_following_statements_4" ~ "Statement 4",
-        statement == "how_much_do_you_agree_with_the_following_statements_5" ~ "Statement 5",
-        TRUE ~ statement
-      ),
-      statement_short = factor(statement_short, levels = paste0("Statement ", 1:5))
+      statement_short = sapply(statement, get_display_short),
+      statement_short = factor(statement_short, levels = unique(statement_short))
     ) %>%
     count(statement_short, response_label) %>%
     group_by(statement_short) %>%

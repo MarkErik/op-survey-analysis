@@ -316,7 +316,7 @@ setup_community_tab <- function(input, output, session, df) {
     if (length(discord_cols) > 0) {
       discord_users <- data %>%
         select(all_of(discord_cols)) %>%
-        rowwise() %>        mutate(uses_discord = any(c_across(everything()) == 1, na.rm = TRUE)) %>%
+        rowwise() |>        mutate(uses_discord = any(c_across(everything()) == 1, na.rm = TRUE)) %>%
         filter(uses_discord) %>%
         nrow()
       

@@ -133,7 +133,7 @@ setup_overview_tab <- function(input, output, session, df) {
   output$overview_response_rate <- renderText({
     data <- filtered_data()
     if (is.null(data)) {
-      return("0%"
+      return("0%")
     }
     # Estimate response rate (this is a placeholder - actual calculation would need enrollment data)
     paste0("100%", " (", nrow(data), " responses)")
@@ -142,7 +142,7 @@ setup_overview_tab <- function(input, output, session, df) {
   output$overview_avg_satisfaction <- renderText({
     data <- filtered_data()
     if (is.null(data)) {
-      return("N/A"
+      return("N/A")
     }
     
     # Calculate average satisfaction from course agreement statements
@@ -158,7 +158,7 @@ setup_overview_tab <- function(input, output, session, df) {
     available_columns <- agreement_columns[agreement_columns %in% names(data)]
     
     if (length(available_columns) == 0) {
-      return("N/A"
+      return("N/A")
     }
     
     avg_score <- data %>%
@@ -168,7 +168,7 @@ setup_overview_tab <- function(input, output, session, df) {
       pull(mean)
     
     if (is.na(avg_score)) {
-      return("N/A"
+      return("N/A")
     }
     
     # Convert to a satisfaction score out of 5
