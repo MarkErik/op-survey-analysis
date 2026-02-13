@@ -12,7 +12,6 @@ create_course_content_tab <- function() {
   tabPanel(
     title = "Course Content",
     value = "course_content",
-    icon = icon("book"),
     div(
       class = "tab-content course-content-tab",
       # Page Header

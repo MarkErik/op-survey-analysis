@@ -330,7 +330,11 @@ process_survey_data <- function(raw_df) {
   df <- raw_df %>%
     normalize_column_names() %>%
     build_column_mappings() %>%
-    rename(section = what_section_are_you_in) %>%
+    rename(
+      section = what_section_are_you_in,
+      prior_programming_experience = prior_to_taking_this_course_what_was_your_programming_experience,
+      learning_preference = do_you_prefer_in_person_or_online_learning
+    ) %>%
     generate_participant_ids() %>%
     parse_section_identifiers()
   

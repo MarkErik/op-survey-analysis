@@ -12,7 +12,6 @@ create_community_tab <- function() {
   tabPanel(
     title = "Community & Belonging",
     value = "community",
-    icon = icon("users"),
     div(
       class = "tab-content community-tab",
       # Page Header
@@ -40,24 +39,21 @@ create_community_tab <- function() {
             create_stat_card(
               title = "Overall Belonging Score",
               value = uiOutput("community_belonging_score"),
-              subtitle = "Average across all statements",
-              icon = "heart"
+              subtitle = "Average across all statements"
             )
           ),
           column(4,
             create_stat_card(
               title = "Strong Agreement Rate",
               value = uiOutput("community_strong_agreement_rate"),
-              subtitle = "Percentage of 'Strongly Agree' responses",
-              icon = "thumbs-up"
+              subtitle = "Percentage of 'Strongly Agree' responses"
             )
           ),
           column(4,
             create_stat_card(
               title = "Discord Engagement",
               value = uiOutput("community_discord_engagement"),
-              subtitle = "Students using Discord",
-              icon = "comments"
+              subtitle = "Students using Discord"
             )
           )
         ),

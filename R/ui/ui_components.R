@@ -20,8 +20,7 @@ create_comparison_controls <- function(id = NULL) {
       actionButton(
         ns("reset_filters"),
         "Reset Filters",
-        class = "btn-reset",
-        icon = icon("refresh")
+        class = "btn-reset"
       )
     ),
     div(
@@ -95,8 +94,7 @@ create_insights_panel <- function(id = NULL, title = "Insights") {
     class = "insights-panel",
     div(
       class = "insights-header",
-      h4(title, class = "insights-title"),
-      icon("lightbulb", class = "insights-icon")
+      h4(title, class = "insights-title")
     ),
     div(
       class = "insights-body",
@@ -160,7 +158,7 @@ create_participant_modal <- function(id = NULL) {
         ),
         actionButton(
           ns("close_modal"),
-          icon("times"),
+          "Close",
           class = "btn-close-modal"
         )
       ),
@@ -169,7 +167,6 @@ create_participant_modal <- function(id = NULL) {
         class = "participant-navigation",
         actionButton(
           ns("prev_participant"),
-          icon("chevron-left"),
           "Previous",
           class = "btn-nav btn-prev"
         ),
@@ -177,7 +174,6 @@ create_participant_modal <- function(id = NULL) {
         actionButton(
           ns("next_participant"),
           "Next",
-          icon("chevron-right"),
           class = "btn-nav btn-next"
         )
       ),
@@ -239,7 +235,6 @@ create_participant_modal <- function(id = NULL) {
         actionButton(
           ns("view_in_table"),
           "View in Data Table",
-          icon = icon("table"),
           class = "btn-secondary"
         )
       )
@@ -254,18 +249,11 @@ create_participant_modal <- function(id = NULL) {
 #' @param title The title of the stat card
 #' @param value The main value to display
 #' @param subtitle Optional subtitle or description
-#' @param icon Optional icon name (from shiny::icon)
 #' @return A shiny UI element containing the stat card
 #' @export
-create_stat_card <- function(title, value, subtitle = NULL, icon = NULL) {
+create_stat_card <- function(title, value, subtitle = NULL) {
   div(
     class = "stat-card",
-    if (!is.null(icon)) {
-      div(
-        class = "stat-icon",
-        icon(icon)
-      )
-    },
     div(
       class = "stat-content",
       h6(title, class = "stat-title"),

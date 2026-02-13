@@ -12,7 +12,6 @@ create_learning_elements_tab <- function() {
   tabPanel(
     title = "Learning Elements",
     value = "learning_elements",
-    icon = icon("graduation-cap"),
     div(
       class = "tab-content learning-elements-tab",
       # Page Header

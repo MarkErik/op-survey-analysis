@@ -13,7 +13,6 @@ create_free_text_tab <- function(free_text_questions) {
   tabPanel(
     title = "Free Text Responses",
     value = "free_text",
-    icon = icon("comment-alt"),
     div(
       class = "tab-content free-text-tab",
       # Page Header
@@ -51,24 +50,21 @@ create_free_text_tab <- function(free_text_questions) {
             create_stat_card(
               title = "Total Responses",
               value = uiOutput("free_text_total_responses"),
-              subtitle = "Responses for selected question",
-              icon = "comments"
+              subtitle = "Responses for selected question"
             )
           ),
           column(4,
             create_stat_card(
               title = "Response Rate",
               value = uiOutput("free_text_response_rate"),
-              subtitle = "Percentage of participants",
-              icon = "percent"
+              subtitle = "Percentage of participants"
             )
           ),
           column(4,
             create_stat_card(
               title = "Avg Word Count",
               value = uiOutput("free_text_avg_words"),
-              subtitle = "Average response length",
-              icon = "align-left"
+              subtitle = "Average response length"
             )
           )
         )
@@ -166,7 +162,6 @@ create_free_text_tab <- function(free_text_questions) {
               actionButton(
                 "view_participant_profile",
                 "View Full Profile",
-                icon = icon("user"),
                 class = "btn-primary"
               )
             )

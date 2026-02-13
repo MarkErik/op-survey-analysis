@@ -186,7 +186,7 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
           ),
           actionButton(
             ns(paste0("view_profile_", resp$participant_id)),
-            icon("user"),
+            "View Profile",
             class = "btn-icon btn-view-profile",
             title = "View Participant Profile"
           )
@@ -232,8 +232,8 @@ setup_free_text_tab <- function(input, output, session, df, free_text_questions)
       title = paste("Participant Profile:", rv$selected_participant),
       size = "l",
       footer = tagList(
-        actionButton(ns("prev_participant"), icon("arrow-left"), "Previous"),
-        actionButton(ns("next_participant"), "Next", icon("arrow-right")),
+        actionButton(ns("prev_participant"), "Previous"),
+        actionButton(ns("next_participant"), "Next"),
         modalButton("Close")
       ),
       uiOutput(ns("participant_profile_content"))

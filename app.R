@@ -18,10 +18,10 @@ source("R/ui/ui_main.R", local = FALSE)
 source("R/server/server_main.R", local = FALSE)
 
 # Define UI
-ui <- create_main_ui(free_text_questions)
+ui <- create_main_ui()
 
 # Define server
-server <- create_main_server(free_text_questions)
+server <- create_main_server()
 
 # Create the Shiny app
 shinyApp(ui = ui, server = server)

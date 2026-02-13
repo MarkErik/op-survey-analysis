@@ -12,7 +12,6 @@ create_overview_tab <- function() {
   tabPanel(
     title = "Overview",
     value = "overview",
-    icon = icon("home"),
     div(
       class = "tab-content overview-tab",
       # Page Header
@@ -31,32 +30,28 @@ create_overview_tab <- function() {
             create_stat_card(
               title = "Total Responses",
               value = uiOutput("overview_total_responses"),
-              subtitle = "Completed surveys",
-              icon = "users"
+              subtitle = "Completed surveys"
             )
           ),
           column(3,
             create_stat_card(
               title = "Unique Sections",
               value = uiOutput("overview_unique_sections"),
-              subtitle = "Course sections represented",
-              icon = "layer-group"
+              subtitle = "Course sections represented"
             )
           ),
           column(3,
             create_stat_card(
               title = "Response Rate",
               value = uiOutput("overview_response_rate"),
-              subtitle = "Estimated completion rate",
-              icon = "chart-line"
+              subtitle = "Estimated completion rate"
             )
           ),
           column(3,
             create_stat_card(
               title = "Avg Satisfaction",
               value = uiOutput("overview_avg_satisfaction"),
-              subtitle = "Overall course satisfaction",
-              icon = "star"
+              subtitle = "Overall course satisfaction"
             )
           )
         )

@@ -11,7 +11,7 @@ source("R/ui/ui_free_text_tab.R", local = TRUE)
 source("R/utils/utility_functions.R", local = TRUE)
 
 # Create the main UI
-create_main_ui <- function(free_text_questions) {
+create_main_ui <- function() {
   fluidPage(
     # Include custom CSS with dynamic cache busting
     # Each CSS file gets a version based on its modification time
@@ -37,7 +37,7 @@ create_main_ui <- function(free_text_questions) {
           create_course_content_tab(),
           create_learning_elements_tab(),
           create_community_tab(),
-          create_free_text_tab(free_text_questions)
+          create_free_text_tab()
         )
       )
     )
