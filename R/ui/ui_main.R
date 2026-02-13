@@ -2,8 +2,12 @@
 
 # Source all UI components
 source("R/ui/ui_header.R", local = TRUE)
-source("R/ui/ui_home_tab.R", local = TRUE)
-source("R/ui/ui_question_responses_tab.R", local = TRUE)
+source("R/ui/ui_components.R", local = TRUE)
+source("R/ui/ui_overview_tab.R", local = TRUE)
+source("R/ui/ui_course_content_tab.R", local = TRUE)
+source("R/ui/ui_learning_elements_tab.R", local = TRUE)
+source("R/ui/ui_community_tab.R", local = TRUE)
+source("R/ui/ui_free_text_tab.R", local = TRUE)
 source("R/utils/utility_functions.R", local = TRUE)
 
 # Create the main UI
@@ -29,8 +33,11 @@ create_main_ui <- function(free_text_questions) {
       column(12,
         tabsetPanel(
           id = "tabset",
-          create_home_tab(),
-          create_question_responses_tab(free_text_questions)
+          create_overview_tab(),
+          create_course_content_tab(),
+          create_learning_elements_tab(),
+          create_community_tab(),
+          create_free_text_tab(free_text_questions)
         )
       )
     )
