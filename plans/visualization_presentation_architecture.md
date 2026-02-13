@@ -288,23 +288,64 @@ flowchart TD
 
 ### 6.2 Color Scheme
 
-Based on existing CSS variables, with semantic extensions:
+Inspired by Anthropic's design aesthetic: clean, sophisticated, warm neutrals with subtle accents.
 
-| Purpose | Color | Hex |
-|---------|-------|-----|
-| **Primary** | Royal Blue | `#2563eb` |
-| **Secondary** | Slate | `#64748b` |
-| **Success** | Green | `#10b981` |
-| **Warning** | Amber | `#f59e0b` |
-| **Error** | Red | `#ef4444` |
-| **Info** | Sky Blue | `#0ea5e9` |
-| **Likert - Strongly Disagree** | Red | `#ef4444` |
-| **Likert - Disagree** | Orange | `#f97316` |
-| **Likert - Neutral** | Gray | `#94a3b8` |
-| **Likert - Agree** | Light Blue | `#38bdf8` |
-| **Likert - Strongly Agree** | Green | `#10b981` |
-| **Section 217** | Blue | `#3498db` |
-| **Section 231** | Light Blue | `#5dade2` |
+| Purpose | Color | Hex | Description |
+|---------|-------|-----|-------------|
+| **Primary** | Warm Taupe | `#8B7355` | Sophisticated brown-taupe |
+| **Primary Dark** | Deep Brown | `#5D4E37` | Darker shade for hover states |
+| **Primary Light** | Light Tan | `#C4A77D` | Lighter shade for backgrounds |
+| **Secondary** | Warm Gray | `#6B6B6B` | Neutral gray with warm undertone |
+| **Secondary Dark** | Charcoal | `#4A4A4A` | Darker neutral |
+| **Secondary Light** | Silver Gray | `#9E9E9E` | Lighter neutral |
+| **Background** | Cream | `#FAF8F5` | Warm off-white background |
+| **Surface** | White | `#FFFFFF` | Pure white for cards/containers |
+| **Border** | Warm Beige | `#E8E4DD` | Subtle border color |
+| **Text Primary** | Dark Brown | `#3D3D3D` | Primary text color |
+| **Text Secondary** | Warm Gray | `#6B6B6B` | Secondary text color |
+| **Text Muted** | Light Gray | `#A0A0A0` | Muted text color |
+| **Accent** | Muted Gold | `#D4AF37` | Subtle gold accent |
+| **Success** | Sage Green | `#7D9A7D` | Muted green for positive |
+| **Warning** | Warm Amber | `#D4A574` | Muted amber for warnings |
+| **Error** | Muted Rose | `#C47D7D` | Soft red for errors |
+| **Info** | Muted Blue | `#7D9DC4` | Soft blue for information |
+
+#### Likert Scale Colors
+
+Subtle, sophisticated gradient from warm neutrals to muted accent:
+
+| Rating | Color | Hex | Description |
+|--------|-------|-----|-------------|
+| **Strongly Disagree** | Muted Rose | `#C47D7D` | Soft red |
+| **Disagree** | Warm Terracotta | `#D49A7D` | Warm orange-brown |
+| **Neutral** | Warm Gray | `#9E9E9E` | Neutral gray |
+| **Agree** | Muted Sage | `#9DC47D` | Soft green |
+| **Strongly Agree** | Deep Sage | `#7DA07D` | Deeper green |
+
+#### Section Colors
+
+Warm, sophisticated palette for section differentiation:
+
+| Section | Color | Hex | Description |
+|---------|-------|-----|-------------|
+| **Section 217** | Warm Taupe | `#8B7355` | Primary taupe |
+| **Section 231** | Light Tan | `#C4A77D` | Lighter tan |
+| **All Sections** | Warm Gray | `#6B6B6B` | Neutral gray |
+
+#### Chart Color Palette
+
+For multi-category charts, use this sophisticated palette:
+
+| Index | Color | Hex | Description |
+|-------|-------|-----|-------------|
+| 1 | Warm Taupe | `#8B7355` |
+| 2 | Muted Sage | `#7DA07D` |
+| 3 | Muted Blue | `#7D9DC4` |
+| 4 | Warm Terracotta | `#D49A7D` |
+| 5 | Muted Gold | `#D4AF37` |
+| 6 | Soft Lavender | `#A89DC4` |
+| 7 | Muted Teal | `#7DC4A0` |
+| 8 | Warm Coral | `#C47D8B` |
 
 ### 6.3 Chart Styling Standards
 
