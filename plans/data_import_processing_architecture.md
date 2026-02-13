@@ -42,14 +42,15 @@ The data processing follows a sequential pipeline:
 ```mermaid
 flowchart TD
     A[Raw CSV] --> B[Load Data]
-    B --> C[Clean Column Names]
-    C --> D[Generate Participant IDs]
-    D --> E[Parse Section Identifiers]
-    E --> F[Normalize Likert Scales]
-    F --> G[Parse Multi-Select Discord]
-    G --> H[Clean Free Text]
-    H --> I[Validate Data]
-    I --> J[Processed Data]
+    B --> C[Normalize Column Names]
+    C --> D[Build Column Mappings]
+    D --> E[Generate Participant IDs]
+    E --> F[Parse Section Identifiers]
+    F --> G[Normalize Likert Scales]
+    G --> H[Parse Multi-Select Discord]
+    H --> I[Clean Free Text]
+    I --> J[Validate Data]
+    J --> K[Processed Data]
 ```
 
 ### 2.2 Core Processing Functions
@@ -58,20 +59,82 @@ flowchart TD
 
 **Function**: `normalize_column_names(df)`
 
-**Purpose**: Convert column names to lowercase, replace spaces with underscores, remove special characters
+**Purpose**: Convert column names to lowercase, replace spaces with underscores, remove special characters for programmatic use
 
 **Implementation**:
 ```r
 normalize_column_names <- function(df) {
+  original_names <- names(df)
   names(df) <- tolower(names(df))
   names(df) <- gsub("[^a-z0-9_]", "_", names(df))
   names(df) <- gsub("_+", "_", names(df))
   names(df) <- gsub("^_|_$", "", names(df))
+  attr(df, "original_column_names") <- original_names
   return(df)
 }
 ```
 
-#### 2.2.2 Participant ID Generation
+**Note**: The function temporarily stores original names as an attribute to return them, but this is only used internally to build the global mapping.
+
+#### 2.2.2 Build Column Mappings
+
+**Function**: `build_column_mappings(df)`
+
+**Purpose**: Create a global mapping between normalized column names and original question text for UI display
+
+**Implementation**:
+```r
+build_column_mappings <- function(df) {
+  original_names <- attr(df, "original_column_names")
+  if (is.null(original_names)) {
+    original_names <- names(df)
+  }
+  
+  column_mappings <<- list(
+    original = original_names,
+    normalized = names(df)
+  )
+  
+  # Remove the temporary attribute
+  attr(df, "original_column_names") <- NULL
+  
+  return(df)
+}
+```
+
+**Rationale**: This creates a global `column_mappings` variable that persists across all operations and won't be lost during data transformations.
+
+#### 2.2.3 Get Display Name for Column
+
+**Function**: `get_column_display_name(normalized_name)`
+
+**Purpose**: Retrieve the original column name (question text) for display in UI/charts
+
+**Implementation**:
+```r
+get_column_display_name <- function(normalized_name) {
+  idx <- which(column_mappings$normalized == normalized_name)
+  if (length(idx) == 0) {
+    return(normalized_name)
+  }
+  return(column_mappings$original[idx[1]])
+}
+```
+
+#### 2.2.4 Get All Display Names
+
+**Function**: `get_all_column_display_names()`
+
+**Purpose**: Return a named vector mapping normalized column names to their display names
+
+**Implementation**:
+```r
+get_all_column_display_names <- function() {
+  setNames(column_mappings$original, column_mappings$normalized)
+}
+```
+
+#### 2.2.5 Participant ID Generation
 
 **Function**: `generate_participant_ids(df)`
 
@@ -97,7 +160,7 @@ generate_participant_ids <- function(df) {
 }
 ```
 
-#### 2.2.3 Section Identifier Parsing
+#### 2.2.6 Section Identifier Parsing
 
 **Function**: `parse_section_identifiers(df)`
 
@@ -123,7 +186,7 @@ parse_section_identifiers <- function(df) {
 }
 ```
 
-#### 2.2.4 Likert Scale Normalization
+#### 2.2.7 Likert Scale Normalization
 
 **Function**: `normalize_likert_scales(df, likert_columns)`
 
@@ -146,7 +209,7 @@ normalize_likert_scales <- function(df, likert_columns) {
 - Learning elements contribution: columns 14-24
 - Community & belonging statements: columns 28-32
 
-#### 2.2.5 Multi-Select Discord Parsing
+#### 2.2.8 Multi-Select Discord Parsing
 
 **Function**: `parse_discord_responses(df)`
 
@@ -196,7 +259,7 @@ parse_discord_responses <- function(df) {
 }
 ```
 
-#### 2.2.6 Free Text Cleaning
+#### 2.2.9 Free Text Cleaning
 
 **Function**: `clean_free_text(df, text_columns)`
 
@@ -221,7 +284,7 @@ clean_free_text <- function(df, text_columns) {
 }
 ```
 
-#### 2.2.7 Main Processing Function
+#### 2.2.10 Main Processing Function
 
 **Function**: `process_survey_data(raw_df)`
 
@@ -234,6 +297,7 @@ process_survey_data <- function(raw_df) {
   
   df <- raw_df %>%
     normalize_column_names() %>%
+    build_column_mappings() %>%
     generate_participant_ids() %>%
     parse_section_identifiers()
   
@@ -311,39 +375,70 @@ process_survey_data <- function(raw_df) {
 - Discord binary columns (one per option)
 - Free text columns (cleaned)
 
-### 3.2 Data Access Functions
+### 3.2 Global Column Mappings
 
-#### 3.2.1 Get All Data
+**Name**: `column_mappings`
+
+**Structure**: List with two character vectors
+
+```r
+column_mappings <- list(
+  original = c("Timestamp", "What section are you in?", ...),
+  normalized = c("timestamp", "what_section_are_you_in", ...)
+)
+```
+
+**Purpose**: Stores the mapping between normalized column names (for programmatic use) and original question text (for UI display)
+
+**Access Functions**:
+- `get_column_display_name(normalized_name)` - Get display name for a single column
+- `get_all_column_display_names()` - Get all mappings as a named vector
+
+### 3.3 Data Access Functions
+
+#### 3.3.1 Get All Data
 
 **Function**: `get_survey_data()`
 
 **Purpose**: Return the full processed data frame
 
-#### 3.2.2 Filter by Section
+#### 3.3.2 Filter by Section
 
 **Function**: `get_data_by_section(course_number, section_time)`
 
 **Purpose**: Return data filtered by course and time slot
 
-#### 3.2.3 Get Likert Data
+#### 3.3.3 Get Likert Data
 
 **Function**: `get_likert_data(category)`
 
 **Purpose**: Return only Likert scale columns for a specific category (course/learning/community)
 
-#### 3.2.4 Get Free Text Responses
+#### 3.3.4 Get Free Text Responses
 
 **Function**: `get_free_text_responses(question_column)`
 
 **Purpose**: Return non-empty responses for a specific free text question
 
-#### 3.2.5 Get Discord Statistics
+#### 3.3.5 Get Discord Statistics
 
 **Function**: `get_discord_stats()`
 
 **Purpose**: Return summary statistics for Discord usage
 
-### 3.3 Data Organization for Visualizations
+#### 3.3.6 Get Column Display Name
+
+**Function**: `get_column_display_name(normalized_name)`
+
+**Purpose**: Retrieve the original column name (question text) for UI display
+
+#### 3.3.7 Get All Display Names
+
+**Function**: `get_all_column_display_names()`
+
+**Purpose**: Return a named vector mapping normalized column names to their display names
+
+### 3.4 Data Organization for Visualizations
 
 **Approach**: Single data frame with accessor functions
 
@@ -392,10 +487,7 @@ load_survey_data <- function() {
 
 **Checks**:
 - Required columns exist
-- Row count matches expected (747)
-- Column count matches expected (38)
 - No duplicate participant IDs
-- Likert values are within valid range (1-5 or NA)
 
 **Implementation**:
 ```r
@@ -405,16 +497,6 @@ validate_survey_data <- function(df) {
   }
   
   errors <- c()
-  
-  # Check row count
-  if (nrow(df) != 747) {
-    errors <- c(errors, paste("Expected 747 rows, found", nrow(df)))
-  }
-  
-  # Check column count
-  if (ncol(df) < 38) {
-    errors <- c(errors, paste("Expected at least 38 columns, found", ncol(df)))
-  }
   
   # Check for required columns
   required_cols <- c("timestamp", "section", "participant_id")
@@ -471,6 +553,7 @@ R/
 #### `R/global.R`
 - Load required packages
 - Define global constants (file paths, column mappings)
+- Initialize global `column_mappings` variable
 - Call data loading and processing at startup
 - Store processed data in global variable `survey_data`
 - Define free text question mappings
@@ -482,6 +565,7 @@ R/
 
 #### `R/data/data_processing.R`
 - `normalize_column_names()` - Column name normalization
+- `build_column_mappings()` - Build global column name mappings
 - `generate_participant_ids()` - ID generation
 - `parse_section_identifiers()` - Section parsing
 - `normalize_likert_scales()` - Likert normalization
@@ -491,8 +575,6 @@ R/
 
 #### `R/data/data_validation.R`
 - `validate_survey_data()` - Comprehensive validation
-- `get_missingness_summary()` - Missing data analysis
-- `validate_likert_range()` - Check Likert value ranges
 
 #### `R/data/data_access.R`
 - `get_survey_data()` - Get full data
@@ -501,6 +583,8 @@ R/
 - `get_free_text_responses()` - Get free text for question
 - `get_discord_stats()` - Discord usage statistics
 - `get_statistics()` - General statistics for home page
+- `get_column_display_name()` - Get display name for a column
+- `get_all_column_display_names()` - Get all display name mappings
 
 ### 5.3 Naming Conventions
 
@@ -508,14 +592,14 @@ R/
 
 **Variables**: `snake_case` (e.g., `survey_data`, `likert_columns`)
 
-**Constants**: `UPPER_SNAKE_CASE` (e.g., `SURVEY_FILE_PATH`, `EXPECTED_ROW_COUNT`)
+**Constants**: `UPPER_SNAKE_CASE` (e.g., `SURVEY_FILE_PATH`)
 
 **Data Frame Columns**: `snake_case` (e.g., `participant_id`, `course_number`)
 
 ### 5.4 Modularization Principles
 
 1. **Single Responsibility**: Each function does one thing well
-2. **Pure Functions**: Processing functions should not have side effects
+2. **Pure Functions**: Processing functions should not have side effects (except `build_column_mappings` which updates global state)
 3. **Composability**: Functions can be chained with pipe operator (`%>%`)
 4. **Testability**: Functions are isolated and can be unit tested
 5. **Documentation**: Each function has clear purpose and parameter documentation
@@ -588,6 +672,7 @@ sequenceDiagram
     Import-->>Global: Raw data frame
     Global->>Process: process_survey_data(raw_df)
     Process->>Process: Normalize column names
+    Process->>Process: Build column mappings (global)
     Process->>Process: Generate participant IDs
     Process->>Process: Parse section identifiers
     Process->>Process: Normalize Likert scales
@@ -599,6 +684,8 @@ sequenceDiagram
     Global->>Global: Store in survey_data
     App->>Access: get_survey_data()
     Access-->>App: Data for visualizations
+    App->>Access: get_column_display_name()
+    Access-->>App: Display name for UI
 ```
 
 ---
@@ -640,10 +727,7 @@ DISCORD_OPTIONS <- c(
 4. **Update `get_responses_for_question()`** to use new column names
 5. **Update `get_participant_profile()`** to use `participant_id` instead of `response_id`
 6. **Add new accessor functions** for section filtering, Likert data, Discord stats
-
-### 9.2 Backward Compatibility
-
-Not needed as this will only hold back improvements. All aspects of the program need to be refactored. Getting the data processing right from the start is the most important.
+7. **Update UI code** to use `get_column_display_name()` for displaying question text
 
 ---
 
