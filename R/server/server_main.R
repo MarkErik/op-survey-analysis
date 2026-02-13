@@ -5,12 +5,18 @@ source("R/server/server_responses.R", local = TRUE)
 source("R/server/server_statistics.R", local = TRUE)
 source("R/server/server_plots.R", local = TRUE)
 source("R/server/server_overview.R", local = TRUE)
+source("R/server/server_course_content.R", local = TRUE)
+source("R/server/server_learning_elements.R", local = TRUE)
+source("R/server/server_community.R", local = TRUE)
 
 # Source data processing and utility functions
 source("R/data/data_processing.R", local = TRUE)
 source("R/utils/utility_functions.R", local = TRUE)
 source("R/visualization/plot_generation.R", local = TRUE)
 source("R/visualization/plot_overview.R", local = TRUE)
+source("R/visualization/plot_course_content.R", local = TRUE)
+source("R/visualization/plot_learning_elements.R", local = TRUE)
+source("R/visualization/plot_community.R", local = TRUE)
 
 # Create the main server function
 create_main_server <- function(free_text_questions) {
@@ -22,6 +28,15 @@ create_main_server <- function(free_text_questions) {
     
     # Setup Overview tab
     overview_state <- setup_overview_tab(input, output, session, df)
+    
+    # Setup Course Content tab
+    course_content_state <- setup_course_content_tab(input, output, session, df)
+    
+    # Setup Learning Elements tab
+    learning_elements_state <- setup_learning_elements_tab(input, output, session, df)
+    
+    # Setup Community & Belonging tab
+    community_state <- setup_community_tab(input, output, session, df)
     
     # Current question state
     current_question <- reactiveVal(NULL)
