@@ -1,0 +1,479 @@
+/* CPSC Experience Survey Explorer - Custom Styles */
+
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
+
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  --light-bg: #f8f9fa;
+  --dark-text: #2c3e50;
+  --muted-text: #7f8c8d;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   Layout Styles
+   ========================================================================== */
+
+.main-content {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--light-bg);
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: var(--muted-text);
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Card Styles
+   ========================================================================== */
+
+.card-custom {
+  margin-bottom: 20px;
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: box-shadow 0.3s ease;
+}
+
+.card-custom:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-header-custom {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+}
+
+/* ==========================================================================
+   Visualization Container
+   ========================================================================== */
+
+.viz-container {
+  background: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+}
+
+.viz-container h4 {
+  color: var(--primary-color);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.chart-subtitle {
+  font-size: 12px;
+  color: var(--muted-text);
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Section Filter
+   ========================================================================== */
+
+.section-filter {
+  background-color: #e3f2fd;
+  padding: 12px 15px;
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-filter .badge {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+/* ==========================================================================
+   Question Buttons
+   ========================================================================== */
+
+.question-button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.question-button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.question-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.question-button.active {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+/* ==========================================================================
+   Statistics Display
+   ========================================================================== */
+
+.stat-box {
+  text-align: center;
+  padding: 20px;
+  background: var(--light-bg);
+  border-radius: var(--border-radius);
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--muted-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-item {
+  padding: 10px;
+}
+
+.stat-item h5 {
+  color: var(--primary-color);
+  font-size: 14px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--light-bg);
+  padding-bottom: 5px;
+}
+
+/* ==========================================================================
+   Table Styles
+   ========================================================================== */
+
+.table-responsive {
+  margin-top: 15px;
+}
+
+/* DataTables specific */
+.dataTables_wrapper {
+  padding: 10px 0;
+}
+
+.dataTables_length label,
+.dataTables_filter label {
+  font-size: 14px;
+  color: var(--dark-text);
+}
+
+.dataTables_info {
+  font-size: 13px;
+  color: var(--muted-text);
+}
+
+.dataTables_paginate {
+  margin-top: 10px;
+}
+
+/* ==========================================================================
+   Modal Styles
+   ========================================================================== */
+
+.modal-content {
+  border-radius: var(--border-radius);
+  border: none;
+}
+
+.modal-header {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.modal-header .btn-close {
+  filter: invert(1);
+}
+
+.response-box {
+  background: var(--light-bg);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--secondary-color);
+}
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+
+.nav-pills .nav-link {
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: var(--light-bg);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--secondary-color);
+}
+
+/* ==========================================================================
+   Sidebar
+   ========================================================================== */
+
+.sidebar-section {
+  padding: 15px;
+  margin-bottom: 15px;
+  background: var(--light-bg);
+  border-radius: var(--border-radius);
+}
+
+.sidebar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.sidebar-hint {
+  font-size: 12px;
+  color: var(--muted-text);
+  margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   Loading States
+   ========================================================================== */
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.spinner-container {
+  text-align: center;
+}
+
+.spinner-container .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* ==========================================================================
+   Empty States
+   ========================================================================== */
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted-text);
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 16px;
+}
+
+/* ==========================================================================
+   Alerts and Messages
+   ========================================================================== */
+
+.alert {
+  border-radius: var(--border-radius);
+  border: none;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.app-footer {
+  padding: 20px;
+  margin-top: 40px;
+  background-color: var(--light-bg);
+  border-top: 1px solid #dee2e6;
+}
+
+.app-footer strong {
+  color: var(--primary-color);
+}
+
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 22px;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .viz-container {
+    padding: 15px;
+  }
+
+  .question-button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  .nav-pills,
+  .sidebar-section,
+  .section-filter {
+    display: none;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+
+  .card-custom {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* ==========================================================================
+   Custom Scrollbar
+   ========================================================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* ==========================================================================
+   Tooltip and Popover
+   ========================================================================== */
+
+.tooltip-inner {
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.popover {
+  border-radius: var(--border-radius);
+  border: 1px solid #dee2e6;
+}
+
+.popover-header {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* ==========================================================================
+   Animation Effects
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Shiny specific */
+.shiny-input-container {
+  width: 100% !important;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
