@@ -1,5 +1,0 @@
-/* Custom CSS for the Shiny App */
-
-/* Note: CSS modules are now loaded directly in ui_main.R with dynamic cache-busting.
-   This file is kept for reference but individual CSS files are loaded separately
-   to ensure proper cache-busting when files are modified. */
