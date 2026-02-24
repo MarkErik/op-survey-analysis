@@ -20,6 +20,7 @@ library(ggiraph)
 
 source("R/global.R")
 source("R/app_config.R")
+source("R/error_handling.R")
 
 # =============================================================================
 # Source Module Files
@@ -59,6 +60,9 @@ ui <- dashboardPage(
   # Body
   dashboardBody(
     useShinyjs(),
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "www/styles.css")
+    ),
     
     # Global loading indicator
     div(
@@ -152,20 +156,17 @@ ui <- dashboardPage(
 server <- function(input, output, session) {
   
   # =============================================================================
-  # Global Error Handling
+  # Global Error Boundary
   # =============================================================================
-  
+
   observe({
     tryCatch({
-      # Check if data file exists
-      if (!file.exists(DATA_FILE_PATH)) {
-        shinyjs::show("global_error")
-        return()
-      }
+      # Check data file status
+      data_status <- check_data_file(DATA_FILE_PATH)
       
-      # Check if data is empty
-      data <- load_survey_data(DATA_FILE_PATH)
-      if (nrow(data) == 0) {
+      if (data_status$status != "ok") {
+        # Show error notification
+        show_error_notification(data_status$error_type)
         shinyjs::show("global_error")
         return()
       }
@@ -174,6 +175,9 @@ server <- function(input, output, session) {
       shinyjs::hide("global_error")
       
     }, error = function(e) {
+      # Log and show error
+      log_error("global_error_boundary", conditionMessage(e))
+      show_error_notification("unknown")
       shinyjs::show("global_error")
     })
   })
@@ -181,43 +185,43 @@ server <- function(input, output, session) {
   # =============================================================================
   # Initialize Data Module
   # =============================================================================
-  
+
   data_server <- dataServer("data")
   
   # =============================================================================
   # Initialize Filter Module
   # =============================================================================
-  
+
   filter_server <- filterServer("filter", data_server = data_server)
   
   # =============================================================================
   # Initialize Home Tab Module
   # =============================================================================
-  
+
   home_server <- homeServer("home", data_server = data_server, filter_server = filter_server)
   
   # =============================================================================
   # Initialize Question Responses Tab Module
   # =============================================================================
-  
+
   responses_server <- responsesServer("responses", data_server = data_server, filter_server = filter_server)
   
   # =============================================================================
   # Initialize Statistics Tab Module
   # =============================================================================
-  
+
   statistics_server <- statisticsServer("statistics", data_server = data_server, filter_server = filter_server)
   
   # =============================================================================
   # Initialize Insights Tab Module
   # =============================================================================
-  
+
   insights_server <- insightsServer("insights", data_server = data_server, filter_server = filter_server)
   
   # =============================================================================
   # Section Filter Propagation
   # =============================================================================
-  
+
   observeEvent(input$selected_section, {
     tryCatch({
       # Update filter server
@@ -228,14 +232,15 @@ server <- function(input, output, session) {
       filter_server$updateAvailableSections(sections)
       
     }, error = function(e) {
-      # Silently handle errors
+      # Log error but don't show notification
+      log_error("filter_propagation", conditionMessage(e))
     })
   })
   
   # =============================================================================
   # Data Loading State Management
   # =============================================================================
-  
+
   observe({
     isLoading <- data_server$isLoading()
     
@@ -249,7 +254,7 @@ server <- function(input, output, session) {
   # =============================================================================
   # Session Management
   # =============================================================================
-  
+
   session$onSessionEnded(function() {
     # Save filter state on session end
     filter_server$saveFilterState()
@@ -258,7 +263,7 @@ server <- function(input, output, session) {
   # =============================================================================
   # Initialize Filter State on App Start
   # =============================================================================
-  
+
   observe({
     tryCatch({
       # Load saved filter state
@@ -269,7 +274,8 @@ server <- function(input, output, session) {
       filter_server$updateAvailableSections(sections)
       
     }, error = function(e) {
-      # Silently handle errors
+      # Log error but don't show notification
+      log_error("filter_state_init", conditionMessage(e))
     })
   })
 }
