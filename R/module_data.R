@@ -253,7 +253,7 @@ dataServer <- function(id, data_file_path = DATA_FILE_PATH) {
 
       # Return all data if no filter
       return(status$data)
-    })
+    }
 
     # Return reactive expressions for use by other modules
     return(list(

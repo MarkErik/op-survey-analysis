@@ -53,12 +53,12 @@ insightsUI <- function(id) {
       column(12,
         div(
           class = "loading-indicator",
-          shinyjs::hidden(
-            div(
-              class = "spinner",
-              icon("spinner", spin = TRUE, lib = "font-awesome"),
-              span("Analyzing...")
-            )
+          div(
+            id = "insights_loading_spinner",
+            style = "display: none;",
+            class = "spinner",
+            icon("spinner", spin = TRUE, lib = "font-awesome"),
+            span("Analyzing...")
           )
         )
       )

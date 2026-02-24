@@ -67,14 +67,13 @@ ui <- dashboardPage(
     # Global loading indicator
     div(
       id = "global_loading",
-      shinyjs::hidden(
+      style = "display: none;",
+      div(
+        class = "loading-overlay",
         div(
-          class = "loading-overlay",
-          div(
-            class = "loading-spinner",
-            icon("spinner", spin = TRUE, lib = "font-awesome"),
-            span("Loading data...")
-          )
+          class = "loading-spinner",
+          icon("spinner", spin = TRUE, lib = "font-awesome"),
+          span("Loading data...")
         )
       )
     ),
@@ -82,13 +81,11 @@ ui <- dashboardPage(
     # Global error notification
     div(
       id = "global_error",
-      shinyjs::hidden(
-        div(
-          class = "error-notification",
-          icon("exclamation-triangle", lib = "font-awesome"),
-          span("An error occurred. Please refresh the page."),
-          shinyjs::onclick("global_error", shinyjs::hide("global_error"))
-        )
+      style = "display: none;",
+      div(
+        class = "error-notification",
+        icon("exclamation-triangle", lib = "font-awesome"),
+        span("An error occurred. Please refresh the page.")
       )
     ),
     

@@ -33,10 +33,8 @@ homeUI <- function(id) {
           div(
             class = "section-breakdown",
             h4("Responses per Section", class = "chart-title"),
-            plotOutput(ns("section_breakdown_chart"),
-              click = ns("section_chart_click"),
-              height = "400px",
-              tooltip = TRUE
+            girafeOutput(ns("section_breakdown_chart"),
+              height = "400px"
             ),
             # Section Filter Display
             div(

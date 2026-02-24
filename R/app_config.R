@@ -102,13 +102,13 @@ STATISTICS_DISPLAY_MISSING <- TRUE
 # Plot Styling Settings
 # =============================================================================
 
-PLOT_THEME <- theme_bw() +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
-    axis.title = element_text(size = 12),
-    axis.text = element_text(size = 10),
+PLOT_THEME <- ggplot2::theme_bw() +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.title = ggplot2::element_text(size = 12),
+    axis.text = ggplot2::element_text(size = 10),
     legend.position = "bottom",
-    panel.grid.minor = element_blank()
+    panel.grid.minor = ggplot2::element_blank()
   )
 
 PLOT_GIRAFE_OPTIONS <- list(
