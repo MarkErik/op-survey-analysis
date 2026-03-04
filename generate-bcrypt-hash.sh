@@ -1,15 +1,4 @@
 #!/bin/bash
-#
-# Generate bcrypt password hashes for ShinyProxy authentication.
-#
-# This script prompts for a password and outputs a bcrypt hash that can be
-# used in application.yml. ShinyProxy uses bcrypt with 10 rounds by default.
-#
-# Usage:
-#     bash generate-bcrypt-hash.sh
-#
-# Requirements:
-#     - htpasswd utility (usually available via apache2-utils or httpd-tools)
 
 set -e
 
@@ -18,7 +7,6 @@ echo "ShinyProxy Bcrypt Password Hash Generator"
 echo "===================================================================="
 echo ""
 
-# Check if htpasswd is available
 if ! command -v htpasswd &> /dev/null; then
     echo "Error: htpasswd command not found."
     echo ""
@@ -29,11 +17,9 @@ if ! command -v htpasswd &> /dev/null; then
     exit 1
 fi
 
-# Get username (optional, for display purposes)
 read -p "Enter username (optional, for reference): " username
 username=${username:-user}
 
-# Get password securely
 read -s -p "Enter password for '$username': " password
 echo ""
 read -s -p "Confirm password: " password_confirm
@@ -51,7 +37,6 @@ if [ -z "$password" ]; then
     exit 1
 fi
 
-# Generate hash using htpasswd with bcrypt
 echo ""
 echo "Generating bcrypt hash..."
 hashed_password=$(htpasswd -nbB "$username" "$password" | cut -d: -f2)
