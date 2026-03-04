@@ -5,32 +5,26 @@
 }
 
 :root {
-  /* Primary Colors */
   --primary-color: #2c3e50;
   --primary-light: #34495e;
   --primary-dark: #1a252f;
   
-  /* Accent Colors */
   --accent-color: #3498db;
   --accent-light: #5dade2;
   --accent-dark: #2980b9;
   
-  /* Success Colors */
   --success-color: #27ae60;
   --success-light: #2ecc71;
   --success-dark: #229954;
   
-  /* Warning Colors */
   --warning-color: #f39c12;
   --warning-light: #f1c40f;
   --warning-dark: #d68910;
   
-  /* Error Colors */
   --error-color: #e74c3c;
   --error-light: #e74c3c;
   --error-dark: #c0392b;
   
-  /* Neutral Colors */
   --text-primary: #2c3e50;
   --text-secondary: #7f8c8d;
   --text-light: #95a5a6;
@@ -38,12 +32,10 @@
   --bg-secondary: #f8f9fa;
   --bg-tertiary: #ecf0f1;
   
-  /* Border Colors */
   --border-color: #bdc3c7;
   --border-light: #e0e0e0;
   --border-dark: #95a5a6;
   
-  /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -51,7 +43,6 @@
   --spacing-xl: 2rem;
   --spacing-2xl: 3rem;
   
-  /* Typography */
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -61,19 +52,16 @@
   --font-size-2xl: 1.5rem;
   --font-size-3xl: 2rem;
   
-  /* Border Radius */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   
-  /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
   
-  /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 300ms ease;
   --transition-slow: 500ms ease;
@@ -86,10 +74,6 @@ body {
   background-color: var(--bg-secondary);
   line-height: 1.6;
 }
-
-/* =============================================================================
-   Loading Spinner Styles
-   ============================================================================= */
 
 .loading-overlay {
   position: fixed;
@@ -141,10 +125,6 @@ body {
   }
 }
 
-/* =============================================================================
-   Card/Panel Styles
-   ============================================================================= */
-
 .card {
   background-color: var(--bg-primary);
   border-radius: var(--radius-lg);
@@ -189,10 +169,6 @@ body {
   padding-top: var(--spacing-sm);
   border-top: 1px solid var(--bg-tertiary);
 }
-
-/* =============================================================================
-   Button Styles
-   ============================================================================= */
 
 .btn {
   display: inline-flex;
@@ -266,7 +242,6 @@ body {
   font-size: var(--font-size-xs);
 }
 
-/* Question selector buttons */
 .question-selector {
   display: flex;
   flex-wrap: wrap;
@@ -294,10 +269,6 @@ body {
   color: white;
   border-color: var(--accent-dark);
 }
-
-/* =============================================================================
-   Table Styles (DT tables)
-   ============================================================================= */
 
 table.dataTable {
   font-size: var(--font-size-sm);
@@ -332,7 +303,6 @@ table.dataTable tbody tr td:first-child {
   font-weight: 600;
 }
 
-/* DataTables pagination */
 table.dataTable_paginate {
   margin-top: var(--spacing-md);
 }
@@ -356,15 +326,10 @@ table.dataTable_paginate .paginate_button.current {
   color: white;
 }
 
-/* DataTables info */
 table.dataTable_info {
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
 }
-
-/* =============================================================================
-   Modal Styles (Participant Profile)
-   ============================================================================= */
 
 .modal-overlay {
   position: fixed;
@@ -443,7 +408,6 @@ table.dataTable_info {
   border-top: 2px solid var(--bg-tertiary);
 }
 
-/* Participant profile sections */
 .profile-section {
   margin-bottom: var(--spacing-lg);
 }
@@ -480,10 +444,6 @@ table.dataTable_info {
   color: var(--text-primary);
   font-weight: 600;
 }
-
-/* =============================================================================
-   Error Notification Styles
-   ============================================================================= */
 
 .error-notification {
   position: fixed;
@@ -532,21 +492,14 @@ table.dataTable_info {
   opacity: 1;
 }
 
-/* Warning notification */
 .warning-notification {
   background-color: var(--warning-color);
 }
 
-/* Success notification */
 .success-notification {
   background-color: var(--success-color);
 }
 
-/* =============================================================================
-   Responsive Breakpoints
-   ============================================================================= */
-
-/* Mobile devices */
 @media (max-width: 768px) {
   :root {
     --font-size-base: 0.9375rem;
@@ -595,7 +548,6 @@ table.dataTable_info {
   }
 }
 
-/* Tablet devices */
 @media (min-width: 769px) and (max-width: 1024px) {
   :root {
     --font-size-base: 1rem;
@@ -609,7 +561,6 @@ table.dataTable_info {
   }
 }
 
-/* Desktop devices */
 @media (min-width: 1025px) {
   :root {
     --font-size-base: 1rem;
@@ -618,10 +569,6 @@ table.dataTable_info {
     --spacing-lg: 1.5rem;
   }
 }
-
-/* =============================================================================
-   Utility Classes
-   ============================================================================= */
 
 .text-center {
   text-align: center;
@@ -691,10 +638,6 @@ table.dataTable_info {
   padding: var(--spacing-lg);
 }
 
-/* =============================================================================
-   Chart Container Styles
-   ============================================================================= */
-
 .chart-container {
   position: relative;
   height: 400px;
@@ -704,10 +647,6 @@ table.dataTable_info {
 .chart-container-lg {
   height: 500px;
 }
-
-/* =============================================================================
-   Filter Display Styles
-   ============================================================================= */
 
 .filter-display {
   display: flex;
@@ -745,10 +684,6 @@ table.dataTable_info {
   color: var(--accent-dark);
 }
 
-/* =============================================================================
-   Empty State Styles
-   ============================================================================= */
-
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -776,10 +711,6 @@ table.dataTable_info {
   max-width: 400px;
 }
 
-/* =============================================================================
-   Loading State for Cards
-   ============================================================================= */
-
 .card-loading {
   position: relative;
   min-height: 200px;
@@ -792,12 +723,7 @@ table.dataTable_info {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    90deg,
-    var(--bg-primary) 0%,
-    var(--bg-tertiary) 50%,
-    var(--bg-primary) 100%
-  );
+  background: linear-gradient(90deg, var(--bg-primary) 0%, var(--bg-tertiary) 50%, var(--bg-primary) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-lg);
