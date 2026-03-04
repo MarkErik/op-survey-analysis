@@ -56,11 +56,8 @@ PLOT_THEME <- ggplot2::theme_bw() +
   )
 
 PLOT_GIRAFE_OPTIONS <- list(
-  width = "100%",
-  height = "100%",
-  zoom_min = 0.5,
-  zoom_max = 3,
-  zoom_ondblclick = FALSE
+  width = 100,
+  height = 100
 )
 
 ERROR_TOAST_DURATION <- 5

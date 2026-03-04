@@ -53,8 +53,7 @@ insightsUI <- function(id) {
             class = "analysis-panel",
             h4("Correlation Matrix", class = "panel-title"),
             plotOutput(ns("correlation_heatmap"),
-              height = "500px",
-              tooltip = TRUE
+              height = "500px"
             ),
             DT::dataTableOutput(ns("correlation_insights"))
           )
@@ -259,11 +258,8 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           ggplot2::ggplot() +
             ggplot2::annotate("text", x = 0.5, y = 0.5, label = "No data available for correlation analysis", size = 5) +
             ggplot2::theme_void(),
-          width = "100%",
-          height = "100%",
-          zoom_min = 0.5,
-          zoom_max = 3,
-          zoom_ondblclick = FALSE
+          width = 100,
+          height = 100
         )
         return()
       }
@@ -308,11 +304,8 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
 
       girafe(
         p,
-        width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        width = 100,
+        height = 100
       )
     })
 
@@ -562,7 +555,7 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
             part_of_class = extract_likert_value(dplyr::all_of(COL_PART_OF_CLASS)),
             friends_important = extract_likert_value(dplyr::all_of(COL_FRIENDS_IMPORTANT)),
             university_community = extract_likert_value(dplyr::all_of(COL_UNIVERSITY_COMMUNITY)),
-            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE)
+            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE))
           ) %>%
           dplyr::filter(!dplyr::any_of(dplyr::c(
             content_relevant, excited_content, satisfied_feedback,
@@ -1083,7 +1076,7 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
             part_of_class = extract_likert_value(dplyr::all_of(COL_PART_OF_CLASS)),
             friends_important = extract_likert_value(dplyr::all_of(COL_FRIENDS_IMPORTANT)),
             university_community = extract_likert_value(dplyr::all_of(COL_UNIVERSITY_COMMUNITY)),
-            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE)
+            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE))
           ) %>%
           dplyr::filter(!dplyr::any_of(dplyr::c(
             content_relevant, excited_content, satisfied_feedback,
@@ -1230,7 +1223,7 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
             part_of_class = extract_likert_value(dplyr::all_of(COL_PART_OF_CLASS)),
             friends_important = extract_likert_value(dplyr::all_of(COL_FRIENDS_IMPORTANT)),
             university_community = extract_likert_value(dplyr::all_of(COL_UNIVERSITY_COMMUNITY)),
-            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE)
+            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE))
           ) %>%
           dplyr::filter(!dplyr::any_of(dplyr::c(
             content_relevant, excited_content, satisfied_feedback,

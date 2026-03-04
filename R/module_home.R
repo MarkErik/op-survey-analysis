@@ -39,8 +39,7 @@ homeUI <- function(id) {
           h4("Learning Preference Distribution", class = "viz-title"),
           plotOutput(ns("learning_preference_chart"),
             click = ns("learning_pref_click"),
-            height = "350px",
-            tooltip = TRUE
+            height = "350px"
           )
         )
       )
@@ -53,8 +52,7 @@ homeUI <- function(id) {
           h4("Prior Programming Experience", class = "viz-title"),
           plotOutput(ns("programming_experience_chart"),
             click = ns("programming_exp_click"),
-            height = "350px",
-            tooltip = TRUE
+            height = "350px"
           )
         )
       )
@@ -67,8 +65,7 @@ homeUI <- function(id) {
           h4("Course Satisfaction Overview", class = "viz-title"),
           plotOutput(ns("course_satisfaction_chart"),
             click = ns("course_sat_click"),
-            height = "350px",
-            tooltip = TRUE
+            height = "350px"
           )
         )
       )
@@ -81,8 +78,7 @@ homeUI <- function(id) {
           h4("Discord Engagement Metrics", class = "viz-title"),
           plotOutput(ns("discord_engagement_chart"),
             click = ns("discord_eng_click"),
-            height = "350px",
-            tooltip = TRUE
+            height = "350px"
           )
         )
       )
@@ -95,8 +91,7 @@ homeUI <- function(id) {
           h4("Most Valuable Learning Methods", class = "viz-title"),
           plotOutput(ns("learning_methods_chart"),
             click = ns("learning_methods_click"),
-            height = "350px",
-            tooltip = TRUE
+            height = "350px"
           )
         )
       )
@@ -109,8 +104,7 @@ homeUI <- function(id) {
           h4("Community Connection Scores", class = "viz-title"),
           plotOutput(ns("community_connection_chart"),
             click = ns("community_conn_click"),
-            height = "350px",
-            tooltip = TRUE
+            height = "350px"
           )
         )
       )
@@ -393,11 +387,8 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
             axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
             panel.grid.minor = ggplot2::element_blank()
           ),
-        width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        width = 100,
+        height = 100
       )
     })
 
@@ -417,11 +408,8 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
             axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
             panel.grid.minor = ggplot2::element_blank()
           ),
-        width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        width = 100,
+        height = 100
       )
     })
 
@@ -441,11 +429,8 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
             axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
             panel.grid.minor = ggplot2::element_blank()
           ),
-        width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        width = 100,
+        height = 100
       )
     })
 
@@ -465,11 +450,8 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
             axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
             panel.grid.minor = ggplot2::element_blank()
           ),
-        width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        width = 100,
+        height = 100
       )
     })
 
@@ -489,11 +471,8 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
             axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
             panel.grid.minor = ggplot2::element_blank()
           ),
-        width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        width = 100,
+        height = 100
       )
     })
 
@@ -513,11 +492,8 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
             axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
             panel.grid.minor = ggplot2::element_blank()
           ),
-        width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        width = 100,
+        height = 100
       )
     })
 
@@ -537,11 +513,8 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
             axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
             panel.grid.minor = ggplot2::element_blank()
           ),
-        width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        width = 100,
+        height = 100
       )
     })
 

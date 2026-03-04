@@ -77,8 +77,7 @@ statisticsUI <- function(id) {
           class = "histogram-section",
           h4("Response Distribution", class = "histogram-title"),
           plotOutput(ns("likert_histogram"),
-            height = "400px",
-            tooltip = TRUE
+            height = "400px"
           )
         )
       )
@@ -90,8 +89,7 @@ statisticsUI <- function(id) {
           class = "section-comparison-panel",
           h4("Section-by-Section Comparison", class = "comparison-title"),
           plotOutput(ns("section_comparison_histogram"),
-            height = "350px",
-            tooltip = TRUE
+            height = "350px"
           )
         )
       )
@@ -282,10 +280,7 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
             ggplot2::annotate("text", x = 0.5, y = 0.5, label = "Select a question to view histogram", size = 5) +
             ggplot2::theme_void(),
           width = "100%",
-          height = "100%",
-          zoom_min = 0.5,
-          zoom_max = 3,
-          zoom_ondblclick = FALSE
+          height = "100%"
         )
         return()
       }
@@ -326,10 +321,7 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       girafe(
         p,
         width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        height = "100%"
       )
     })
 
@@ -342,10 +334,7 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
             ggplot2::annotate("text", x = 0.5, y = 0.5, label = "Enable section comparison to view breakdown", size = 5) +
             ggplot2::theme_void(),
           width = "100%",
-          height = "100%",
-          zoom_min = 0.5,
-          zoom_max = 3,
-          zoom_ondblclick = FALSE
+          height = "100%"
         )
         return()
       }
@@ -374,10 +363,7 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       girafe(
         p,
         width = "100%",
-        height = "100%",
-        zoom_min = 0.5,
-        zoom_max = 3,
-        zoom_ondblclick = FALSE
+        height = "100%"
       )
     })
 
