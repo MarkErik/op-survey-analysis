@@ -1,20 +1,7 @@
-# R/utils_insights.R
-# Helper functions for Insights tab statistical analyses
+R/utils_insights.R
+Helper functions for Insights tab statistical analyses
 
-# =============================================================================
-# Correlation Analysis Helpers
-# =============================================================================
-
-#' Calculate correlation matrix between Likert questions
-#'
-#' Computes Pearson correlations between all Likert-scale questions in the survey.
-#'
-#' @param data Tibble containing processed survey data
-#' @return Numeric matrix of correlation coefficients
-#' @examples
-#' calculate_correlation_matrix(processed_data)
 calculate_correlation_matrix <- function(data) {
-  # Extract Likert values for all question groups
   likert_data <- data %>%
     dplyr::select(
       dplyr::all_of(COL_CONTENT_RELEVANT),
@@ -76,27 +63,12 @@ calculate_correlation_matrix <- function(data) {
     return(NULL)
   }
 
-  # Calculate correlation matrix
   cor_matrix <- cor(likert_data, use = "pairwise.complete.obs")
 
   return(cor_matrix)
 }
 
-# =============================================================================
-# Clustering Analysis Helpers
-# =============================================================================
-
-#' Perform K-means clustering on student response patterns
-#'
-#' Groups students based on their Likert-scale responses using K-means clustering.
-#'
-#' @param data Tibble containing processed survey data
-#' @param k Integer number of clusters to create (default: 4)
-#' @return List containing cluster assignments and cluster profiles
-#' @examples
-#' perform_cluster_analysis(processed_data, k = 4)
 perform_cluster_analysis <- function(data, k = 4) {
-  # Extract Likert values for all question groups
   likert_data <- data %>%
     dplyr::select(
       dplyr::all_of(COL_CONTENT_RELEVANT),
@@ -158,17 +130,13 @@ perform_cluster_analysis <- function(data, k = 4) {
     return(list(clusters = tibble::tibble(), profiles = tibble::tibble()))
   }
 
-  # Standardize data
   likert_scaled <- scale(likert_data)
 
-  # Perform K-means clustering
   set.seed(42)
   kmeans_result <- kmeans(likert_scaled, centers = k, nstart = 10)
 
-  # Add cluster labels to data
   likert_data$cluster <- kmeans_result$cluster
 
-  # Calculate cluster profiles (mean scores for each question)
   cluster_profiles <- likert_data %>%
     dplyr::group_by(cluster) %>%
     dplyr::summarise(
@@ -197,7 +165,6 @@ perform_cluster_analysis <- function(data, k = 4) {
     ) %>%
     dplyr::arrange(dplyr::desc(meeting_goals))
 
-  # Add cluster names based on profiles
   cluster_profiles$ClusterName <- sapply(cluster_profiles$cluster, function(c) {
     if (c == 1) return("Highly Engaged")
     if (c == 2) return("Struggling")
@@ -209,21 +176,7 @@ perform_cluster_analysis <- function(data, k = 4) {
   return(list(clusters = cluster_profiles, profiles = likert_data))
 }
 
-# =============================================================================
-# Cronbach's Alpha Helpers
-# =============================================================================
-
-#' Calculate Cronbach's alpha for a set of variables
-#'
-#' Measures internal consistency reliability of a scale.
-#'
-#' @param data Tibble containing processed survey data
-#' @param variables Character vector of variable names to include in the scale
-#' @return Cronbach's alpha value
-#' @examples
-#' calculate_cronbachs_alpha(processed_data, c("content_relevant", "excited_content"))
 calculate_cronbachs_alpha <- function(data, variables) {
-  # Extract Likert values for specified variables
   likert_data <- data %>%
     dplyr::select(dplyr::all_of(variables)) %>%
     dplyr::mutate_at(dplyr::vars(dplyr::all_of(variables)), ~ extract_likert_value(.)) %>%
@@ -233,29 +186,13 @@ calculate_cronbachs_alpha <- function(data, variables) {
     return(NA)
   }
 
-  # Calculate Cronbach's alpha using psych package
   alpha_result <- psych::alpha(likert_data[, variables])$total$alpha
 
   return(alpha_result)
 }
 
-# =============================================================================
-# Regression Analysis Helpers
-# =============================================================================
-
-#' Perform linear regression analysis
-#'
-#' Identifies predictors of a given outcome variable.
-#'
-#' @param data Tibble containing processed survey data
-#' @param outcome Character name of the outcome variable
-#' @param predictors Character vector of predictor variable names
-#' @return Data frame with regression results
-#' @examples
-#' perform_regression_analysis(processed_data, "meeting_goals", c("content_relevant", "excited_content"))
 perform_regression_analysis <- function(data, outcome, predictors) {
-  # Extract Likert values
-  reg_data <- data %>%
+  reg_data <- data %>+
     dplyr::select(dplyr::all_of(outcome), dplyr::all_of(predictors)) %>%
     dplyr::mutate_at(dplyr::vars(dplyr::all_of(c(outcome, predictors))), ~ extract_likert_value(.)) %>%
     dplyr::filter(!dplyr::any_of(dplyr::all_of(c(outcome, predictors))))
@@ -264,13 +201,10 @@ perform_regression_analysis <- function(data, outcome, predictors) {
     return(tibble::tibble())
   }
 
-  # Fit linear regression
   model <- lm(dplyr::all_of(outcome) ~ ., data = reg_data[, c(outcome, predictors)])
 
-  # Extract coefficients and p-values
   coef_summary <- summary(model)$coefficients
 
-  # Create predictors table
   predictors_df <- data.frame(
     Predictor = predictors,
     Coefficient = round(coef_summary[, 1], 4),
@@ -280,7 +214,6 @@ perform_regression_analysis <- function(data, outcome, predictors) {
     stringsAsFactors = FALSE
   )
 
-  # Add interpretation
   predictors_df$Interpretation <- sapply(predictors_df$Coefficient, function(c) {
     if (is.na(c)) return("N/A")
     if (c > 0) return("Positive effect")
@@ -295,19 +228,7 @@ perform_regression_analysis <- function(data, outcome, predictors) {
   return(predictors_df)
 }
 
-# =============================================================================
-# Effect Size Helpers
-# =============================================================================
-
-#' Calculate Cohen's d effect size between two groups
-#'
-#' @param group1 Numeric vector for group 1
-#' @param group2 Numeric vector for group 2
-#' @return List with effect size and interpretation
-#' @examples
-#' calculate_cohens_d(c(1,2,3), c(4,5,6))
 calculate_cohens_d <- function(group1, group2) {
-  # Handle NULL or empty inputs
   if (is.null(group1) || length(group1) == 0) {
     return(list(d = NA, interpretation = "Insufficient data"))
   }
@@ -316,7 +237,6 @@ calculate_cohens_d <- function(group1, group2) {
     return(list(d = NA, interpretation = "Insufficient data"))
   }
 
-  # Remove NA values
   group1 <- group1[!is.na(group1)]
   group2 <- group2[!is.na(group2)]
 
@@ -324,15 +244,12 @@ calculate_cohens_d <- function(group1, group2) {
     return(list(d = NA, interpretation = "Insufficient data"))
   }
 
-  # Calculate pooled standard deviation
   n1 <- length(group1)
   n2 <- length(group2)
   pooled_sd <- sqrt(((n1 - 1) * var(group1) + (n2 - 1) * var(group2)) / (n1 + n2 - 2))
 
-  # Calculate Cohen's d
   d <- (mean(group1, na.rm = TRUE) - mean(group2, na.rm = TRUE)) / pooled_sd
 
-  # Determine interpretation
   interpretation <- switch(
     as.character(abs(d)),
     "0" = "No effect",
@@ -347,19 +264,7 @@ calculate_cohens_d <- function(group1, group2) {
   return(list(d = d, interpretation = interpretation))
 }
 
-# =============================================================================
-# Section Comparison Helpers
-# =============================================================================
-
-#' Calculate section comparison statistics
-#'
-#' @param data Tibble containing processed survey data
-#' @param question_col Character name of the question column
-#' @return Data frame with section statistics
-#' @examples
-#' calculate_section_comparison(processed_data, "meeting_goals")
 calculate_section_comparison <- function(data, question_col) {
-  # Extract Likert values and section for each question
   comp_data <- data %>%
     dplyr::select(dplyr::all_of(COL_SECTION), dplyr::all_of(question_col)) %>%
     dplyr::mutate(value = extract_likert_value(dplyr::all_of(question_col))) %>%
@@ -369,8 +274,7 @@ calculate_section_comparison <- function(data, question_col) {
     return(tibble::tibble())
   }
 
-  # Calculate mean scores by section
-  section_stats <- comp_data %>%
+  section_stats <- comp_data %>+
     dplyr::group_by(dplyr::all_of(COL_SECTION)) %>%
     dplyr::summarise(
       n = dplyr::n(),
@@ -385,21 +289,7 @@ calculate_section_comparison <- function(data, question_col) {
   return(section_stats)
 }
 
-# =============================================================================
-# Interaction Analysis Helpers
-# =============================================================================
-
-#' Test interaction effects between variables
-#'
-#' @param data Tibble containing processed survey data
-#' @param outcome Character name of the outcome variable
-#' @param var1 Character name of first predictor variable
-#' @param var2 Character name of second predictor variable
-#' @return Data frame with interaction test results
-#' @examples
-#' test_interaction(processed_data, "meeting_goals", "content_relevant", "excited_content")
 test_interaction <- function(data, outcome, var1, var2) {
-  # Extract Likert values
   int_data <- data %>%
     dplyr::select(dplyr::all_of(outcome), dplyr::all_of(var1), dplyr::all_of(var2)) %>%
     dplyr::mutate_at(dplyr::vars(dplyr::all_of(c(outcome, var1, var2))), ~ extract_likert_value(.)) %>%
@@ -409,11 +299,9 @@ test_interaction <- function(data, outcome, var1, var2) {
     return(tibble::tibble())
   }
 
-  # Fit linear regression with interaction term
   model <- lm(dplyr::all_of(outcome) ~ dplyr::all_of(var1) * dplyr::all_of(var2), data = int_data)
   summary_result <- summary(model)$coefficients
 
-  # Extract interaction term results
   if (nrow(summary_result) >= 3) {
     interaction_row <- summary_result[3, ]
     return(data.frame(
