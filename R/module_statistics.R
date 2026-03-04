@@ -1,30 +1,12 @@
-# R/module_statistics.R
-# Statistics tab module for the CPSC Experience Survey Explorer
-# Provides UI and server functions for detailed statistical analysis of Likert-scale questions
-
-# =============================================================================
-# UI Module - Statistics Tab
-# =============================================================================
-
-#' Statistics UI module function
-#'
-#' Creates the Statistics tab UI with category navigation, question selector,
-#' statistical summary panel, histogram visualization, and section comparison.
-#'
-#' @param id Character module ID for namespacing
-#' @return UI element for the Statistics tab
-#' @export
 statisticsUI <- function(id) {
   ns <- NS(id)
 
   tagList(
-    # Category Navigation Section
     fluidRow(
       column(12,
         div(
           class = "category-navigation",
           h3("Statistics Analysis", class = "section-title"),
-          # Category selector dropdown
           div(
             class = "category-selector",
             selectInput(
@@ -42,17 +24,14 @@ statisticsUI <- function(id) {
       )
     ),
 
-    # Question Selector Section
     fluidRow(
       column(12,
         div(
           class = "question-selector-section",
-          # Question count display
           div(
             class = "question-count-display",
             span(id = ns("question_count_label"), "6 questions")
           ),
-          # Horizontal row of clickable buttons for each question
           div(
             class = "question-buttons-row",
             lapply(names(QUESTION_GROUPS$course_satisfaction), function(q_name) {
@@ -69,7 +48,6 @@ statisticsUI <- function(id) {
       )
     ),
 
-    # Section Comparison Toggle
     fluidRow(
       column(12,
         div(
@@ -83,25 +61,21 @@ statisticsUI <- function(id) {
       )
     ),
 
-    # Statistical Summary Panel
     fluidRow(
       column(12,
         div(
           class = "stats-summary-panel",
           h4("Descriptive Statistics", class = "stats-title"),
-          # Stats table
           DT::dataTableOutput(ns("stats_table"))
         )
       )
     ),
 
-    # Histogram Visualization
     fluidRow(
       column(12,
         div(
           class = "histogram-section",
           h4("Response Distribution", class = "histogram-title"),
-          # Histogram plot
           plotOutput(ns("likert_histogram"),
             height = "400px",
             tooltip = TRUE
@@ -110,13 +84,11 @@ statisticsUI <- function(id) {
       )
     ),
 
-    # Section Comparison Panel (hidden by default)
     fluidRow(
       column(12,
         div(
           class = "section-comparison-panel",
           h4("Section-by-Section Comparison", class = "comparison-title"),
-          # Section comparison plots
           plotOutput(ns("section_comparison_histogram"),
             height = "350px",
             tooltip = TRUE
@@ -127,35 +99,15 @@ statisticsUI <- function(id) {
   )
 }
 
-# =============================================================================
-# Server Module - Statistics Tab
-# =============================================================================
-
-#' Statistics module server function
-#'
-#' Provides reactive data expressions, statistics calculations, and histogram
-#' rendering for the Statistics tab.
-#'
-#' @param id Character module ID for namespacing
-#' @param data_server Reactive data server module (optional)
-#' @param filter_server Reactive filter server module (optional)
-#' @return List of reactive expressions and outputs for the Statistics tab
-#' @export
 statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
-    # =============================================================================
-    # Reactive Data Access
-    # =============================================================================
-
-    #' Reactive expression for filtered data
     filtered_data <- reactive({
       tryCatch({
         if (!is.null(data_server)) {
           data_server$getDataReactive()
         } else {
-          # Fallback: use reactive data from module
           reactive({
             tibble::tibble()
           })()
@@ -165,34 +117,21 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for selected category
     selected_category <- reactiveVal("course_satisfaction")
 
-    #' Reactive expression for selected question
     selected_question <- reactiveVal(NULL)
 
-    #' Reactive expression for question count label
     question_count_label <- reactive({
       cat <- selected_category()
       n_questions <- length(QUESTION_GROUPS[[cat]])
       paste0(n_questions, " questions")
     })
 
-    # =============================================================================
-    # Category Navigation Handlers
-    # =============================================================================
-
-    #' Handle category selection changes
     observeEvent(input$category_select, {
       selected_category(input$category_select)
-      selected_question(NULL)  # Reset selected question
+      selected_question(NULL)
     })
 
-    # =============================================================================
-    # Question Selector Handlers
-    # =============================================================================
-
-    #' Handle question button clicks
     observeEvent(names(QUESTION_GROUPS$course_satisfaction), {
       lapply(names(QUESTION_GROUPS$course_satisfaction), function(q_name) {
         btn_id <- ns(paste0("q_", q_name))
@@ -202,11 +141,6 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    # =============================================================================
-    # Statistics Calculation
-    # =============================================================================
-
-    #' Reactive expression for question statistics
     question_stats <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -228,10 +162,8 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
           ))
         }
 
-        # Get the column name for the selected question
         q_col <- QUESTION_GROUPS[[selected_category()]][[q_key]]
 
-        # Extract Likert values
         likert_values <- data %>%
           dplyr::select(dplyr::all_of(q_col)) %>%
           dplyr::mutate(
@@ -240,7 +172,6 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
           dplyr::filter(!is.na(value)) %>%
           dplyr::pull(value)
 
-        # Calculate descriptive statistics
         stats <- calculate_descriptive_stats(likert_values)
 
         return(stats)
@@ -262,7 +193,6 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for section comparison data
     section_comparison_data <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -272,10 +202,8 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Get the column name for the selected question
         q_col <- QUESTION_GROUPS[[selected_category()]][[q_key]]
 
-        # Extract Likert values and section for each row
         comp_data <- data %>%
           dplyr::select(dplyr::all_of(COL_SECTION), dplyr::all_of(q_col)) %>%
           dplyr::mutate(
@@ -302,15 +230,9 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    # =============================================================================
-    # Stats Table Output
-    # =============================================================================
-
-    #' Render statistics table
     output$stats_table <- DT::renderDataTable({
       stats <- question_stats()
 
-      # Format statistics for display
       stats_df <- tibble::tibble(
         Statistic = c("N", "Mean", "Median", "Mode", "SD", "SE", "Min", "Max", "Q1", "Q3", "Missing"),
         Value = c(
@@ -346,16 +268,10 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Update question count label
     output$question_count_label <- renderText({
       question_count_label()
     })
 
-    # =============================================================================
-    # Histogram Output
-    # =============================================================================
-
-    #' Render Likert histogram
     output$likert_histogram <- renderGirafe({
       data <- filtered_data()
       q_key <- selected_question()
@@ -374,10 +290,8 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
         return()
       }
 
-      # Get the column name for the selected question
       q_col <- QUESTION_GROUPS[[selected_category()]][[q_key]]
 
-      # Count responses by Likert value
       likert_counts <- data %>%
         dplyr::select(dplyr::all_of(q_col)) %>%
         dplyr::mutate(
@@ -389,13 +303,10 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
           percentage = round(n / sum(n) * 100, 1)
         )
 
-      # Create Likert labels
       likert_labels <- LIKERT_SCALE
 
-      # Create Likert colors
       likert_colors <- LIKERT_COLORS
 
-      # Create histogram
       p <- ggplot2::ggplot(likert_counts, ggplot2::aes(x = value, y = n, fill = value)) +
         ggplot2::geom_bar_interactive(ggplot2::aes(tooltip = paste0("Score: ", value, "<br>Count: ", n, "<br>Percentage: ", percentage, "%"))) +
         ggplot2::scale_x_discrete(limits = LIKERT_NUMERIC_VALUES, labels = likert_labels) +
@@ -422,7 +333,6 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render section comparison histogram
     output$section_comparison_histogram <- renderGirafe({
       comp_data <- section_comparison_data()
 
@@ -440,13 +350,10 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
         return()
       }
 
-      # Create Likert labels
       likert_labels <- LIKERT_SCALE
 
-      # Create Likert colors
       likert_colors <- LIKERT_COLORS
 
-      # Create histogram with facets
       p <- ggplot2::ggplot(comp_data, ggplot2::aes(x = value, y = n, fill = value)) +
         ggplot2::geom_bar_interactive(ggplot2::aes(tooltip = paste0("Section: ", dplyr::all_of(COL_SECTION), "<br>Score: ", value, "<br>Count: ", n, "<br>Mean: ", round(mean, 2)))) +
         ggplot2::facet_wrap(~ dplyr::all_of(COL_SECTION), scales = "free_y") +
@@ -474,13 +381,7 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # =============================================================================
-    # Section Comparison Toggle Handler
-    # =============================================================================
-
-    #' Handle section comparison toggle
     observeEvent(input$compare_sections, {
-      # Toggle visibility of section comparison panel
       if (input$compare_sections) {
         shinyjs::show("section-comparison-panel")
       } else {
@@ -488,7 +389,6 @@ statisticsServer <- function(id, data_server = NULL, filter_server = NULL) {
       }
     })
 
-    # Return reactive expressions for use by other modules
     return(list(
       selected_category = selected_category,
       selected_question = selected_question,
