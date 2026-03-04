@@ -1,31 +1,12 @@
-# R/module_insights.R
-# Insights tab module for the CPSC Experience Survey Explorer
-# Provides UI and server functions for advanced statistical analyses
-
-# =============================================================================
-# UI Module - Insights Tab
-# =============================================================================
-
-#' Insights UI module function
-#'
-#' Creates the Insights tab UI with navigation for different analysis types:
-#' Correlation Analysis, Regression Analysis, Student Segmentation, Section Comparison,
-#' Effect Size Analysis, Reliability Analysis, Interaction Analysis, and Satisfaction Predictors.
-#'
-#' @param id Character module ID for namespacing
-#' @return UI element for the Insights tab
-#' @export
 insightsUI <- function(id) {
   ns <- NS(id)
 
   tagList(
-    # Analysis Navigation Section
     fluidRow(
       column(12,
         div(
           class = "insights-navigation",
           h3("Advanced Analytics", class = "section-title"),
-          # Analysis type selector dropdown
           div(
             class = "analysis-selector",
             selectInput(
@@ -48,7 +29,6 @@ insightsUI <- function(id) {
       )
     ),
 
-    # Loading Indicator
     fluidRow(
       column(12,
         div(
@@ -64,118 +44,98 @@ insightsUI <- function(id) {
       )
     ),
 
-    # Analysis Content Section
     fluidRow(
       column(12,
         div(
           class = "analysis-content",
-          # Correlation Analysis Panel
           div(
             id = ns("panel_correlation"),
             class = "analysis-panel",
             h4("Correlation Matrix", class = "panel-title"),
-            # Correlation heatmap
             plotOutput(ns("correlation_heatmap"),
               height = "500px",
               tooltip = TRUE
             ),
-            # Correlation insights table
             DT::dataTableOutput(ns("correlation_insights"))
           )
         )
       )
     ),
 
-    # Regression Analysis Panel
     fluidRow(
       column(12,
         div(
           id = ns("panel_regression"),
           class = "analysis-panel",
           h4("Regression Analysis", class = "panel-title"),
-          # Predictor ranking table
           DT::dataTableOutput(ns("regression_predictors"))
         )
       )
     ),
 
-    # Student Segmentation Panel
     fluidRow(
       column(12,
         div(
           id = ns("panel_segmentation"),
           class = "analysis-panel",
           h4("Student Segmentation", class = "panel-title"),
-          # Cluster summary table
           DT::dataTableOutput(ns("cluster_summary")),
-          # Cluster profiles table
           DT::dataTableOutput(ns("cluster_profiles"))
         )
       )
     ),
 
-    # Section Comparison Panel
     fluidRow(
       column(12,
         div(
           id = ns("panel_section_comparison"),
           class = "analysis-panel",
           h4("Section Comparison", class = "panel-title"),
-          # Section comparison table
           DT::dataTableOutput(ns("section_comparison_table")),
-          # Effect size values
           DT::dataTableOutput(ns("effect_size_table"))
         )
       )
     ),
 
-    # Effect Size Analysis Panel
     fluidRow(
       column(12,
         div(
           id = ns("panel_effect_size"),
           class = "analysis-panel",
           h4("Effect Size Analysis", class = "panel-title"),
-          # Effect size table
           DT::dataTableOutput(ns("effect_size_table"))
         )
       )
     ),
 
-    # Reliability Analysis Panel
     fluidRow(
       column(12,
         div(
           id = ns("panel_reliability"),
           class = "analysis-panel",
           h4("Reliability Analysis", class = "panel-title"),
-          # Cronbach's alpha table
           DT::dataTableOutput(ns("cronbach_alpha_table"))
         )
       )
     ),
 
-    # Interaction Analysis Panel
     fluidRow(
       column(12,
         div(
           id = ns("panel_interaction"),
           class = "analysis-panel",
           h4("Interaction Analysis", class = "panel-title"),
-          # Interaction effects table
           DT::dataTableOutput(ns("interaction_effects"))
         )
       )
     ),
 
-    # Satisfaction Predictors Panel
     fluidRow(
       column(12,
         div(
           id = ns("panel_satisfaction_predictors"),
           class = "analysis-panel",
           h4("Satisfaction Predictors", class = "panel-title"),
-          # Key drivers table
           DT::dataTableOutput(ns("satisfaction_drivers"))
         )
       )
@@ -183,34 +143,15 @@ insightsUI <- function(id) {
   )
 }
 
-# =============================================================================
-# Server Module - Insights Tab
-# =============================================================================
-
-#' Insights module server function
-#'
-#' Provides reactive data expressions and analysis calculations for the Insights tab.
-#'
-#' @param id Character module ID for namespacing
-#' @param data_server Reactive data server module (optional)
-#' @param filter_server Reactive filter server module (optional)
-#' @return List of reactive expressions and outputs for the Insights tab
-#' @export
 insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
-    # =============================================================================
-    # Reactive Data Access
-    # =============================================================================
-
-    #' Reactive expression for filtered data
     filtered_data <- reactive({
       tryCatch({
         if (!is.null(data_server)) {
           data_server$getDataReactive()
         } else {
-          # Fallback: use reactive data from module
           reactive({
             tibble::tibble()
           })()
@@ -220,17 +161,10 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for selected analysis type
     selected_analysis <- reactiveVal("correlation")
 
-    # =============================================================================
-    # Analysis Type Navigation Handlers
-    # =============================================================================
-
-    #' Handle analysis type selection changes
     observeEvent(input$analysis_type, {
       selected_analysis(input$analysis_type)
-      # Hide all panels, show selected panel
       shinyjs::hide(c(
         "panel_correlation", "panel_regression", "panel_segmentation",
         "panel_section_comparison", "panel_effect_size", "panel_reliability",
@@ -239,11 +173,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       shinyjs::show(paste0("panel_", input$analysis_type))
     })
 
-    # =============================================================================
-    # Correlation Analysis
-    # =============================================================================
-
-    #' Reactive expression for correlation matrix
     correlation_matrix <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -252,7 +181,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(NULL)
         }
 
-        # Extract Likert values for all question groups
         likert_data <- data %>%
           dplyr::select(
             dplyr::all_of(COL_CONTENT_RELEVANT),
@@ -314,7 +242,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(NULL)
         }
 
-        # Calculate correlation matrix
         cor_matrix <- cor(likert_data, use = "pairwise.complete.obs")
 
         return(cor_matrix)
@@ -324,7 +251,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Render correlation heatmap
     output$correlation_heatmap <- renderGirafe({
       cor_mat <- correlation_matrix()
       
@@ -342,7 +268,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
         return()
       }
 
-      # Get question names
       question_names <- c(
         "Content Relevant", "Excited Content", "Satisfied Feedback",
         "Apply Learning", "Easy Ask Help", "Meeting Goals",
@@ -353,10 +278,8 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
         "University Community", "Easy Meet People"
       )
 
-      # Create color palette
       color_palette <- colorRampPalette(c("#DC3545", "#FFFFFF", "#28A745"))(100)
 
-      # Create heatmap
       p <- ggplot2::ggplot() +
         ggplot2::geom_tile(
           data = as.data.frame(cor_mat),
@@ -393,7 +316,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render correlation insights table
     output$correlation_insights <- DT::renderDataTable({
       cor_mat <- correlation_matrix()
       
@@ -411,7 +333,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
         "University Community", "Easy Meet People"
       )
 
-      # Extract upper triangle correlations
       insights <- data.frame(
         Question1 = character(),
         Question2 = character(),
@@ -441,7 +362,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
         }
       }
 
-      # Sort by absolute correlation
       insights <- insights %>%
         dplyr::arrange(dplyr::desc(abs(Correlation)))
 
@@ -462,11 +382,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # =============================================================================
-    # Regression Analysis
-    # =============================================================================
-
-    #' Reactive expression for regression predictors
     regression_predictors <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -475,7 +390,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Extract Likert values for predictors
         predictors <- data %>%
           dplyr::select(
             dplyr::all_of(COL_CONTENT_RELEVANT),
@@ -537,19 +451,14 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Use meeting_goals as outcome variable
         outcome <- predictors$meeting_goals
         
-        # Remove outcome from predictors
         predictor_cols <- setdiff(names(predictors), "meeting_goals")
         
-        # Fit linear regression
         model <- lm(meeting_goals ~ ., data = predictors[, predictor_cols])
         
-        # Extract coefficients and p-values
         coef_summary <- summary(model)$coefficients
         
-        # Create predictors table
         predictors_df <- data.frame(
           Predictor = predictor_cols,
           Coefficient = round(coef_summary[, 1], 4),
@@ -559,7 +468,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           stringsAsFactors = FALSE
         )
         
-        # Add interpretation
         predictors_df$Interpretation <- sapply(predictors_df$Coefficient, function(c) {
           if (is.na(c)) return("N/A")
           if (c > 0) return("Positive effect")
@@ -567,7 +475,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return("No effect")
         })
         
-        # Sort by absolute coefficient
         predictors_df <- predictors_df %>%
           dplyr::arrange(dplyr::desc(abs(Coefficient)))
         
@@ -578,7 +485,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Render regression predictors table
     output$regression_predictors <- DT::renderDataTable({
       pred_df <- regression_predictors()
       
@@ -603,11 +509,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # =============================================================================
-    # Student Segmentation (K-means Clustering)
-    # =============================================================================
-
-    #' Reactive expression for cluster analysis
     cluster_analysis <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -616,7 +517,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(list(clusters = tibble::tibble(), profiles = tibble::tibble()))
         }
 
-        # Extract Likert values for all question groups
         likert_data <- data %>%
           dplyr::select(
             dplyr::all_of(COL_CONTENT_RELEVANT),
@@ -662,7 +562,7 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
             part_of_class = extract_likert_value(dplyr::all_of(COL_PART_OF_CLASS)),
             friends_important = extract_likert_value(dplyr::all_of(COL_FRIENDS_IMPORTANT)),
             university_community = extract_likert_value(dplyr::all_of(COL_UNIVERSITY_COMMUNITY)),
-            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE))
+            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE)
           ) %>%
           dplyr::filter(!dplyr::any_of(dplyr::c(
             content_relevant, excited_content, satisfied_feedback,
@@ -678,10 +578,8 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(list(clusters = tibble::tibble(), profiles = tibble::tibble()))
         }
 
-        # Standardize data
         likert_scaled <- scale(likert_data)
 
-        # Determine optimal number of clusters using silhouette
         max_clusters <- min(5, nrow(likert_scaled))
         silhouette_scores <- sapply(1:max_clusters, function(k) {
           set.seed(42)
@@ -691,14 +589,11 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
         })
         optimal_k <- which.max(silhouette_scores)
 
-        # Perform k-means clustering
         set.seed(42)
         kmeans_result <- kmeans(likert_scaled, centers = optimal_k, nstart = 10)
 
-        # Add cluster labels to data
         likert_data$cluster <- kmeans_result$cluster
 
-        # Calculate cluster profiles (mean scores for each question)
         cluster_profiles <- likert_data %>%
           dplyr::group_by(cluster) %>%
           dplyr::summarise(
@@ -727,7 +622,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           ) %>%
           dplyr::arrange(dplyr::desc(meeting_goals))
 
-        # Add cluster names based on profiles
         cluster_profiles$ClusterName <- sapply(cluster_profiles$cluster, function(c) {
           if (c == 1) return("Highly Engaged")
           if (c == 2) return("Struggling")
@@ -743,7 +637,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Render cluster summary table
     output$cluster_summary <- DT::renderDataTable({
       cluster_df <- cluster_analysis()$clusters
       
@@ -769,7 +662,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render cluster profiles table
     output$cluster_profiles <- DT::renderDataTable({
       profiles_df <- cluster_analysis()$profiles
       
@@ -795,11 +687,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # =============================================================================
-    # Section Comparison Analysis
-    # =============================================================================
-
-    #' Reactive expression for section comparison
     section_comparison <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -808,7 +695,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Extract Likert values and section for each question
         comp_data <- data %>%
           dplyr::select(
             dplyr::all_of(COL_SECTION),
@@ -836,7 +722,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Calculate mean scores by section
         section_stats <- comp_data %>%
           dplyr::group_by(dplyr::all_of(COL_SECTION)) %>%
           dplyr::summarise(
@@ -857,7 +742,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Render section comparison table
     output$section_comparison_table <- DT::renderDataTable({
       section_df <- section_comparison()
       
@@ -883,7 +767,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Reactive expression for effect size analysis
     effect_size <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -892,7 +775,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Extract Likert values and section for each question
         comp_data <- data %>%
           dplyr::select(
             dplyr::all_of(COL_SECTION),
@@ -920,7 +802,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Calculate effect sizes for each question across sections
         effect_df <- data.frame(
           Question = character(),
           EffectSize = numeric(),
@@ -932,14 +813,12 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
                        "apply_learning", "easy_ask_help", "meeting_goals")
 
         for (q in questions) {
-          # Get values for each section
           section_values <- comp_data %>%
             dplyr::group_by(dplyr::all_of(COL_SECTION)) %>%
             dplyr::summarise(value = mean(!!sym(q), na.rm = TRUE)) %>%
             dplyr::arrange(dplyr::desc(value))
 
           if (nrow(section_values) >= 2) {
-            # Calculate Cohen's d between highest and lowest sections
             highest <- section_values$value[1]
             lowest <- section_values$value[nrow(section_values)]
             eff <- calculate_cohens_d(highest, lowest)
@@ -960,7 +839,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Render effect size table
     output$effect_size_table <- DT::renderDataTable({
       eff_df <- effect_size()
       
@@ -985,11 +863,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # =============================================================================
-    # Reliability Analysis (Cronbach's Alpha)
-    # =============================================================================
-
-    #' Reactive expression for Cronbach's alpha
     cronbach_alpha <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -998,7 +871,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Calculate Cronbach's alpha for each question group
         alpha_results <- data.frame(
           Group = character(),
           Alpha = numeric(),
@@ -1007,7 +879,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           stringsAsFactors = FALSE
         )
 
-        # Course satisfaction group
         q_group <- data %>%
           dplyr::select(
             dplyr::all_of(COL_CONTENT_RELEVANT),
@@ -1045,7 +916,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           ))
         }
 
-        # Learning methods group
         q_group <- data %>%
           dplyr::select(
             dplyr::all_of(COL_PRE_WRITTEN_CODE),
@@ -1094,7 +964,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           ))
         }
 
-        # Community/belonging group
         q_group <- data %>%
           dplyr::select(
             dplyr::all_of(COL_COMFORTABLE_SPEAKING),
@@ -1137,7 +1006,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Render Cronbach's alpha table
     output$cronbach_alpha_table <- DT::renderDataTable({
       alpha_df <- cronbach_alpha()
       
@@ -1162,11 +1030,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # =============================================================================
-    # Interaction Analysis
-    # =============================================================================
-
-    #' Reactive expression for interaction effects
     interaction_effects <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -1175,7 +1038,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Extract Likert values
         likert_data <- data %>%
           dplyr::select(
             dplyr::all_of(COL_CONTENT_RELEVANT),
@@ -1221,7 +1083,7 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
             part_of_class = extract_likert_value(dplyr::all_of(COL_PART_OF_CLASS)),
             friends_important = extract_likert_value(dplyr::all_of(COL_FRIENDS_IMPORTANT)),
             university_community = extract_likert_value(dplyr::all_of(COL_UNIVERSITY_COMMUNITY)),
-            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE))
+            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE)
           ) %>%
           dplyr::filter(!dplyr::any_of(dplyr::c(
             content_relevant, excited_content, satisfied_feedback,
@@ -1237,7 +1099,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Test interactions between course satisfaction and learning methods
         interaction_df <- data.frame(
           Interaction = character(),
           FValue = numeric(),
@@ -1246,7 +1107,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           stringsAsFactors = FALSE
         )
 
-        # Test interaction between content relevance and learning methods
         model1 <- lm(meeting_goals ~ content_relevant * pre_written_code, data = likert_data)
         summary1 <- summary(model1)$coefficients
         if (nrow(summary1) >= 3) {
@@ -1260,7 +1120,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           ))
         }
 
-        # Test interaction between satisfied feedback and ask questions
         model2 <- lm(meeting_goals ~ satisfied_feedback * ask_questions, data = likert_data)
         summary2 <- summary(model2)$coefficients
         if (nrow(summary2) >= 3) {
@@ -1274,7 +1133,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           ))
         }
 
-        # Test interaction between excited content and live coding
         model3 <- lm(meeting_goals ~ excited_content * live_coding, data = likert_data)
         summary3 <- summary(model3)$coefficients
         if (nrow(summary3) >= 3) {
@@ -1295,7 +1153,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Render interaction effects table
     output$interaction_effects <- DT::renderDataTable({
       int_df <- interaction_effects()
       
@@ -1320,11 +1177,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # =============================================================================
-    # Satisfaction Predictors
-    # =============================================================================
-
-    #' Reactive expression for satisfaction predictors
     satisfaction_predictors <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -1333,7 +1185,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Extract Likert values for predictors
         predictors <- data %>%
           dplyr::select(
             dplyr::all_of(COL_CONTENT_RELEVANT),
@@ -1379,7 +1230,7 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
             part_of_class = extract_likert_value(dplyr::all_of(COL_PART_OF_CLASS)),
             friends_important = extract_likert_value(dplyr::all_of(COL_FRIENDS_IMPORTANT)),
             university_community = extract_likert_value(dplyr::all_of(COL_UNIVERSITY_COMMUNITY)),
-            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE))
+            easy_meet_people = extract_likert_value(dplyr::all_of(COL_EASY_MEET_PEOPLE)
           ) %>%
           dplyr::filter(!dplyr::any_of(dplyr::c(
             content_relevant, excited_content, satisfied_feedback,
@@ -1395,19 +1246,14 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Use meeting_goals as outcome variable
         outcome <- predictors$meeting_goals
         
-        # Remove outcome from predictors
         predictor_cols <- setdiff(names(predictors), "meeting_goals")
         
-        # Fit linear regression
         model <- lm(meeting_goals ~ ., data = predictors[, predictor_cols])
         
-        # Extract coefficients and p-values
         coef_summary <- summary(model)$coefficients
         
-        # Create predictors table
         predictors_df <- data.frame(
           Predictor = predictor_cols,
           Coefficient = round(coef_summary[, 1], 4),
@@ -1418,10 +1264,8 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
           stringsAsFactors = FALSE
         )
         
-        # Calculate relative importance using standardized coefficients
         predictors_df$Importance <- round(abs(coef_summary[, 1]) / sum(abs(coef_summary[, 1])), 3)
         
-        # Sort by importance
         predictors_df <- predictors_df %>%
           dplyr::arrange(dplyr::desc(Importance))
         
@@ -1432,7 +1276,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Render satisfaction drivers table
     output$satisfaction_drivers <- DT::renderDataTable({
       pred_df <- satisfaction_predictors()
       
@@ -1457,7 +1300,6 @@ insightsServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # Return reactive expressions for use by other modules
     return(list(
       selected_analysis = selected_analysis,
       correlation_matrix = correlation_matrix,

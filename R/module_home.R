@@ -1,42 +1,23 @@
-# R/module_home.R
-# Home tab module for the CPSC Experience Survey Explorer
-# Provides UI and server functions for the Home tab with response overview and visualizations
-
-# =============================================================================
-# UI Module - Home Tab
-# =============================================================================
-
-#' Home UI module function
-#'
-#' Creates the Home tab UI with response overview and six visualization panels.
-#'
-#' @param id Character module ID for namespacing
-#' @return UI element for the Home tab
-#' @export
 homeUI <- function(id) {
   ns <- NS(id)
 
   tagList(
-    # Response Overview Section
     fluidRow(
       column(12,
         div(
           class = "response-overview",
           h3("Response Overview", class = "section-title"),
-          # Total Responses Counter
           div(
             class = "response-counter",
             h4("Total Responses", class = "counter-label"),
             span(class = "counter-value", id = ns("total_responses"))
           ),
-          # Section Breakdown Chart
           div(
             class = "section-breakdown",
             h4("Responses per Section", class = "chart-title"),
             girafeOutput(ns("section_breakdown_chart"),
               height = "400px"
             ),
-            # Section Filter Display
             div(
               class = "section-filter-display",
               h5("Selected Section:", class = "filter-label"),
@@ -51,8 +32,6 @@ homeUI <- function(id) {
       )
     ),
 
-    # Six Visualization Panels
-    # 1. Learning Preference Distribution
     fluidRow(
       column(12,
         div(
@@ -67,7 +46,6 @@ homeUI <- function(id) {
       )
     ),
 
-    # 2. Prior Programming Experience
     fluidRow(
       column(12,
         div(
@@ -82,7 +60,6 @@ homeUI <- function(id) {
       )
     ),
 
-    # 3. Course Satisfaction Overview
     fluidRow(
       column(12,
         div(
@@ -97,7 +74,6 @@ homeUI <- function(id) {
       )
     ),
 
-    # 4. Discord Engagement Metrics
     fluidRow(
       column(12,
         div(
@@ -112,7 +88,6 @@ homeUI <- function(id) {
       )
     ),
 
-    # 5. Most Valuable Learning Methods
     fluidRow(
       column(12,
         div(
@@ -127,7 +102,6 @@ homeUI <- function(id) {
       )
     ),
 
-    # 6. Community Connection Scores
     fluidRow(
       column(12,
         div(
@@ -144,34 +118,15 @@ homeUI <- function(id) {
   )
 }
 
-# =============================================================================
-# Server Module - Home Tab
-# =============================================================================
-
-#' Home module server function
-#'
-#' Provides reactive data expressions and click handlers for the Home tab.
-#'
-#' @param id Character module ID for namespacing
-#' @param data_server Reactive data server module (optional)
-#' @param filter_server Reactive filter server module (optional)
-#' @return List of reactive expressions and outputs for the Home tab
-#' @export
 homeServer <- function(id, data_server = NULL, filter_server = NULL) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
-    # =============================================================================
-    # Reactive Data Access
-    # =============================================================================
-
-    #' Reactive expression for filtered data
     filtered_data <- reactive({
       tryCatch({
         if (!is.null(data_server)) {
           data_server$getDataReactive()
         } else {
-          # Fallback: use reactive data from module
           reactive({
             tibble::tibble()
           })()
@@ -181,7 +136,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for total responses
     total_responses <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -191,7 +145,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for section breakdown data
     section_breakdown_data <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -200,11 +153,9 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Count responses per section
         section_counts <- data %>%
           dplyr::count(dplyr::all_of(COL_SECTION), sort = TRUE)
 
-        # Add percentage column
         total <- sum(section_counts$n)
         section_counts <- section_counts %>%
           dplyr::mutate(
@@ -219,7 +170,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for learning preference data
     learning_preference_data <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -228,11 +178,9 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Count learning preferences
         pref_counts <- data %>%
           dplyr::count(dplyr::all_of(COL_LEARNING_PREF), sort = TRUE)
 
-        # Add percentage column
         total <- sum(pref_counts$n)
         pref_counts <- pref_counts %>%
           dplyr::mutate(
@@ -246,7 +194,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for programming experience data
     programming_experience_data <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -255,11 +202,9 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Count programming experience levels
         exp_counts <- data %>%
           dplyr::count(dplyr::all_of(COL_EXPERIENCE), sort = TRUE)
 
-        # Add percentage column
         total <- sum(exp_counts$n)
         exp_counts <- exp_counts %>%
           dplyr::mutate(
@@ -273,7 +218,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for course satisfaction data
     course_satisfaction_data <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -282,12 +226,10 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Calculate average for each satisfaction statement
         sat_data <- data %>%
           dplyr::select(dplyr::all_of(QUESTION_GROUPS$course_satisfaction)) %>%
           dplyr::summarise(across(everything(), mean, na.rm = TRUE))
 
-        # Convert to long format
         sat_long <- sat_data %>%
           dplyr::pivot_longer(
             cols = dplyr::all_of(QUESTION_GROUPS$course_satisfaction),
@@ -303,7 +245,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for Discord engagement data
     discord_engagement_data <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -312,14 +253,12 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Parse Discord multi-select responses
         discord_responses <- data %>%
           dplyr::select(dplyr::all_of(COL_DISCORD)) %>%
           tidyr::separate_rows(dplyr::all_of(COL_DISCORD), sep = ";", convert = TRUE) %>%
           dplyr::filter(!is.na(.)) %>%
           dplyr::count(.id = TRUE)
 
-        # Calculate percentages for each option
         total <- nrow(discord_responses)
         engagement_data <- discord_responses %>%
           dplyr::count(.id, sort = TRUE) %>%
@@ -327,7 +266,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
             percentage = round(n / total * 100, 1)
           )
 
-        # Map to specific metrics
         metrics <- list(
           "Joined Discord" = "I have joined the class Discord",
           "Active on Discord" = "I am active in the class Discord",
@@ -359,7 +297,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for learning methods data
     learning_methods_data <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -368,12 +305,10 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Calculate average for each learning method
         methods_data <- data %>%
           dplyr::select(dplyr::all_of(QUESTION_GROUPS$learning_methods)) %>%
           dplyr::summarise(across(everything(), mean, na.rm = TRUE))
 
-        # Convert to long format and get top 7
         methods_long <- methods_data %>%
           dplyr::pivot_longer(
             cols = dplyr::all_of(QUESTION_GROUPS$learning_methods),
@@ -390,7 +325,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for community connection data
     community_connection_data <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -399,12 +333,10 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Calculate average for each community statement
         conn_data <- data %>%
           dplyr::select(dplyr::all_of(QUESTION_GROUPS$community_belonging)) %>%
           dplyr::summarise(across(everything(), mean, na.rm = TRUE))
 
-        # Convert to long format
         conn_long <- conn_data %>%
           dplyr::pivot_longer(
             cols = dplyr::all_of(QUESTION_GROUPS$community_belonging),
@@ -420,7 +352,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for selected section display
     selected_section_display <- reactive({
       tryCatch({
         if (!is.null(filter_server)) {
@@ -433,16 +364,10 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    # =============================================================================
-    # Chart Outputs
-    # =============================================================================
-
-    #' Render total responses counter
     output$total_responses <- renderText({
       total_responses()
     })
 
-    #' Render selected section display
     output$selected_section_display <- renderText({
       sec <- selected_section_display()
       if (sec == "" || is.null(sec)) {
@@ -452,7 +377,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       }
     })
 
-    #' Render section breakdown chart
     output$section_breakdown_chart <- renderGirafe({
       girafe(
         ggplot2::ggplot(section_breakdown_data(), ggplot2::aes(x = label, y = n, fill = label)) +
@@ -477,7 +401,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render learning preference chart
     output$learning_preference_chart <- renderGirafe({
       girafe(
         ggplot2::ggplot(learning_preference_data(), ggplot2::aes(x = dplyr::reorder(dplyr::all_of(COL_LEARNING_PREF), n), y = n, fill = dplyr::reorder(dplyr::all_of(COL_LEARNING_PREF), n))) +
@@ -502,7 +425,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render programming experience chart
     output$programming_experience_chart <- renderGirafe({
       girafe(
         ggplot2::ggplot(programming_experience_data(), ggplot2::aes(x = dplyr::reorder(dplyr::all_of(COL_EXPERIENCE), n), y = n, fill = dplyr::reorder(dplyr::all_of(COL_EXPERIENCE), n))) +
@@ -527,7 +449,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render course satisfaction chart
     output$course_satisfaction_chart <- renderGirafe({
       girafe(
         ggplot2::ggplot(course_satisfaction_data(), ggplot2::aes(x = dplyr::reorder(statement, average), y = average, fill = dplyr::reorder(statement, average))) +
@@ -552,7 +473,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render Discord engagement chart
     output$discord_engagement_chart <- renderGirafe({
       girafe(
         ggplot2::ggplot(discord_engagement_data(), ggplot2::aes(x = dplyr::reorder(metric, percentage), y = percentage, fill = dplyr::reorder(metric, percentage))) +
@@ -577,7 +497,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render learning methods chart
     output$learning_methods_chart <- renderGirafe({
       girafe(
         ggplot2::ggplot(learning_methods_data(), ggplot2::aes(x = dplyr::reorder(method, average), y = average, fill = dplyr::reorder(method, average))) +
@@ -602,7 +521,6 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    #' Render community connection chart
     output$community_connection_chart <- renderGirafe({
       girafe(
         ggplot2::ggplot(community_connection_data(), ggplot2::aes(x = dplyr::reorder(statement, average), y = average, fill = dplyr::reorder(statement, average))) +
@@ -627,24 +545,16 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
       )
     })
 
-    # =============================================================================
-    # Click Handlers for Section Filtering
-    # =============================================================================
-
-    #' Handle section chart clicks for filtering
     observeEvent(input$section_chart_click, {
       tryCatch({
         click_data <- input$section_chart_click
 
         if (!is.null(click_data) && !is.na(click_data$x)) {
-          # Find the section label from the click data
           section_data <- section_breakdown_data()
           if (nrow(section_data) > 0) {
-            # Get the section name from the clicked position
             clicked_idx <- which.min(abs(section_data$label - click_data$x))
             selected_section <- section_data$label[clicked_idx]
 
-            # Update filter if a section was clicked (not "No Section")
             if (selected_section != "No Section") {
               if (!is.null(filter_server)) {
                 filter_server$updateSelectedSection(selected_section)
@@ -653,22 +563,18 @@ homeServer <- function(id, data_server = NULL, filter_server = NULL) {
           }
         }
       }, error = function(e) {
-        # Silently handle errors
       })
     })
 
-    #' Handle reset filter button click
     observeEvent(input$reset_filter, {
       tryCatch({
         if (!is.null(filter_server)) {
           filter_server$resetFilter()
         }
       }, error = function(e) {
-        # Silently handle errors
       })
     })
 
-    # Return reactive expressions for use by other modules
     return(list(
       filtered_data = filtered_data,
       total_responses = total_responses,
