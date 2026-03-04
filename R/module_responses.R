@@ -1,30 +1,12 @@
-# R/module_responses.R
-# Question Responses tab module for the CPSC Experience Survey Explorer
-# Provides UI and server functions for browsing and exploring individual free-text responses
-
-# =============================================================================
-# UI Module - Question Responses Tab
-# =============================================================================
-
-#' Responses UI module function
-#'
-#' Creates the Question Responses tab UI with question selector buttons and
-#' responses table display.
-#'
-#' @param id Character module ID for namespacing
-#' @return UI element for the Question Responses tab
-#' @export
 responsesUI <- function(id) {
   ns <- NS(id)
 
   tagList(
-    # Question Selector Section
     fluidRow(
       column(12,
         div(
           class = "question-selector-section",
           h3("Question Responses", class = "section-title"),
-          # Horizontal row of clickable buttons for each free-text question
           div(
             class = "question-buttons-row",
             lapply(names(FREE_TEXT_QUESTIONS), function(q_name) {
@@ -41,17 +23,14 @@ responsesUI <- function(id) {
       )
     ),
 
-    # Responses Table Section
     fluidRow(
       column(12,
         div(
           class = "responses-table-section",
-          # Table caption showing selected question
           div(
             class = "table-caption",
             h4(id = ns("responses_caption"), "Select a question to view responses")
           ),
-          # DT datatable for displaying responses
           DT::dataTableOutput(ns("responses_table"))
         )
       )
@@ -59,34 +38,15 @@ responsesUI <- function(id) {
   )
 }
 
-# =============================================================================
-# Server Module - Question Responses Tab
-# =============================================================================
-
-#' Responses module server function
-#'
-#' Provides reactive data expressions and click handlers for the Question Responses tab.
-#'
-#' @param id Character module ID for namespacing
-#' @param data_server Reactive data server module (optional)
-#' @param filter_server Reactive filter server module (optional)
-#' @return List of reactive expressions and outputs for the Question Responses tab
-#' @export
 responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
-    # =============================================================================
-    # Reactive Data Access
-    # =============================================================================
-
-    #' Reactive expression for filtered data
     filtered_data <- reactive({
       tryCatch({
         if (!is.null(data_server)) {
           data_server$getDataReactive()
         } else {
-          # Fallback: use reactive data from module
           reactive({
             tibble::tibble()
           })()
@@ -96,10 +56,8 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    #' Reactive expression for selected question
     selected_question <- reactiveVal(NULL)
 
-    #' Reactive expression for filtered responses
     filtered_responses <- reactive({
       tryCatch({
         data <- filtered_data()
@@ -109,10 +67,8 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
           return(tibble::tibble())
         }
 
-        # Get the column name for the selected question
         q_col <- FREE_TEXT_QUESTIONS[[q_key]]
 
-        # Filter data for the selected question
         responses <- data %>%
           dplyr::filter(dplyr::all_of(q_col) != "") %>%
           dplyr::select(
@@ -134,11 +90,6 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    # =============================================================================
-    # Question Button Click Handlers
-    # =============================================================================
-
-    #' Handle question button clicks
     observeEvent(names(FREE_TEXT_QUESTIONS), {
       lapply(names(FREE_TEXT_QUESTIONS), function(q_name) {
         btn_id <- ns(paste0("q_", q_name))
@@ -148,11 +99,6 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
       })
     })
 
-    # =============================================================================
-    # DT DataTable Output
-    # =============================================================================
-
-    #' Render responses table
     output$responses_table <- DT::renderDataTable({
       data <- filtered_responses()
 
@@ -204,7 +150,6 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
       }
     })
 
-    #' Update table caption
     output$responses_caption <- renderText({
       q_key <- selected_question()
       if (!is.null(q_key)) {
@@ -219,11 +164,6 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
       }
     })
 
-    # =============================================================================
-    # Individual Response Click Handler
-    # =============================================================================
-
-    #' Handle row clicks for viewing individual responses
     observeEvent(input$responses_table_rows_selected, {
       tryCatch({
         selected_rows <- input$responses_table_rows_selected
@@ -231,10 +171,8 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
         if (!is.null(selected_rows) && length(selected_rows) > 0) {
           data <- filtered_responses()
           if (nrow(data) > 0) {
-            # Get the selected row data
             selected_row <- data[selected_rows[1], ]
 
-            # Open participant modal with selected response
             showModal(
               participantModalUI(
                 participant_data = selected_row,
@@ -244,11 +182,9 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
           }
         }
       }, error = function(e) {
-        # Silently handle errors
       })
     })
 
-    # Return reactive expressions for use by other modules
     return(list(
       selected_question = selected_question,
       filtered_responses = filtered_responses
@@ -256,23 +192,9 @@ responsesServer <- function(id, data_server = NULL, filter_server = NULL) {
   })
 }
 
-# =============================================================================
-# Participant Profile Modal UI
-# =============================================================================
-
-#' Participant modal UI function
-#'
-#' Creates a modal dialog displaying participant profile information and
-#' all their responses for the selected question.
-#'
-#' @param participant_data Tibble with participant's data
-#' @param selected_response_question Character key of the selected question
-#' @return UI element for the participant profile modal
-#' @export
 participantModalUI <- function(participant_data, selected_response_question = NULL) {
   ns <- NS("participant_modal")
 
-  # Extract participant information
   section <- participant_data[[COL_SECTION]]
   experience <- participant_data[[COL_EXPERIENCE]]
   learning_pref <- participant_data[[COL_LEARNING_PREF]]
@@ -281,13 +203,12 @@ participantModalUI <- function(participant_data, selected_response_question = NU
   tagList(
     modalDialog(
       title = "Participant Profile",
-      size = "l",  # Large size for comfortable reading
-      easyClose = TRUE,  # Easy to close (X button or click outside)
+      size = "l",
+      easyClose = TRUE,
       footer = tagList(
         modalButton("Close")
       ),
 
-      # Basic Information Section
       div(
         class = "participant-info-section",
         h4("Basic Information", class = "info-section-title"),
@@ -308,7 +229,6 @@ participantModalUI <- function(participant_data, selected_response_question = NU
         )
       ),
 
-      # Selected Response Section
       div(
         class = "selected-response-section",
         h4("Selected Response", class = "info-section-title"),
@@ -318,11 +238,9 @@ participantModalUI <- function(participant_data, selected_response_question = NU
         )
       ),
 
-      # All Other Responses Section
       div(
         class = "other-responses-section",
         h4("Other Responses", class = "info-section-title"),
-        # Get all other free-text questions
         lapply(names(FREE_TEXT_QUESTIONS), function(q_name) {
           if (q_name != selected_response_question) {
             q_col <- FREE_TEXT_QUESTIONS[[q_name]]
