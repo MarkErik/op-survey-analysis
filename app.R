@@ -78,7 +78,6 @@ ui <- dashboardPage(
       )
     ),
     
-    # Global error notification
     div(
       id = "global_error",
       style = "display: none;",
@@ -89,9 +88,7 @@ ui <- dashboardPage(
       )
     ),
     
-    # Tab content
     tabItems(
-      # Home Tab
       tabItem(
         tabName = "home",
         fluidRow(
@@ -104,7 +101,6 @@ ui <- dashboardPage(
         )
       ),
       
-      # Question Responses Tab
       tabItem(
         tabName = "responses",
         fluidRow(
@@ -117,7 +113,6 @@ ui <- dashboardPage(
         )
       ),
       
-      # Statistics Tab
       tabItem(
         tabName = "statistics",
         fluidRow(
@@ -130,7 +125,6 @@ ui <- dashboardPage(
         )
       ),
       
-      # Insights Tab
       tabItem(
         tabName = "insights",
         fluidRow(

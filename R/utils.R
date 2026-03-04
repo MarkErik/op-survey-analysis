@@ -1,42 +1,20 @@
-# R/utils.R
-# Utility functions for the CPSC Experience Survey Explorer
-
-# =============================================================================
-# Likert Scale Processing
-# =============================================================================
-
-#' Extract numeric value from Likert scale response
-#'
-#' @param response Character string containing Likert response (e.g., "1 - Strongly Disagree")
-#' @return Integer value (1-5) or NA if invalid
-#' @examples
-#' extract_likert_value("1 - Strongly Disagree")  # Returns 1
-#' extract_likert_value("5 - Strongly Agree")    # Returns 5
-#' extract_likert_value("invalid")               # Returns NA
 extract_likert_value <- function(response) {
-  # Handle NULL or empty input
   if (is.null(response) || response == "") {
     return(NA_integer_)
   }
 
-  # Convert to character for processing
   response <- as.character(response)
 
-  # Remove any leading/trailing whitespace
   response <- trimws(response)
 
-  # Extract numeric portion using regex
-  # Pattern matches: digits (1-5) optionally followed by text
   match <- regmatches(response, regexpr("[0-9]+", response, perl = TRUE))
 
   if (length(match) == 0) {
     return(NA_integer_)
   }
 
-  # Convert to integer
   numeric_value <- as.integer(match[1])
 
-  # Validate that value is within 1-5 range
   if (numeric_value >= 1 && numeric_value <= 5) {
     return(numeric_value)
   }
@@ -44,20 +22,7 @@ extract_likert_value <- function(response) {
   return(NA_integer_)
 }
 
-# =============================================================================
-# Discord Multi-Select Parsing
-# =============================================================================
 
-#' Parse Discord multi-select field response
-#'
-#' Parses semicolon-separated values from Discord multi-select responses
-#' and returns a named logical vector indicating which options were selected.
-#'
-#' @param discord_string Character string containing Discord response (e.g., "I have joined;I am active")
-#' @return Named logical vector with TRUE for selected options
-#' @examples
-#' parse_discord_field("I have joined;I am active")  # Returns c(joined = TRUE, active = TRUE, useful = FALSE)
-#' parse_discord_field("")                           # Returns all FALSE
 parse_discord_field <- function(discord_string) {
   # Handle NULL or empty input
   if (is.null(discord_string) || discord_string == "") {
